@@ -1,0 +1,52 @@
+{% extends "./base1.html" %}
+{% block main %}
+  <main class="col-md-9 bgmain ms-sm-auto col-lg-10 px-md-4">     
+                                        
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2">
+        <h1 class="h4">Destination Area
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/admin">Home</a></li>
+            <li class="breadcrumb-item">Destination Area</li>
+          </ol>
+        </h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+          <div class="btn-group me-2">
+            <a href="/dot/view_destinationarea"><button type="button" class="btn btn-sm">View Destination Area</button></a>
+          </div>
+        </div>
+      </div>
+      <div class="card p-4 rounded-1 border-0 shadow">
+        <h5 class="text-uppercase fw-bold mb-4 col-8">&nbsp;</h5>
+
+        <form class="form-horizontal" method="POST" action="/dot/add_destination_area/" enctype="multipart/form-data">{% csrf_token %}
+          <div class="row">
+              <div class="col-md-12">
+                <label for="title" class="form-label">Destination Area</label>
+                <input type="text" class="form-control" name="destn_area" id="destn_area" required><br>
+              </div>
+              
+              <div class="col-md-12">
+                <label for="place">Place</label>
+                <input type="text" class="form-control" name="place" id="place" required><br>
+              </div>
+              <div>
+                <label for="status">Status </label>
+                <input type="checkbox" id="status" name="status" value="True">
+                
+              </div>
+                 
+            </div>
+            
+            <div class="col-12 mt-4">
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+          </form>
+      </div>
+      
+    
+  
+    </main>
+    </div>
+    </div>
+
+{% endblock %}

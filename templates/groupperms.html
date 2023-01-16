@@ -1,0 +1,77 @@
+{% extends "./base1.html" %}
+
+{% block main %}
+  <main class="col-md-9 bgmain ms-sm-auto col-lg-10 px-md-4">     
+                                        
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2">
+        <h1 class="h4">Group Permissions
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/dot">Home</a></li>
+            <li class="breadcrumb-item">Group Permissions</li>
+          </ol>
+        </h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+          <div class="btn-group me-2">
+            <a href="/dot/groups"><button type="button" class="btn btn-sm">Group List</button></a>
+          </div>
+        </div>
+      </div>
+      <div class="card p-4 rounded-1 border-0 shadow">
+        <h5 class="text-uppercase fw-bold mb-2 col-8">&nbsp;</h5>
+        <form>
+              <div class="col-md-12">
+                {% for x in gp %}
+                <label for="title" class="form-label">Group</label>
+                <input type="text" class="form-control" name="g_name" value="{{x.name}}" id="g_name" placeholder="Add Groups" readonly><br>
+                {% endfor %}
+              </div>
+      
+      <!-- <p id="id_permissions_filter" class="selector-filter">
+        <label for="id_permissions_input"><span class="help-tooltip search-label-icon" title="Type into this box to filter down the list of available permissions."></span></label>
+        <input type="text" placeholder="Filter" id="id_permissions_input">
+      </p> -->
+<!--       
+      <select style="width: 40%;height: 20rem;" name="permissions_old" id="id_permissions_from" multiple="" class="filtered" data-field-name="permissions" data-is-stacked="0"> -->
+        <select  name="permissions" id="id_permissions" multiple="" class="filtered" data-field-name="permissions" data-is-stacked="0">
+        {% for x in perms %}
+        <option value="{{x.id}}" title='' onClick="select_perm(this, '{{x.id}}');">{{x.name}}</option>
+        {% endfor %}
+        </select>
+        <input type="hidden" class="form-control" id="deletedfiles" name="deletedfiles" value="" >
+    </form></div>
+     <!-- </div> -->
+
+     <script type="text/javascript">
+        function confSubmit(form) {
+        if (confirm("Are you sure you want to submit the form?")) {
+        form.submit();
+        }
+        else {
+          event.preventDefault();
+        }
+        }
+        function select_perm(obj, id) {
+        var result = confirm("Are you sure to selects?");
+        // console.log(result.length)
+        // var count= 0
+        // console.log(count)
+        if(result){
+          df = document.getElementById('id_permissions').value;
+          console.log('bjkgh')
+          dfc  = df.split(", ");
+          if(dfc.length < document.getElementById('imgcount').value) {
+            document.getElementById('deletedfiles').value = df+', '+id;
+            a=document.getElementById('img_id')
+            console.log(a)
+            obj.parentElement.parentElement.style.display = 'none';
+          }
+          else {
+            alert('Please keep atleaimagest one ');
+          }        
+        }
+      }
+      </script>
+
+    </main>
+    
+{% endblock %}

@@ -1,0 +1,26 @@
+from django.contrib import admin
+from django.urls import path,include
+from . import views
+# from django.conf import settings
+
+urlpatterns = [
+    path('login/', views.login_user, name='login'),
+    path('dot/dashboard/', views.dot_dashboard, name='dot_dashboard'),
+    path('logout/', views.logoutuser, name="logout" ),
+    path('dot/adduser/', views.dot_adduser, name='dot_adduser'), 
+    path('dot/groups/', views.dot_groups, name='dot_groups'), 
+    path('dot/addgroups/', views.dot_add_groups, name='dot_add_groups'), 
+    path('dot/viewusers/', views.dot_viewusers, name='dot_viewusers'),
+    path('dot/addgroup/permissions/', views.dot_add_groups_permissions, name='dot_add_groups_permissions'),
+
+    #hoteladmin add hotels
+    path('dot/addhotel/', views.dot_addhotel, name='dot_addhotel'),
+
+    path('dot/destination_area/', views.dot_destination_area, name='dot_destination_area'),
+    path('dot/add_destination_area/', views.dot_add_destination_area, name='dot_add_destination_area'),
+    path('dot/view_destinationarea/', views.dot_view_destinationarea, name='dot_view_destinationarea'),
+    path('dot/destinations/', views.dot_destinations, name='dot_destinations'),
+    path('dot/add_destination/', views.dot_add_destination, name='dot_add_destination'),
+    path('dot/view_destination/', views.dot_view_destination, name='dot_view_destination')
+
+]

@@ -1,0 +1,78 @@
+{% extends "./base1.html" %}
+{% block main %}
+  <main class="col-md-9 bgmain ms-sm-auto col-lg-10 px-md-4">     
+                                        
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2">
+        <h1 class="h4">Add Destinations
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/admin">Home</a></li>
+            <li class="breadcrumb-item">Add Destinations</li>
+          </ol>
+        </h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+          <div class="btn-group me-2">
+            <a href="/dot/view_destination"><button type="button" class="btn btn-sm">View Destinations</button></a>
+          </div>
+        </div>
+      </div>
+      <div class="card p-4 rounded-1 border-0 shadow">
+        <h5 class="text-uppercase fw-bold mb-4 col-8">&nbsp;</h5>
+
+        <form class="form-horizontal" method="POST" action="/dot/add_destination/" enctype="multipart/form-data">{% csrf_token %}
+          <div class="row">
+              <div class="col-md-4">
+                <label for="title" class="form-label">Name</label>
+                <input type="text" class="form-control" name="destn" id="destn" required><br>
+              </div>
+              <div class="col-md-4">
+                <label for="inputState" class="form-label">Destination Area</label>
+                <select id="destn_area" name="destn_area" class="form-select">
+                  <option value="0">Choose...</option>
+                  {% for x in destn_area %}
+                  <option value="{{x.id}}">{{x.name}}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="col-md-4">
+                <label for="images">Choose Images</label><br>
+                  <input type="file" class="form-control"  placeholder="" name="image" id="image" multiple >
+                </div> 
+              <div class="col-md-4">
+                <label for="address">Address</label>
+                <textarea class="form-control htmlarea" placeholder="" name="address" id="address" style="height: 100px"></textarea><br>
+              </div>
+              <div class="col-md-4">
+                <label for="description">Description</label>
+                <textarea class="form-control htmlarea" placeholder="" name="description" id="description" style="height: 100px"></textarea><br>
+              </div>
+              <div class="col-md-4">
+                <label for="climate">Climate</label>
+                <textarea class="form-control htmlarea" placeholder="" name="climate" id="climate" style="height: 100px"></textarea><br>
+              </div>
+              <div class="col-md-4">
+                <label for="culture">Culture</label>
+                <textarea class="form-control htmlarea" placeholder="" name="culture" id="culture" style="height: 100px"></textarea><br>
+              </div>
+              
+             
+              <div class="col-md-4">
+                <label for="status">Status </label>
+                <input type="checkbox" id="status" name="status" value="True">
+                
+              </div>
+                 
+            </div>
+            
+            <div class="col-2 mt-4">
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+          </form>
+      </div>
+      
+    
+  
+    </main>
+    </div>
+    </div>
+
+{% endblock %}

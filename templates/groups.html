@@ -1,0 +1,65 @@
+{% extends "./base1.html" %}
+
+{% block main %}
+  <main class="col-md-9 bgmain ms-sm-auto col-lg-10 px-md-4">     
+                                        
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2">
+        <h1 class="h4">Add Groups
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/dot">Home</a></li>
+            <li class="breadcrumb-item">Add Groups</li>
+          </ol>
+        </h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+          <!-- <div class="btn-group me-2">
+            <a href="/dot/view_places"><button type="button" class="btn btn-sm">View Places</button></a>
+          </div> -->
+        </div>
+      </div>
+      <div class="card p-4 rounded-1 border-0 shadow">
+        <h5 class="text-uppercase fw-bold mb-2 col-8">&nbsp;</h5>
+
+        <form class="form-horizontal" method="POST" action="/dot/addgroups/" enctype="multipart/form-data">{% csrf_token %}
+              <div class="col-md-12">
+                <label for="title" class="form-label">Add Groups</label>
+                <input type="text" class="form-control" name="g_name" value="" id="g_name" placeholder="Add Groups" required><br>
+              </div>
+            <div class="col-12 mt-4">
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+          </form>
+      </div>
+
+      <div class="table-responsive card rounded-1 border-0 shadow mt-4 mb-4">
+        <h5 class="text-uppercase fw-bold mb-0 p-4 pt-3 pb-3">List of Groups</h5>
+        <table id="example" class="table table-striped table-sm">   
+          <thead>
+            <tr>
+              <th >Name</th>
+            </tr>
+          </thead>
+          {% for x in b %}
+          <tbody>
+            <tr>
+                <td >{{x.name}}</td>  
+                <td >{{x.id}}</td>              
+                <td >         
+                  <div style="float: right; margin-right: 2rem;">
+                        <a href="/dot/addgroup/permissions/?a={{x.id}}"><button class="btn-link border-0 bg-transparent text-body" ><span>add permissions</span></button> </a>
+                  </div></td>   
+            </tr>
+          </tbody>
+          {% endfor %}
+        </table>
+        <!-- <div class="p-4 border-top"><button type="submit" class="btn btn-primary d-inline-block">Primary Button</button> <button type="submit" class="btn btn-outline-primary border-2 d-inline-block">Secondary button</button></div> -->
+  </div>   
+      
+
+      
+    
+  
+    </main>
+    </div>
+    </div>
+
+{% endblock %}

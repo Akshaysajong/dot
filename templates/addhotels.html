@@ -1,0 +1,138 @@
+{% extends "./base1.html" %}
+{% block main %}
+
+<main class="col-md-9 bgmain ms-sm-auto col-lg-10 px-md-4">     
+                                        
+          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2">
+            <h1 class="h4">Add Hotels
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/dot">Home</a></li>
+                <li class="breadcrumb-item">Add Hotels</li>
+              </ol>
+            </h1>
+            <div class="btn-toolbar mb-2 mb-md-0">
+              <div class="btn-group me-2">
+                <a href="/dot/viewhotel"><button type="button" class="btn btn-sm">View Hotels</button></a>
+              </div>
+            </div>
+          </div>
+          <div class="card p-4 rounded-1 border-0 shadow">
+            <h5 class="text-uppercase fw-bold mb-4 col-8">&nbsp;</h5>
+            <div class="row" style="margin-left: .5rem;">
+
+              <form class="form-horizontal" method="POST" action="/dot/add_places/" enctype="multipart/form-data">{% csrf_token %}
+                <div class="row">
+                  <div class="col-md-4">
+                    <label for="cars" >Type:</label>
+                            <select name="cars" id="hotel" class="form-control">
+                              <option value="0">--Select--</option>
+                              {% for x in type %}
+                              <option value="x.id">{{x.type}}</option>
+                              {% endfor %}
+                            </select>
+                          </div>
+                    <div class="col-md-4">
+                      <label for="title" class="form-label">Name</label>
+                      <input type="text" class="form-control" name="name" value="" id="name" required><br>
+                    </div>
+                    <div class="col-md-4">
+                      <label for="title" class="form-label">Contact Person</label>
+                      <input type="text" class="form-control" name="contact_person" value="" id="contact_person" required><br>
+                    </div>
+                    <div class="col-md-4">
+                      <label for="title" class="form-label">Contact Number</label>
+                      <input type="text" class="form-control" name="contact_number" value="" id="contact_number" required><br>
+                    </div>
+                    <div class="col-md-4">
+                      <label for="title" class="form-label">User Name</label>
+                      <input type="text" class="form-control" name="user_name" value="" id="user_name" required><br>
+                    </div>
+                    <div class="col-md-4">
+                      <label for="title" class="form-label">Password</label>
+                      <input type="password" class="form-control" name="pwd" value="" id="pwd" required><br>
+                    </div>
+                    <div class="col-md-8">
+                      <label for="title" class="form-label">Address</label>
+                      <input type="text" class="form-control" name="address" value="" id="address" required><br>
+                    </div>
+                    
+                    <div class="col-md-4">
+                      <label for="" >Country</label><br>
+                              <select name="" id="country" class="form-control" onchange="get_country()">
+                                <option value="0">--Select--</option>    
+                                {% for x in country %}
+                                <option value="{{x.id}}">{{x.name}}</option>
+                                {% endfor %}
+                              </select>  
+                    </div>
+                    <div class="col-md-4">
+                      <label for="" >State</label><br><br>
+                              <select name="" id="state" style="height:30px;width: 100%;" onchange="get_state()">
+                                <option value="0">--Select--</option>    
+                                {% for x in states %}
+                                <option value="{{x.id}}">{{x.name}}</option>
+                                {% endfor %}    
+                              </select>
+                    </div>
+                    <div class="col-md-4">
+                      <label for="" >City</label><br><br>
+                              <select name="" id="city" style="height:30px;width: 100%;">
+                                <option value="0">--Select--</option>    
+                                {% for x in city %}
+                                <option value="{{x.id}}">{{x.city}}</option>
+                                {% endfor %}
+                              </select>
+                    </div>
+                    
+                   
+                  </div>
+                  
+                  <div class="col-12 mt-4">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                  </div>
+                </form>
+           
+        </div>
+        
+        <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
+        
+</main>
+{% endblock %}  
+
+<!-- <form class="form-horizontal" method="POST">{% csrf_token %}    
+  <div class="row">
+    <label class="col-2 col-form-label text-nowrap" for="{{ form.hotel_name.id_for_label }}">{{form.hotel_name.label}} :</label>
+    <div class="col">{{form.hotel_name}}</div>
+  </div><br>
+  <div class="row">
+    <label class="col-2 col-form-label text-nowrap" for="{{ form.address.id_for_label }}">{{form.address.label}} :</label>
+    <div class="col">{{form.address}}</div>
+  </div><br>
+  <div class="row">
+    <label class="col-2 col-form-label text-nowrap" for="{{ form.destination.id_for_label }}">{{form.destination.label}} :</label>
+    <div class="col">{{form.destination}}</div>
+  </div><br>
+  <div class="row">
+    <label class="col-2 col-form-label text-nowrap" for="{{ form.phone_number.id_for_label }}">{{form.phone_number.label}} :</label>
+    <div class="col">{{form.phone_number}}</div>
+  </div><br>
+  <div class="row">
+    <label class="col-2 col-form-label text-nowrap" for="{{ form.username.id_for_label }}">{{form.username.label}} :</label>
+    <div class="col">{{form.username}}</div>
+  {{ form.username.errors }}
+  </div><br>
+  <div class="row">
+    <label class="col-2 col-form-label text-nowrap" for="{{ form.password1.id_for_label }}">{{form.password.label}} :</label>
+    <div class="col">{{form.password}}</div>
+    {{ form.password.errors }}
+  </div><br>
+  <div class="row" >
+    <label class="col-2 col-form-label text-nowrap"  for="{{ form.password2.id_for_label }}">{{form.Confirm_password.label}} :</label>
+    <div class="col" >{{form.Confirm_password}}</div>
+    {{ form.password2.errors }}
+  </div><br>
+
+  <div class="col-12 mt-4" style="margin-left: .5rem;">
+    <button type="submit" id="btnSubmit" class="btn btn-primary">Submit</button>
+  </div><br><br>
+</form> -->

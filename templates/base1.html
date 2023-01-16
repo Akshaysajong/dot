@@ -1,0 +1,155 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="Jince Thomas, Grinesh PK">
+<meta name="generator" content="">
+<title>Dot</title>
+<!-- Bootstrap core CSS -->
+<link rel="stylesheet" href="/static/css/bootstrap-icons.css">
+<link href="/static/css/bootstrap.css" rel="stylesheet" type="text/css">
+<!-- Favicons -->
+<link rel="icon" href="/static/img/favicon.png">
+<!-- Custom styles for this template -->
+<link href="/static/css/dashboard.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<a class="navbar-brand position-fixed" href="#"><img src="/static/img/logo.png" class="img-fluid w-75" title="Logo" alt="logo"></a>
+<button class="navbar-toggler menu-btn position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"><i class="bi bi-menu-app"></i></span> </button>
+<div class="container-fluid">
+  <div class="row">
+    <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse border-0 bg-white">
+      <div class="position-sticky">
+        <ul class="nav flex-column">
+          <li class="nav-item"> <a class="nav-link" aria-current="page" href="/dot/dashboard/"> <span data-feather="home"></span> Dashboard </a> </li>
+          
+          <li class="nav-item"> <a class="nav-link" data-bs-toggle="collapse" href="#menu-product" aria-expanded="false" aria-controls="menu-product"> <span data-feather="users"></span> Users </a> 
+            <ul class="list-group collapse multi-collapse ms-4 mb-2" id="menu-product">
+              <li class="list-group-item border-0 p-1"><a href="/dot/viewusers/" class="nav-sublink">View Users</a></li>
+              
+              <li class="list-group-item border-0 p-1"><a href="/dot/adduser/" class="nav-sublink">Add Users</a></li>
+             
+            </ul>
+          </li>
+          <li class="nav-item"> <a class="nav-link" data-bs-toggle="collapse" href="#menu" aria-expanded="false" aria-controls="menu-product"> <span data-feather="shopping-cart"></span> Entrollment </a> 
+            <ul class="list-group collapse multi-collapse ms-4 mb-1" id="menu">
+              
+              <li class="list-group-item border-0 p-1"><a href="/dot/viewhotel/" class="nav-sublink">View Hotel</a></li>
+           
+              <li class="list-group-item border-0 p-1"><a href="/dot/addhotel/" class="nav-sublink">Add Hotel</a></li>
+        
+            </ul>
+          </li>
+          <li class="nav-item"> <a class="nav-link" data-bs-toggle="collapse" href="#menu-or" aria-expanded="false" aria-controls="menu-order"> <span data-feather="file"></span> Destinstions </a> 
+          <ul class="list-group collapse multi-collapse ms-4 mb-2" id="menu-or"> 
+            <li class="list-group-item border-0 p-1"><a href="/dot/destination_area/" class="nav-sublink">Destinstion Area</a></li>
+           
+            <li class="list-group-item border-0 p-1"><a href="/dot/destinations/" class="nav-sublink">Destinstions</a></li>
+         
+          </ul>
+          </li>
+
+          
+        
+          
+          
+          
+          <!-- {% if perms.dot_app.add_hotels %} -->
+          <li class="nav-item"> <a class="nav-link"> <span data-feather="users"></span> Customers </a> </li>
+          <li class="nav-item"> <a class="nav-link" href="/dot/groups/"> <span data-feather="users"></span>Groups </a> </li>
+          <!-- {% endif %} -->
+         
+        </ul>
+      </div>
+    </nav>
+    <header class="navbar nav-top sticky-top flex-md-nowrap w-100 bgmain">
+      <input class="form-control top-serch rounded-1" type="text" placeholder="Search" aria-label="Search">
+        <ul class="nav justify-content-end">
+          <li class="nav-item dropdown position-relative"> <span class="position-absolute alert-dot translate-middle bg-danger border border-2 rounded-circle"> <span class="visually-hidden">New alerts</span> </span> <a class="nav-link text-body dropdown-toggle" href="#" id="notification" data-bs-toggle="dropdown" aria-expanded="false"><span data-feather="bell" class="position-relative"></span></a>
+          <div class="dropdown-menu notificationdropdown rounded-1 shadow border-0 p-4 pb-0 text-muted" aria-labelledby="notification">
+            <i class="bi bi-caret-up-fill position-absolute fs-5 text-white"></i>
+            <div class="list-group notification-top">
+                <a href="#" class="list-group-item p-0 border-0 list-group-item-action d-flex gap-3 mb-4" aria-current="true">
+                  <img src="/static/img/gift1.jpg" alt="twbs" width="32" height="32" class="rounded-circle flex-shrink-0">
+                  <div class="d-flex gap-2 w-100 justify-content-between">
+                    <div>
+                      <h6 class="mb-1 fw-bold">List group item heading</h6>
+                        <small class="mb-0 opacity-75 form-text">Some placeholder content in a paragraph.</small>
+                      </div>
+                      <small class="opacity-50 text-nowrap">today</small>
+                    </div>
+                </a>
+              <a href="#" class="list-group-item p-0 border-0 list-group-item-action d-flex gap-3 mb-4" aria-current="true">
+                <img src="/static/img/gift1.jpg" alt="twbs" width="32" height="32" class="rounded-circle flex-shrink-0">
+                <div class="d-flex gap-2 w-100 justify-content-between">
+                  <div>
+                    <h6 class="mb-1 fw-bold">List group item heading</h6>
+                    <small class="mb-0 opacity-75 form-text">Some placeholder content in a paragraph.</small>
+                  </div>
+                  <small class="opacity-50 text-nowrap">3d</small>
+                </div>
+              </a>
+              <a href="#" class="list-group-item p-0 border-0 list-group-item-action d-flex gap-3 mb-4" aria-current="true">
+                <img src="/static/img/gift1.jpg" alt="twbs" width="32" height="32" class="rounded-circle flex-shrink-0">
+                <div class="d-flex gap-2 w-100 justify-content-between">
+                  <div>
+                    <h6 class="mb-1 fw-bold">List group item heading</h6>
+                    <small class="mb-0 opacity-75 form-text">Some placeholder content in a paragraph.</small>
+                  </div>
+                  <small class="opacity-50 text-nowrap">1w</small>
+                </div>
+              </a>
+  
+            </div>
+          </div>
+          </li>
+         
+<li class="nav-item dropdown" > <a class="nav-link text-body dropdown-toggle" href="#" id="topaction" data-bs-toggle="dropdown" aria-expanded="false"><span data-feather="user" class="me-2"></span> 
+  {% if request.user.is_authenticated %}
+    {{user.username}}
+  {% endif %}
+  <span data-feather="chevron-down" class="me-2"></span></a>
+  <ul class="dropdown-menu rounded-1 shadow border-0" aria-labelledby="topaction">
+    <i class="bi bi-caret-up-fill position-absolute fs-5 text-white"></i>
+    <li><a class="dropdown-item pt-1" href="#">Action</a></li>
+    <li><a class="dropdown-item pt-1" href="/profile">Profile</a></li>
+    <li><a class="dropdown-item pt-1" href="{% url 'logout' %}">Logout</a></li>
+  </ul>
+</li>
+
+          <!-- {% block authenticateduser %}
+          {% endblock %}
+           -->
+        </ul>
+    </header>
+    {% block main %}
+    
+    {% endblock %}
+
+  </div>
+</div>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>  -->
+<script src="/static/js/bootstrap.min.js"></script> 
+<script src="/static/js/bootstrap.bun dle.min.js"></script> 
+<script src="/static/js/feather.min.js"></script> 
+<script src="/static/js/Chart.min.js"></script> 
+<script src="/static/js/dashboard.js"></script> 
+<script src="/static/js/dot.js"></script>
+<script>
+$(document).ready(function() {
+    $('#example').DataTable();
+} );
+</script> 
+<script src="/static/js/dataTables.bootstrap4.min.js"></script> 
+<script src="/static/js/jquery.dataTables.min.js"></script>
+
+
+</body>
+</html>
+
+
+    
