@@ -162,6 +162,12 @@ def dot_add_destination_area(request):
         d_area.save()
     return redirect("dot_destination_area")
 
+<<<<<<< HEAD
+=======
+def dot_edit_destination(request):
+    pass
+
+>>>>>>> 13c34046efaadf47b7812292aa1d1d9957f5e625
 
 @login_required(login_url="/login")
 def dot_view_destinationarea(request):
