@@ -1,14 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, User
 
-
-# class userprofile(models.Model):
-#     user = models.ForeignKey(User, default=None, on_delete=models.CASCADE)
-#     address = models.CharField(max_length=200,blank=True, null=True)
-
 class destination_area(models.Model):
     name = models.CharField(max_length=200, default=None, blank=True)
     place = models.CharField(max_length=100, default=None, blank=True)
+    lattitude = models.CharField(max_length=100,default=None, blank=True)
+    longitude = models.CharField(max_length=100,default=None, blank=True)
     status = models.BooleanField()
 
 class destinstions(models.Model):
@@ -18,6 +15,8 @@ class destinstions(models.Model):
     description = models.TextField()
     climate = models.TextField()
     culture = models.TextField()
+    lattitude = models.CharField(max_length=100,default=None, blank=True)
+    longitude = models.CharField(max_length=100,default=None, blank=True)
     status = models.BooleanField(default=False)
 
 class destination_img(models.Model):
@@ -36,6 +35,8 @@ class destn_facility(models.Model):
     title = models.CharField(max_length=100, default=None, blank=True)
     description = models.CharField(max_length=200, default=None, blank=True)
     types = models.CharField(max_length=100, default=None, blank=True)
+    lattitude = models.CharField(max_length=100,default=None, blank=True)
+    longitude = models.CharField(max_length=100,default=None, blank=True)
     status = models.BooleanField(default=False)
 
 class facility_price(models.Model):
@@ -50,6 +51,27 @@ class facility_image(models.Model):
     facility = models.ForeignKey(destn_facility, default=None, on_delete=models.CASCADE) 
     imagetype = models.CharField(max_length=200, default=None, blank=True)
     image = models.ImageField(upload_to = 'images/', blank=True)
+    status = models.BooleanField(default=False)
+
+class country(models.Model):
+    name = models.CharField(max_length=200, default=None, blank=True)
+    location = models.CharField(max_length=200, default=None, blank=True)
+    lattitude = models.CharField(max_length=200, default=None, blank=True)
+    longitude = models.CharField(max_length=200, default=None, blank=True)
+    status = models.BooleanField(default=False)
+class state(models.Model):
+    name = models.CharField(max_length=200, default=None, blank=True)
+    location = models.CharField(max_length=200, default=None, blank=True)
+    lattitude = models.CharField(max_length=200, default=None, blank=True)
+    longitude = models.CharField(max_length=200, default=None, blank=True)
+    country_id = models.ForeignKey(country, default=None, on_delete=models.CASCADE)  
+    status = models.BooleanField(default=False)
+class city(models.Model):
+    name = models.CharField(max_length=200, default=None, blank=True)
+    location = models.CharField(max_length=200, default=None, blank=True)
+    lattitude = models.CharField(max_length=200, default=None, blank=True)
+    longitude = models.CharField(max_length=200, default=None, blank=True)
+    state_id = models.ForeignKey(state, default=None, on_delete=models.CASCADE)  
     status = models.BooleanField(default=False)
 
 class organization(models.Model):
