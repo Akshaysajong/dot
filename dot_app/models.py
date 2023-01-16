@@ -8,6 +8,11 @@ class destination_area(models.Model):
     longitude = models.DecimalField(max_digits=8, decimal_places=3, default=None, blank=True)
     status = models.BooleanField()
 
+class destination_type(models.Model):
+    name = models.CharField(max_length=50, blank=True, default=None)
+    description = models.CharField(max_length=200, default=None, blank=True)
+    status = models.BooleanField(default=False)
+
 class destinstions(models.Model):
     name = models.CharField(max_length=100, default=None, blank=True)
     d_area = models.ForeignKey(destination_area, default=None, on_delete=models.CASCADE)
