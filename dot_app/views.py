@@ -112,16 +112,25 @@ def dot_add_groups_permissions(request):
 #hoteladmin add hotels
 @login_required(login_url="/login")
 def dot_addhotel(request):
-    form = EntrollmentForm
-    return render(request, "addhotels.html",{'form':form})
+    ctry=country.objects.all()
+    print(ctry)
+    st=state.objects.all()
+    cty=city.objects.all()
+    return render(request,'addhotels.html',{'country':ctry,'states':st,'city':cty})
+
+
+# def admin_viewhotels(request):
+#     a= hotels.objects.all()
+#     return render(request, "admin/js_view.html",{'b':a})
 
 
 @login_required(login_url="/login")
 def ajax_country(request):
         c_id = request.GET['country']
-        zz = state.objects.all().filter(country=c_id)
+        print(c_id)
+        sts = state.objects.all().filter(country_id=c_id)
         dat = []
-        for x in zz:
+        for x in sts:
             dat.append({'name':x.name, 'id':x.id})
             print(dat)
         return JsonResponse(dat, safe=False)
@@ -131,9 +140,9 @@ def ajax_country(request):
 @login_required(login_url="/login")
 def ajax_state(request):
     s_id = request.GET['state']
-    ss = city.objects.all().filter(state=s_id)
+    cit = city.objects.all().filter(state_id=s_id)
     dat = []
-    for x in ss:
+    for x in cit:
         dat.append({'name':x.name, 'id':x.id})
         print(dat)
     return JsonResponse(dat, safe=False)
@@ -152,6 +161,7 @@ def dot_add_destination_area(request):
         d_area = destination_area(name=destn_area, place=place, status=statu)
         d_area.save()
     return redirect("dot_destination_area")
+
 
 @login_required(login_url="/login")
 def dot_view_destinationarea(request):

@@ -64,6 +64,7 @@ class country(models.Model):
     lattitude = models.DecimalField(max_digits=8, decimal_places=3, default=None, blank=True)
     longitude = models.DecimalField(max_digits=8, decimal_places=3, default=None, blank=True)
     status = models.BooleanField(default=False)
+
 class state(models.Model):
     name = models.CharField(max_length=200, default=None, blank=True)
     location = models.CharField(max_length=200, default=None, blank=True)
@@ -71,6 +72,7 @@ class state(models.Model):
     longitude = models.DecimalField(max_digits=8, decimal_places=3, default=None, blank=True)
     country_id = models.ForeignKey(country, default=None, on_delete=models.CASCADE)  
     status = models.BooleanField(default=False)
+
 class city(models.Model):
     name = models.CharField(max_length=200, default=None, blank=True)
     location = models.CharField(max_length=200, default=None, blank=True)
@@ -110,3 +112,42 @@ class userprofile(models.Model):
     phone = models.CharField(max_length=200,blank=True, null=True)
     email = models.EmailField(max_length=200,blank=True, null=True)
     status = models.BooleanField(default=False)
+
+
+    
+class content(models.Model):
+    content_type = models.CharField(max_length=200,blank=True, null=True)
+    title = models.CharField(max_length=200,blank=True, null=True)
+    page = models.CharField(max_length=200,blank=True, null=True)
+    path = models.FilePathField(path=None, match=None, recursive=False, max_length=100)
+    body = models.CharField(max_length=200,blank=True, null=True)
+    created = models.CharField(max_length=200,blank=True, null=True)
+    updated = models.CharField(max_length=200,blank=True, null=True)
+    status = models.BooleanField(default=False)
+
+class content_images(models.Model):
+    cid = models.ForeignKey(content, default=None, on_delete=models.CASCADE) 
+    content = models.CharField(max_length=200,blank=True, null=True)
+    image = models.ImageField(upload_to = 'images/', blank=True)
+    overlay = models.CharField(max_length=200,blank=True, null=True)
+    weight = models.CharField(max_length=200,blank=True, null=True)
+    created = models.CharField(max_length=200,blank=True, null=True)
+    status =  models.BooleanField(default=False)
+
+class faq_category(models.Model):
+    name = models.CharField(max_length=200,blank=True, null=True)
+    description = models.CharField(max_length=200,blank=True, null=True)
+    popularity = models.CharField(max_length=200,blank=True, null=True)
+    status =  models.BooleanField(default=False)
+
+class faq(models.Model):
+    title = models.CharField(max_length=200,blank=True, null=True)
+    description = models.CharField(max_length=200,blank=True, null=True)
+    category = models.CharField(max_length=200,blank=True, null=True)
+    access = models.CharField(max_length=200,blank=True, null=True)
+    access_count = models.CharField(max_length=200,blank=True, null=True)
+    likes = models.CharField(max_length=200,blank=True, null=True)
+    dislike = models.CharField(max_length=200,blank=True, null=True)
+    status = models.BooleanField(default=False)
+
+

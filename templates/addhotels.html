@@ -20,25 +20,17 @@
             <h5 class="text-uppercase fw-bold mb-4 col-8">&nbsp;</h5>
             <div class="row" style="margin-left: .5rem;">
 
-              <form class="form-horizontal" method="POST" action="/dot/add_places/" enctype="multipart/form-data">{% csrf_token %}
+              <form class="form-horizontal" method="POST" action="/dot/addhotel//" enctype="multipart/form-data">{% csrf_token %}
                 <div class="row">
-                  <div class="col-md-4">
-                    <label for="cars" >Type:</label>
-                            <select name="cars" id="hotel" class="form-control">
-                              <option value="0">--Select--</option>
-                              {% for x in type %}
-                              <option value="x.id">{{x.type}}</option>
-                              {% endfor %}
+                 
+                    <div class="col-md-4">
+                      <label for=""  >Type:</label><br><br>
+                            <select name="cars" id="hotel" style="height:30px;width: 100%;"  onchange="get_type()">
+                            <option value="0">--Select--</option>   
+                            <option value="3_star_hotels">3 Star Hotels</option>
+                            <option value="5_star_hotels">5 Star Hotels</option>  
                             </select>
-                          </div>
-                          <div class="col-md-4">
-                            <label for="" >Type:</label><br><br>
-                                    <select name="cars" id="hotel" style="height:30px;width: 100%;" onchange="get_type()">
-                                      <option value="3_star_hotels">3 Star Hotels</option>
-                                      <option value="5_star_hotels">5 Star Hotels</option>
-                                      
-                                    </select>
-                                  </div>
+                    </div>
                     <div class="col-md-4">
                       <label for="title" class="form-label">Name</label>
                       <input type="text" class="form-control" name="name" value="" id="name" required><br>
@@ -87,7 +79,7 @@
                               <select name="" id="city" style="height:30px;width: 100%;">
                                 <option value="0">--Select--</option>    
                                 {% for x in city %}
-                                <option value="{{x.id}}">{{x.city}}</option>
+                                <option value="{{x.id}}">{{x.name}}</option>
                                 {% endfor %}
                               </select>
                     </div>
