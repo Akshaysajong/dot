@@ -31,6 +31,14 @@
                               {% endfor %}
                             </select>
                           </div>
+                          <div class="col-md-4">
+                            <label for="" >Type:</label><br><br>
+                                    <select name="cars" id="hotel" style="height:30px;width: 100%;" onchange="get_type()">
+                                      <option value="3_star_hotels">3 Star Hotels</option>
+                                      <option value="5_star_hotels">5 Star Hotels</option>
+                                      
+                                    </select>
+                                  </div>
                     <div class="col-md-4">
                       <label for="title" class="form-label">Name</label>
                       <input type="text" class="form-control" name="name" value="" id="name" required><br>

@@ -7,6 +7,7 @@ from django.contrib.auth.models import User, Group, Permission
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth import update_session_auth_hash
 from .form import RegisterForm,EntrollmentForm
+from django.http import JsonResponse
 
 
 def login_user(request):
@@ -113,6 +114,30 @@ def dot_add_groups_permissions(request):
 def dot_addhotel(request):
     form = EntrollmentForm
     return render(request, "addhotels.html",{'form':form})
+
+
+@login_required(login_url="/login")
+def ajax_country(request):
+        c_id = request.GET['country']
+        zz = state.objects.all().filter(country=c_id)
+        dat = []
+        for x in zz:
+            dat.append({'name':x.name, 'id':x.id})
+            print(dat)
+        return JsonResponse(dat, safe=False)
+
+
+
+@login_required(login_url="/login")
+def ajax_state(request):
+    s_id = request.GET['state']
+    ss = city.objects.all().filter(state=s_id)
+    dat = []
+    for x in ss:
+        dat.append({'name':x.name, 'id':x.id})
+        print(dat)
+    return JsonResponse(dat, safe=False)
+
 
 @login_required(login_url="/login")
 def dot_destination_area(request):
