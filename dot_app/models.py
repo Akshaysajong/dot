@@ -110,3 +110,69 @@ class userprofile(models.Model):
     phone = models.CharField(max_length=200,blank=True, null=True)
     email = models.EmailField(max_length=200,blank=True, null=True)
     status = models.BooleanField(default=False)
+
+class customer_type(models.Model):
+    name = models.CharField(max_length=50,blank=True, null=True)
+    status = models.BooleanField(default=False)
+
+class customer(models.Model):
+    name = models.CharField(max_length=50,blank=True, null=True)
+    pwd = models.CharField(max_length=50,blank=True, null=True)
+    first_name = models.CharField(max_length=50,blank=True, null=True)
+    last_name = models.CharField(max_length=50,blank=True, null=True)
+    email = models.EmailField(max_length = 254)
+    phone = models.CharField(max_length=50,blank=True, null=True)
+    cust_type = models.CharField(max_length=50,blank=True, null=True)
+    status = models.BooleanField(default=False)
+
+class cust_profile(models.Model):
+    cust = models.ForeignKey(customer, default=None, on_delete=models.CASCADE)
+    city = models.CharField(max_length=50,blank=True, null=True)
+    state = models.CharField(max_length=50,blank=True, null=True)
+    address = models.CharField(max_length=50,blank=True, null=True)
+    phone = models.CharField(max_length=50,blank=True, null=True)
+    email = models.EmailField(max_length=200,blank=True, null=True)
+    status = models.BooleanField(default=False)
+
+
+
+
+class booking_type(models.Model):
+    name = models.CharField(max_length=50,blank=True, null=True)
+    description = models.CharField(max_length=200, default=None, blank=True)
+    status = models.BooleanField(default=False)
+
+class booking(models.Model):
+    title = models.CharField(max_length=50,blank=True, null=True)
+    bking_type = models.CharField(max_length=50,blank=True, null=True)
+    bk_from = models.CharField(max_length=50,blank=True, null=True)
+    bk_to = models.CharField(max_length=50,blank=True, null=True)
+    cust = models.ForeignKey(customer, default=None, on_delete=models.CASCADE)
+    created = models.DateTimeField(blank=True, null=True)
+    updated = models.DateTimeField(blank=True, null=True)
+    status = models.BooleanField(default=False)
+
+class coupon_type(models.Model):
+    name = models.CharField(max_length=50,blank=True, null=True)
+    label = models.CharField(max_length=50,blank=True, null=True)
+    description = models.CharField(max_length=50,blank=True, null=True)
+    status = models.BooleanField(default=False)
+
+class coupon(models.Model):
+    code = models.CharField(max_length=50,blank=True, null=True)
+    c_type = models.IntegerField(max_length=50,blank=True, null=True)
+    amount = models.FloatField(max_length=50,blank=True, null=True)
+    amount_type = models.CharField(max_length=50,blank=True, null=True)
+    usage_limit = models.IntegerField(max_length=50,blank=True, null=True)
+    used_by = models.IntegerField(max_length=50,blank=True, null=True)
+    weight = models.IntegerField(max_length=50,blank=True, null=True)
+    expiry = models.DateTimeField(blank=True, null=True)
+    created = models.DateTimeField(blank=True, null=True)
+    updated = models.DateTimeField(blank=True, null=True)
+    status = models.BooleanField(default=False)
+
+# class orders(models.Model):
+#     order = models.CharField(max_length=50,blank=True, null=True)
+#     email = models.EmailField(max_length=200,blank=True, null=True)
+#     first_name = models.CharField(max_length=50,blank=True, null=True)
+#     last_name = models.CharField(max_length=50,blank=True, null=True)

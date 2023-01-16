@@ -58,3 +58,30 @@ class EntrollmentForm(UserCreationForm):
         required=True,  
         widget=forms.Select(attrs={'class': 'form-control'})
     )
+
+
+
+# class AddHotels(forms.ModelForm):
+#     hotel_name = forms.CharField(max_length=100,required=True,
+#                                 widget=forms.TextInput(attrs={'class': 'form-control'}))
+#     address = forms.CharField(max_length=100,required=True,
+#                                 widget=forms.TextInput(attrs={'class': 'form-control'}))
+#     destination = forms.CharField(max_length=100,required=True,
+#                                 widget=forms.TextInput(attrs={'class': 'form-control'}))
+#     phone_number = forms.IntegerField(required=True,
+#                                 widget=forms.NumberInput(attrs={'class': 'form-control'}))
+#     # facilities = forms.CharField(max_length=100,required=True,
+#     #                             widget=forms.TextInput(attrs={'class': 'form-control'}))
+#     username = forms.CharField(max_length=100,required=True,
+#                                 widget=forms.TextInput(attrs={'class': 'form-control'}))
+#     password=forms.CharField(max_length=100,required=True,
+#                                 widget=forms.PasswordInput(attrs={'class': 'form-control', 'id':'txtPassword'}),validators=[validate_password])
+
+#     Confirm_password = forms.CharField(max_length=100,required=True,
+#                                 widget=forms.PasswordInput(attrs={'class': 'form-control', 'id':'txtConfirmPassword'}))
+
+    
+
+#     class Meta:
+#         model = User
+#         fields = ['username','first_name', 'password']
