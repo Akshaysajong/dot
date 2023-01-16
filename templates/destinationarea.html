@@ -20,16 +20,17 @@
 
         <form class="form-horizontal" method="POST" action="/dot/add_destination_area/" enctype="multipart/form-data">{% csrf_token %}
           <div class="row">
-              <div class="col-md-12">
+              <div class="col-md-6">
                 <label for="title" class="form-label">Destination Area</label>
-                <input type="text" class="form-control" name="destn_area" id="destn_area" required><br>
+                <input type="text" class="form-control" name="destn_area" id="destn_area" required>
+                
               </div>
               
-              <div class="col-md-12">
+              <div class="col-md-6">
                 <label for="place">Place</label>
-                <input type="text" class="form-control" name="place" id="place" required><br>
+                <input type="text" class="form-control" name="place" id="place" required>
               </div>
-              <div>
+              <div class="col-md-6">
                 <label for="status">Status </label>
                 <input type="checkbox" id="status" name="status" value="True">
                 
