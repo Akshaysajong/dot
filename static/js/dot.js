@@ -65,3 +65,19 @@ function get_state()
     })
 
 }
+
+function delete_darea(id){
+    jQuery.ajax({
+        type : 'get',
+        url : "/delete_darea/",
+        data : {
+            d_id : id
+        },
+        dataType : 'jason',
+        success: function(data)
+        {
+            alert('Destination area deleted')
+            window.location.reload()
+        }
+    })
+}

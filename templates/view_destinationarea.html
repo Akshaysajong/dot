@@ -13,7 +13,7 @@
             <div class="btn-toolbar mb-2 mb-md-0">
               
                 <div class="btn-group me-2">
-                  <a href="/dot/destination_area"><button type="button" class="btn btn-sm">Add Destination Area</button></a>
+                  <a href="/dot/destination_area/"><button type="button" class="btn btn-sm">Add Destination Area</button></a>
                 </div>
                 
               </div>
@@ -40,11 +40,13 @@
                     <td ></td>       
                     <td>         
                       <div class="btn-group me-2">
-                            <a href="/dot/edit_destination/?a={{x.id}}"><button class="btn-link border-0 bg-transparent text-body" ><span data-feather="edit-2"></span></button> </a>
+                            <a href="/dot/edit_destinationarea/?a={{x.id}}"><button class="btn-link border-0 bg-transparent text-body" ><span data-feather="edit-2"></span></button> </a>
                           </div> 
                           <div class="btn-group me-2">
-                            <a href="/dot/remove_user/?a={{x.id}}"><b<button class="btn-link border-0 bg-transparent text-body" onClick="confdelete();"><span data-feather="trash-2" ></span></button> </a>
+                            <!-- <a href="/dot/delete_destinationarea/?a={{x.id}}"><b<button class="btn-link border-0 bg-transparent text-body" onClick="delete_darea();"><span data-feather="trash-2" ></span></button> </a> -->
+                            <button class="btn-link border-0 bg-transparent text-body" type="submit" onclick="delete_darea('{{x.id}}')"><span data-feather="trash-2" ></span></button>
                           </div>
+                          
                           
                 </tr>
               </tbody>
