@@ -35,28 +35,6 @@ class destn_geography(models.Model):
     description = models.CharField(max_length=200, default=None, blank=True)
     status = models.BooleanField(default=False)
 
-class destn_facility(models.Model):
-    destinstions = models.ForeignKey(destinstions, default=None, on_delete=models.CASCADE)
-    title = models.CharField(max_length=100, default=None, blank=True)
-    description = models.CharField(max_length=200, default=None, blank=True)
-    types = models.CharField(max_length=100, default=None, blank=True)
-    lattitude = models.DecimalField(max_digits=8, decimal_places=3, default=None, blank=True)
-    longitude = models.DecimalField(max_digits=8, decimal_places=3, default=None, blank=True)
-    status = models.BooleanField(default=False)
-
-class facility_price(models.Model):
-    dstn_facility = models.ForeignKey(destinstions, default=None, on_delete=models.CASCADE)
-    amount = models.FloatField(default=None, blank=True)
-    discount = models.FloatField(default=None, blank=True)
-    total = models.FloatField(default=None, blank=True)
-    status = models.BooleanField(default=False)
-
-class facility_image(models.Model):
-    destinstion = models.ForeignKey(destinstions, default=None, on_delete=models.CASCADE)  
-    facility = models.ForeignKey(destn_facility, default=None, on_delete=models.CASCADE) 
-    imagetype = models.CharField(max_length=200, default=None, blank=True)
-    image = models.ImageField(upload_to = 'images/', blank=True)
-    status = models.BooleanField(default=False)
 
 class country(models.Model):
     name = models.CharField(max_length=200, default=None, blank=True)
@@ -85,7 +63,6 @@ class organization(models.Model):
     title = models.CharField(max_length=200,blank=True, null=True)
     org_type = models.CharField(max_length=200,blank=True, null=True)
     destinstion = models.ForeignKey(destinstions, default=None, on_delete=models.CASCADE)  
-    facility = models.ForeignKey(destn_facility, default=None, on_delete=models.CASCADE) 
     contact_person = models.CharField(max_length=200,blank=True, null=True)
     contact_number = models.CharField(max_length=200,blank=True, null=True)
     website = models.CharField(max_length=200,blank=True, null=True)
@@ -95,6 +72,31 @@ class organization(models.Model):
     phone = models.CharField(max_length=200,blank=True, null=True)
     email = models.EmailField(max_length=200,blank=True, null=True)
     proof = models.CharField(max_length=200,blank=True, null=True)
+    status = models.BooleanField(default=False)
+
+
+class destn_facility(models.Model):
+    destinstions = models.ForeignKey(destinstions, default=None, on_delete=models.CASCADE)
+    orgatn = models.ForeignKey(organization, default=None, on_delete=models.CASCADE) 
+    title = models.CharField(max_length=100, default=None, blank=True)
+    description = models.CharField(max_length=200, default=None, blank=True)
+    types = models.CharField(max_length=100, default=None, blank=True)
+    lattitude = models.DecimalField(max_digits=8, decimal_places=3, default=None, blank=True)
+    longitude = models.DecimalField(max_digits=8, decimal_places=3, default=None, blank=True)
+    status = models.BooleanField(default=False)
+
+class facility_price(models.Model):
+    dstn_facility = models.ForeignKey(destinstions, default=None, on_delete=models.CASCADE)
+    amount = models.FloatField(default=None, blank=True)
+    discount = models.FloatField(default=None, blank=True)
+    total = models.FloatField(default=None, blank=True)
+    status = models.BooleanField(default=False)
+
+class facility_image(models.Model):
+    destinstion = models.ForeignKey(destinstions, default=None, on_delete=models.CASCADE)  
+    facility = models.ForeignKey(destn_facility, default=None, on_delete=models.CASCADE) 
+    imagetype = models.CharField(max_length=200, default=None, blank=True)
+    image = models.ImageField(upload_to = 'images/', blank=True)
     status = models.BooleanField(default=False)
 
 class organization_images(models.Model):

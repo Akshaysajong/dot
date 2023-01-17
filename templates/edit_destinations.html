@@ -3,10 +3,10 @@
   <main class="col-md-9 bgmain ms-sm-auto col-lg-10 px-md-4">     
                                         
       <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2">
-        <h1 class="h4">Edit Destination
+        <h1 class="h4">Edit Destination Area
           <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/admin/">Home</a></li>
-            <li class="breadcrumb-item">Edit Destination</li>
+            <li class="breadcrumb-item">Edit Destination Area</li>
           </ol>
         </h1>
         <div class="btn-toolbar mb-2 mb-md-0">
@@ -19,22 +19,23 @@
         <h5 class="text-uppercase fw-bold mb-4 col-8">&nbsp;</h5>
 
         <form class="form-horizontal" method="POST" action="/dot/add_destination_area/" enctype="multipart/form-data">{% csrf_token %}
+          {% for x in destn %}
           <div class="row">
               <div class="col-md-6">
                 <label for="title" class="form-label">Destination Area</label>
-                <input type="text" class="form-control" name="destn_area" id="destn_area" required>
+                <input type="text" class="form-control" name="destn_area" id="destn_area" value="{{x.name}}" required>
                 
               </div>
               
               <div class="col-md-6">
                 <label for="place">Place</label>
-                <input type="text" class="form-control" name="place" id="place" required><br>
+                <input type="text" class="form-control" name="place" id="place" value="{{x.place}}" required><br>
               </div>
-              <div class="col-md-6">
+              <!-- <div class="col-md-6">
                 <label for="status">Status </label>
                 <input type="checkbox" id="status" name="status" value="True">
                 
-              </div>
+              </div> -->
                  
             </div>
             
@@ -42,6 +43,7 @@
               <button type="submit" class="btn btn-primary">Submit</button>
             </div>
           </form>
+          {% endfor %}
       </div>
       
     

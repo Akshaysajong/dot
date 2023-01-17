@@ -164,9 +164,16 @@ def dot_add_destination_area(request):
 
 
 
-def dot_edit_destination(request):
-    pass
+def dot_edit_destinationarea(request):
+    ed_id = request.GET['a']
+    destn = destination_area.objects.all().filter(id=ed_id)
+    return render(request, "edit_destinations.html",{'destn':destn})
 
+def delete_darea(request):
+    d_id = request.GET['d_id']
+    destn = destination_area.objects.all().filter(id=d_id)
+    dat = ['Destination area deleted']
+    return JsonResponse(dat, safe=False)
 
 @login_required(login_url="/login")
 def dot_view_destinationarea(request):
