@@ -121,8 +121,8 @@ class content(models.Model):
     page = models.CharField(max_length=200,blank=True, null=True)
     path = models.FilePathField(path=None, match=None, recursive=False, max_length=100)
     body = models.CharField(max_length=200,blank=True, null=True)
-    created = models.CharField(max_length=200,blank=True, null=True)
-    updated = models.CharField(max_length=200,blank=True, null=True)
+    created = models.DateTimeField(max_length=200,blank=True, null=True)
+    updated = models.DateTimeField(max_length=200,blank=True, null=True)
     status = models.BooleanField(default=False)
 
 class content_images(models.Model):
@@ -130,8 +130,8 @@ class content_images(models.Model):
     content = models.CharField(max_length=200,blank=True, null=True)
     image = models.ImageField(upload_to = 'images/', blank=True)
     overlay = models.CharField(max_length=200,blank=True, null=True)
-    weight = models.CharField(max_length=200,blank=True, null=True)
-    created = models.CharField(max_length=200,blank=True, null=True)
+    weight = models.IntegerField(max_length=200,blank=True, null=True)
+    created = models.DateTimeField(max_length=200,blank=True, null=True)
     status =  models.BooleanField(default=False)
 
 class faq_category(models.Model):
