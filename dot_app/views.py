@@ -132,6 +132,8 @@ def dot_addhoteldb(request):
         ho = User(username=user_name, password=pwd)
         ho.save()
         print(ho.id)
+        hotl = userprofile(name=name,hoteltype=hoteltype, contact_person=contact_person,contact_number=contact_number,address=address,country=cotry,state=sts,city=citi)
+        hotl.save()
 
     return redirect('dot_addhotel')
 
