@@ -114,8 +114,6 @@ class userprofile(models.Model):
     phone = models.CharField(max_length=200,blank=True, null=True)
     email = models.EmailField(max_length=200,blank=True, null=True)
     status = models.BooleanField(default=False)
-
-
     
 class content(models.Model):
     content_type = models.CharField(max_length=200,blank=True, null=True)
