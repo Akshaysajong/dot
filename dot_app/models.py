@@ -35,7 +35,6 @@ class destn_geography(models.Model):
     description = models.CharField(max_length=200, default=None, blank=True)
     status = models.BooleanField(default=False)
 
-
 class country(models.Model):
     name = models.CharField(max_length=200, default=None, blank=True)
     location = models.CharField(max_length=200, default=None, blank=True)
@@ -73,7 +72,6 @@ class organization(models.Model):
     email = models.EmailField(max_length=200,blank=True, null=True)
     proof = models.CharField(max_length=200,blank=True, null=True)
     status = models.BooleanField(default=False)
-
 
 class destn_facility(models.Model):
     destinstions = models.ForeignKey(destinstions, default=None, on_delete=models.CASCADE)
@@ -150,7 +148,6 @@ class faq(models.Model):
     dislike = models.CharField(max_length=200,blank=True, null=True)
     status = models.BooleanField(default=False)
 
-
 class customer_type(models.Model):
     name = models.CharField(max_length=50,blank=True, null=True)
     status = models.BooleanField(default=False)
@@ -173,9 +170,6 @@ class cust_profile(models.Model):
     phone = models.CharField(max_length=50,blank=True, null=True)
     email = models.EmailField(max_length=200,blank=True, null=True)
     status = models.BooleanField(default=False)
-
-
-
 
 class booking_type(models.Model):
     name = models.CharField(max_length=50,blank=True, null=True)

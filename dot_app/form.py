@@ -61,27 +61,28 @@ class EntrollmentForm(UserCreationForm):
 
 
 
-# class AddHotels(forms.ModelForm):
-#     hotel_name = forms.CharField(max_length=100,required=True,
-#                                 widget=forms.TextInput(attrs={'class': 'form-control'}))
-#     address = forms.CharField(max_length=100,required=True,
-#                                 widget=forms.TextInput(attrs={'class': 'form-control'}))
-#     destination = forms.CharField(max_length=100,required=True,
-#                                 widget=forms.TextInput(attrs={'class': 'form-control'}))
-#     phone_number = forms.IntegerField(required=True,
-#                                 widget=forms.NumberInput(attrs={'class': 'form-control'}))
-#     # facilities = forms.CharField(max_length=100,required=True,
-#     #                             widget=forms.TextInput(attrs={'class': 'form-control'}))
-#     username = forms.CharField(max_length=100,required=True,
-#                                 widget=forms.TextInput(attrs={'class': 'form-control'}))
-#     password=forms.CharField(max_length=100,required=True,
-#                                 widget=forms.PasswordInput(attrs={'class': 'form-control', 'id':'txtPassword'}),validators=[validate_password])
+class AddHotels(forms.ModelForm):
+    hotel_type = forms.ChoiceField(
+                                widget=forms.TextInput)
+    name = forms.CharField(max_length=100,required=True,
+                                widget=forms.TextInput(attrs={'class': 'form-control'}))
+    contact_person = forms.CharField(max_length=100,required=True,
+                                widget=forms.TextInput(attrs={'class': 'form-control'}))
+    contact_number = forms.CharField(max_length=100,required=True,
+                                widget=forms.TextInput(attrs={'class': 'form-control'}))
+    username = forms.CharField(max_length=100,required=True,
+                                widget=forms.TextInput(attrs={'class': 'form-control'}))
+    password = forms.CharField(max_length=100,required=True,
+                                widget=forms.PasswordInput(attrs={'class': 'form-control', 'id':'txtPassword'}),validators=[validate_password])
+    address = forms.CharField(max_length=100,required=True,
+                                widget=forms.TextInput(attrs={'class': 'form-control'}))
+    country = forms.ChoiceField(
+                                widget=forms.TextInput)
+    state = forms.ChoiceField(
+                                widget=forms.TextInput)
+    city = forms.ChoiceField(
+                                widget=forms.TextInput)
 
-#     Confirm_password = forms.CharField(max_length=100,required=True,
-#                                 widget=forms.PasswordInput(attrs={'class': 'form-control', 'id':'txtConfirmPassword'}))
-
-    
-
-#     class Meta:
-#         model = User
-#         fields = ['username','first_name', 'password']
+    class Meta:
+        model = User
+        fields = ['username','first_name', 'password']
