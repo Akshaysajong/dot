@@ -164,7 +164,8 @@ def dot_add_destination_area(request):
 
 
 def dot_edit_destination(request):
-    pass
+    return render(request, "edit_destinations.html")
+
 @login_required(login_url="/login")
 def dot_view_destinationarea(request):
     destn_area = destination_area.objects.all()
