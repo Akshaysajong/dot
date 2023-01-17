@@ -20,6 +20,24 @@
 
         <form class="form-horizontal" method="POST" action="/dot/add_destination_area/" enctype="multipart/form-data">{% csrf_token %}
           <div class="row">
+            <div class="col-md-6">
+              <label for="inputState" class="form-label">Country</label>
+              <select id="destn_area" name="destn_area" class="form-select" onchange="get_country()">
+                <option value="0">Choose...</option>
+                {% for x in destn_area %}
+                <option value="{{x.id}}">{{x.name}}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label for="inputState" class="form-label">State</label>
+              <select id="destn_area" name="destn_area" class="form-select">
+                <option value="0">Choose...</option>
+                {% for x in destn_area %}
+                <option value="{{x.id}}">{{x.name}}</option>
+                {% endfor %}
+              </select>
+            </div>
               <div class="col-md-6">
                 <label for="title" class="form-label">Destination Area</label>
                 <input type="text" class="form-control" name="destn_area" id="destn_area" required>

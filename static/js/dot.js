@@ -77,7 +77,7 @@ function delete_darea(id){
         success: function(data)
         {
             alert('Destination area deleted')
-            window.location.reload()
+            
         }
     })
 }
