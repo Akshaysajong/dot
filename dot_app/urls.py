@@ -19,6 +19,7 @@ urlpatterns = [
     path('ajax_country/', views.ajax_country, name='ajax_country'),
     path('ajax_state/', views.ajax_state, name='ajax_state'),
     # path('dot/add_hotels/', views.dot_add_hotels, name='dot_add_hotels'),
+    path('dot/content/', views.dot_content, name='dot_content'),
 
 
     path('dot/destination_area/', views.dot_destination_area, name='dot_destination_area'),

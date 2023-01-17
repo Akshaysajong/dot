@@ -17,5 +17,6 @@ admin.site.register(userprofile)
 admin.site.register(country)
 admin.site.register(state)
 admin.site.register(city)
+admin.site.register(content)
 
 # admin.site.register(organization_images)

@@ -223,3 +223,8 @@ def dot_view_destination(request):
     return render(request, "view_destination.html",{'destn_list':destn_list})
 
 
+@login_required(login_url="/login")
+def dot_content(request):
+    ctnt=content.objects.all()
+    print(ctnt)
+    return render(request,'content.html',{'content':ctnt})
