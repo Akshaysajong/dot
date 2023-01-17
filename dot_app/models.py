@@ -121,8 +121,8 @@ class content(models.Model):
     page = models.CharField(max_length=200,blank=True, null=True)
     path = models.FilePathField(path=None, match=None, recursive=False, max_length=100)
     body = models.CharField(max_length=200,blank=True, null=True)
-    created = models.DateTimeField(max_length=200,blank=True, null=True)
-    updated = models.DateTimeField(max_length=200,blank=True, null=True)
+    created = models.DateTimeField(blank=True, null=True)
+    updated = models.DateTimeField(blank=True, null=True)
     status = models.BooleanField(default=False)
 
 class content_images(models.Model):
@@ -130,8 +130,8 @@ class content_images(models.Model):
     content = models.CharField(max_length=200,blank=True, null=True)
     image = models.ImageField(upload_to = 'images/', blank=True)
     overlay = models.CharField(max_length=200,blank=True, null=True)
-    weight = models.IntegerField(max_length=200,blank=True, null=True)
-    created = models.DateTimeField(max_length=200,blank=True, null=True)
+    weight = models.IntegerField(blank=True, null=True)
+    created = models.DateTimeField(blank=True, null=True)
     status =  models.BooleanField(default=False)
 
 class faq_category(models.Model):
@@ -200,12 +200,12 @@ class coupon_type(models.Model):
 
 class coupon(models.Model):
     code = models.CharField(max_length=50,blank=True, null=True)
-    c_type = models.IntegerField(max_length=50,blank=True, null=True)
+    c_type = models.IntegerField(blank=True, null=True)
     amount = models.FloatField(max_length=50,blank=True, null=True)
     amount_type = models.CharField(max_length=50,blank=True, null=True)
-    usage_limit = models.IntegerField(max_length=50,blank=True, null=True)
-    used_by = models.IntegerField(max_length=50,blank=True, null=True)
-    weight = models.IntegerField(max_length=50,blank=True, null=True)
+    usage_limit = models.IntegerField(blank=True, null=True)
+    used_by = models.IntegerField(blank=True, null=True)
+    weight = models.IntegerField(blank=True, null=True)
     expiry = models.DateTimeField(blank=True, null=True)
     created = models.DateTimeField(blank=True, null=True)
     updated = models.DateTimeField(blank=True, null=True)
