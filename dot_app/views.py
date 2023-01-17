@@ -113,11 +113,27 @@ def dot_add_groups_permissions(request):
 @login_required(login_url="/login")
 def dot_addhotel(request):
     ctry=country.objects.all()
-    print(ctry)
     st=state.objects.all()
     cty=city.objects.all()
     return render(request,'addhotels.html',{'country':ctry,'states':st,'city':cty})
 
+def dot_addhoteldb(request):
+    if request.method == "POST":
+        hoteltype = request.POST['hoteltype']
+        name = request.POST['name']
+        contact_person = request.POST['contact_person']
+        contact_number = request.POST['contact_number']
+        user_name = request.POST['user_name']
+        pwd = request.POST['pwd']
+        address = request.POST['address']
+        cotry = request.POST['country']
+        sts = request.POST['state']
+        citi = request.POST['city']
+        ho = User(username=user_name, password=pwd)
+        ho.save()
+        print(ho.id)
+
+    return redirect('dot_addhotel')
 
 # def admin_viewhotels(request):
 #     a= hotels.objects.all()

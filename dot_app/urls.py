@@ -15,6 +15,7 @@ urlpatterns = [
 
     #hoteladmin add hotels
     path('dot/addhotel/', views.dot_addhotel, name='dot_addhotel'),
+    path('dot/addhoteldb/', views.dot_addhoteldb, name='dot_addhoteldb'),
     # path('dot/viewhotel/', views.dot_viewhotel, name='dot_viewhotel'),
     path('ajax_country/', views.ajax_country, name='ajax_country'),
     path('ajax_state/', views.ajax_state, name='ajax_state'),
