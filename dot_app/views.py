@@ -120,9 +120,8 @@ def dot_addhotel(request):
 def dot_addhoteldb(request):
     if request.method == "POST":
         hoteltype = request.POST['hoteltype']
-        name = request.POST['name']
         contact_person = request.POST['contact_person']
-        contact_number = request.POST['contact_number']
+        contact_number = request.POST['phone']
         user_name = request.POST['user_name']
         pwd = request.POST['pwd']
         address = request.POST['address']
@@ -132,9 +131,9 @@ def dot_addhoteldb(request):
         ho = User(username=user_name, password=pwd)
         ho.save()
         print(ho.id)
-        hotl = userprofile(name=name,hoteltype=hoteltype, contact_person=contact_person,contact_number=contact_number,address=address,country=cotry,state=sts,city=citi)
+        org=2
+        hotl = userprofile(user_id=ho.id,organization_id=org,hotel_type=hoteltype,contact_person=contact_person,phone=contact_number,address=address,country=cotry,state=sts,city=citi)
         hotl.save()
-
     return redirect('dot_addhotel')
 
 # def admin_viewhotels(request):
