@@ -63,7 +63,7 @@ class city(models.Model):
     status = models.BooleanField(default=False)
 
 class hotel_type(models.Model):
-    type = models.CharField(max_length=200, default=None, blank=True)
+    types = models.CharField(max_length=200, default=None, blank=True)
     
 class organization(models.Model):
     title = models.CharField(max_length=200,blank=True, null=True)
