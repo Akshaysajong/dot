@@ -21,19 +21,19 @@
         <form class="form-horizontal" method="POST" action="/dot/add_destination_area/" enctype="multipart/form-data">{% csrf_token %}
           <div class="row">
             <div class="col-md-6">
-              <label for="inputState" class="form-label">Country</label>
-              <select id="destn_area" name="destn_area" class="form-select" onchange="get_country()">
+              <label for="inputcountry" class="form-label">Country</label>
+              <select id="country" name="country" class="form-select" onchange="get_country()">
                 <option value="0">Choose...</option>
-                {% for x in destn_area %}
+                {% for x in country %}
                 <option value="{{x.id}}">{{x.name}}</option>
                 {% endfor %}
               </select>
             </div>
             <div class="col-md-6">
               <label for="inputState" class="form-label">State</label>
-              <select id="destn_area" name="destn_area" class="form-select">
+              <select id="state" name="state" class="form-select">
                 <option value="0">Choose...</option>
-                {% for x in destn_area %}
+                {% for x in state %}
                 <option value="{{x.id}}">{{x.name}}</option>
                 {% endfor %}
               </select>
@@ -48,6 +48,15 @@
                 <label for="place">Place</label>
                 <input type="text" class="form-control" name="place" id="place" required><br>
               </div>
+              <div class="col-md-6">
+                <label for="lattitude">Lattitude</label>
+                <input type="text" class="form-control" name="lattitude" id="lattitude" required><br>
+              </div>
+              <div class="col-md-6">
+                <label for="longitude">Longitude</label>
+                <input type="" class="form-control" name="longitude" id="longitude" required><br>
+              </div>
+              
               <div class="col-md-6">
                 <label for="status">Status </label>
                 <input type="checkbox" id="status" name="status" value="True">

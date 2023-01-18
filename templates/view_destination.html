@@ -4,16 +4,16 @@
   <main class="col-md-9 bgmain ms-sm-auto col-lg-10 px-md-4">
      
       <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2">
-        <h1 class="h4">List of Destination
+        <h1 class="h4">List of Destinations
          <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/dot">Home</a></li>
-            <li class="breadcrumb-item">List of Destination</li>
+            <li class="breadcrumb-item">List of Destinations</li>
           </ol></h1>
         <div class="btn-toolbar mb-2 mb-md-0">
             <div class="btn-toolbar mb-2 mb-md-0">
               
                 <div class="btn-group me-2">
-                  <a href="/dot/add_destination"><button type="button" class="btn btn-sm">Add Destination Area</button></a>
+                  <a href="/dot/add_destination/"><button type="button" class="btn btn-sm">Add Destination Area</button></a>
                 </div>
                 
               </div>
@@ -39,11 +39,10 @@
             {% for x in destn_list %}
             <tr>
                 <td >{{x.name}}</td>
-               
-                <td >{{x.address}}</td>
-                <td >{{x.description}}</td>
-                <td >{{x.climate}}</td>
-                <td >{{x.culture}}</td>
+                <td >{{ x.address|truncatechars:40 }}</td>
+                <td >{{ x.description|truncatechars:40 }}</td>
+                <td >{{x.climate|truncatechars:40 }}</td>
+                <td >{{x.culture|truncatechars:40 }}</td>
                 <td class="pic"> <img  src="{{x.image.url}}" alt="" style="width:50px;height:60px;" ></td>
               
               <td>
@@ -54,7 +53,7 @@
             </td>
             <td>
               <div class="btn-group me-2">
-                <a href="/admin/editplace/?a={{x.id}}"><button class="btn-link border-0 bg-transparent text-body"><span data-feather="edit-2"></span></button> </a>
+                <a href="/dot/editdestination/?a={{x.id}}"><button class="btn-link border-0 bg-transparent text-body"><span data-feather="edit-2"></span></button> </a>
               </div>
             </td>
             <td>
