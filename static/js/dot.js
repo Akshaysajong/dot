@@ -66,6 +66,20 @@ function get_state()
 
 }
 
+
+
+// function confdelete(){
+//     var result = confirm("Are you sure to delete?");
+//     if(result){
+//       console.log("Deleted")
+//     }
+//     else{
+//       event.preventDefault();
+//     }
+//   }
+
+
+
 function delete_darea(id){
     jQuery.ajax({
         type : 'get',

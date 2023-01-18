@@ -115,31 +115,35 @@ def dot_addhotel(request):
     ctry=country.objects.all()
     st=state.objects.all()
     cty=city.objects.all()
-    return render(request,'addhotels.html',{'country':ctry,'states':st,'city':cty})
+    org=organization.objects.all()
+    return render(request,'addhotels.html',{'country':ctry,'states':st,'city':cty,'organization':org})
 
 def dot_addhoteldb(request):
     if request.method == "POST":
         hoteltype = request.POST['hoteltype']
         contact_person = request.POST['contact_person']
-        contact_number = request.POST['phone']
+        phone= request.POST['phone']
         user_name = request.POST['user_name']
         pwd = request.POST['pwd']
         address = request.POST['address']
-        cotry = request.POST['country']
-        sts = request.POST['state']
-        citi = request.POST['city']
+        cotry_id = request.POST['country'] 
+        sts_id = request.POST['state']
+        citi_id = request.POST['city']
+        organtn_id = request.POST['organization']
+        cnty = country.objects.all().filter(id=cotry_id)
+        sts = state.objects.all().filter(id=sts_id)
+        citi = city.objects.all().filter(id=citi_id)
+        
         ho = User(username=user_name, password=pwd)
         ho.save()
-        print(ho.id)
-        org=2
-        hotl = userprofile(user_id=ho.id,organization_id=org,hotel_type=hoteltype,contact_person=contact_person,phone=contact_number,address=address,country=cotry,state=sts,city=citi)
+        print(ho.id)  
+        hotl = userprofile(user_id=ho.id, organization_id=organtn_id, hotel_type=hoteltype, contact_person=contact_person, phone=phone, address=address, country=cnty[0].name, state=sts[0].name, city=citi[0].name)
         hotl.save()
     return redirect('dot_addhotel')
 
-# def admin_viewhotels(request):
-#     a= hotels.objects.all()
-#     return render(request, "admin/js_view.html",{'b':a})
-
+def dot_viewhotels(request):
+    upro= userprofile.objects.all()
+    return render(request, "viewhotels.html",{'hotel':upro})
 
 @login_required(login_url="/login")
 def ajax_country(request):
@@ -163,6 +167,9 @@ def ajax_state(request):
         dat.append({'name':x.name, 'id':x.id})
         print(dat)
     return JsonResponse(dat, safe=False)
+
+
+
 
 
 @login_required(login_url="/login")
