@@ -23,14 +23,15 @@
               <form class="form-horizontal" method="POST" action="/dot/addhoteldb/" enctype="multipart/form-data">{% csrf_token %}
                 <div class="row">
                  
-                    <div class="col-md-4">
-                      <label for=""  >Type:</label><br><br>
-                            <select name="hoteltype" id="hotel" style="height:30px;width: 100%;"  onchange="get_type()">
-                            <option value="0">--Select--</option>   
-                            <option value="3_star_hotels">3 Star Hotels</option>
-                            <option value="5_star_hotels">5 Star Hotels</option>  
+                  <div class="col-md-4">
+                    <label for="" >type</label><br><br>
+                            <select name="type" id="type" style="height:30px;width: 100%;" onchange="get_type()">
+                              <option value="0">--Select--</option>    
+                              {% for x in type %}
+                              <option value="{{x.id}}">{{x.type}}</option>
+                              {% endfor %}    
                             </select>
-                    </div>
+                  </div>
                     <div class="col-md-4">
                       <label for="title" class="form-label">Name</label>
                       <input type="text" class="form-control" name="name" value="" id="name" required><br>

@@ -61,7 +61,7 @@ class EntrollmentForm(UserCreationForm):
 
 
 
-class AddHotels(forms.ModelForm):
+class AddHotelsForm(forms.ModelForm):
     hotel_type = forms.ChoiceField(
                                 widget=forms.TextInput)
     name = forms.CharField(max_length=100,required=True,
@@ -72,8 +72,7 @@ class AddHotels(forms.ModelForm):
                                 widget=forms.TextInput(attrs={'class': 'form-control'}))
     username = forms.CharField(max_length=100,required=True,
                                 widget=forms.TextInput(attrs={'class': 'form-control'}))
-    password = forms.CharField(max_length=100,required=True,
-                                widget=forms.PasswordInput(attrs={'class': 'form-control', 'id':'txtPassword'}),validators=[validate_password])
+    password1= forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
     address = forms.CharField(max_length=100,required=True,
                                 widget=forms.TextInput(attrs={'class': 'form-control'}))
     country = forms.ChoiceField(
@@ -85,4 +84,11 @@ class AddHotels(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['username','first_name', 'password']
+        fields = ['username','first_name', 'password','groups']
+    groups = forms.ModelChoiceField(
+        queryset=Group.objects.all(),
+        to_field_name='id',
+       
+        required=True,  
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )

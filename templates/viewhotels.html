@@ -4,7 +4,7 @@
   <main class="col-md-9 bgmain ms-sm-auto col-lg-10 px-md-4">
      
       <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2">
-        <h1 class="h4">View hotels
+        <h1 class="h4">VIEW HOTELS
          <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/dot">Home</a></li>
             <li class="breadcrumb-item">View hotels</li>
@@ -39,8 +39,8 @@
               {% for x in hotel %}
               <tbody>
                 <tr>
-                    <td >{{x.user.username}}</td>
                     <td >{{x.hotel_type}}</td>
+                    <td >{{x.user.username}}</td>
                     <td >{{x.phone}}</td>
                     <td >{{x.address}}</td>
                     <td >{{x.country}}</td>
@@ -48,16 +48,17 @@
                     <td >{{x.city}}</td>
                     <td >{{x.organization.org_type}}</td>                  
                     <td ></td> 
-                <td>
-                    <!-- <div class="btn-group me-2">
-                        <a href="/dot/edithotel/?a={{x.id}}"><button class="btn-link border-0 bg-transparent text-body"><span data-feather="edit-2"></span></button> </a>
-                      </div>
-                    </td>
-                    <td>
-                      <div class="btn-group me-2">
-                        <a href="/dot/removehotel/?a={{x.id}}"><button class="btn-link border-0 bg-transparent text-body" onclick="confdelete()"><span data-feather="trash-2"></span></button></a>
-                      </div>
-                    </td>                   -->
+        <td>
+          <div class="btn-group me-2">
+            <a href="/dot/edit_hotel/?a={{x.id}}"><button class="btn-link border-0 bg-transparent text-body" ><span data-feather="edit-2"></span></button> </a>
+          </div> 
+        </td>
+        <td>
+          <div class="btn-group me-2">
+           
+            <button class="btn-link border-0 bg-transparent text-body" type="submit" onclick="delete_hotel('{{x.user_id}}')"><span data-feather="trash-2" ></span></button>
+          </div>
+        </td>
                 </tr>
               </tbody>
               {% endfor %}

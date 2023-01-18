@@ -6,8 +6,9 @@ from .models import *
 from django.contrib.auth.models import User, Group, Permission
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth import update_session_auth_hash
-from .form import RegisterForm,EntrollmentForm
+from .form import RegisterForm,AddHotelsForm
 from django.http import JsonResponse
+from django.contrib.auth.hashers import make_password
 
 
 def login_user(request):
@@ -49,7 +50,6 @@ def dot_adduser(request):
             user = form.save()
             username = form.cleaned_data.get('username')
             print(username)
-            # groups = form.cleaned_data.get('groups')
             gr_id = request.POST.getlist('groups')
             idd= gr_id[0]
             print(gr_id)
@@ -77,20 +77,7 @@ def dot_add_groups(request):
 
 @login_required(login_url="/login")
 def dot_viewusers(request):
-    # if request.user.is_authenticated:
-    # u= User.objects.filter(is_superuser = '0')
-        # v= request.user.is_authenticated
         user = request.user
-        # userquery = User.objects.all()
-        # user_group = ''
-        # for x in userquery :
-        #     userid= x.id
-        #     print(x.groups)
-        #     print('########################################################')
-        #     group_name=user.groups.all().filter(user=userid)
-        #     print(group_name)
-        #     user_group = group_name[0].name  
-        #     print(user_group)
         if user.is_superuser:
             u= User.objects.filter(is_superuser = '0')
             g= user.groups.filter(user=user.id)
@@ -118,6 +105,7 @@ def dot_addhotel(request):
     org=organization.objects.all()
     return render(request,'addhotels.html',{'country':ctry,'states':st,'city':cty,'organization':org})
 
+# add hotels
 def dot_addhoteldb(request):
     if request.method == "POST":
         hoteltype = request.POST['hoteltype']
@@ -133,26 +121,54 @@ def dot_addhoteldb(request):
         cnty = country.objects.all().filter(id=cotry_id)
         sts = state.objects.all().filter(id=sts_id)
         citi = city.objects.all().filter(id=citi_id)
-        
+        password = 'PASSWORD_HERE'
+        form = AddHotelsForm
+        if request.method == "POST":
+         form = RegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            username = form.cleaned_data.get('username')
+            print(username)
+        # if form.is_valid():
+        #     user = form.save()
+        form.password = make_password(password)
+        # form.save()
         ho = User(username=user_name, password=pwd)
         ho.save()
-        print(ho.id)  
+        print(ho.id) 
+        gr_id = request.POST.getlist('groups')
+        # idd= gr_id[0]
+        print(gr_id)
+        for x in  gr_id:
+                print(x)
+                # user.groups.add(x)
         hotl = userprofile(user_id=ho.id, organization_id=organtn_id, hotel_type=hoteltype, contact_person=contact_person, phone=phone, address=address, country=cnty[0].name, state=sts[0].name, city=citi[0].name)
         hotl.save()
+
     return redirect('dot_addhotel')
 
-<<<<<<< HEAD
+# view hotels
 def dot_viewhotels(request):
     upro= userprofile.objects.all()
     return render(request, "viewhotels.html",{'hotel':upro})
 
-=======
-# def admin_viewhotels(request):
-#     a= hotels.objects.all()
-#     return render(request, "admin/js_view.html",{'b':a})
+#edit hotel
+@login_required(login_url="/login")
+def dot_edit_hotel(request):
+    ed_id = request.GET['a']
+    print(ed_id)
+    htl = userprofile.objects.all().filter(id=ed_id)
+    return render(request, "edit_hotel.html",{'htl':htl})
+
+#delete hotel
+@login_required(login_url="/login")
+def delete_hotel(request):
+    d_id = request.GET['d_id']
+    htl = userprofile.objects.all().filter(id=d_id).delete()
+    dat = ['hotel deleted']
+    return JsonResponse(dat, safe=False)
 
 #ajax get country
->>>>>>> 292c46737955541a109a1213a4c45066514191a6
 @login_required(login_url="/login")
 def ajax_country(request):
         c_id = request.GET['country']
@@ -176,14 +192,8 @@ def ajax_state(request):
         print(dat)
     return JsonResponse(dat, safe=False)
 
-<<<<<<< HEAD
-
-
-
-
-=======
 #add destinstion area template display
->>>>>>> 292c46737955541a109a1213a4c45066514191a6
+
 @login_required(login_url="/login")
 def dot_destination_area(request):
     cntry = country.objects.all()
