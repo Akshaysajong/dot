@@ -140,7 +140,7 @@ def dot_addhoteldb(request):
 #     a= hotels.objects.all()
 #     return render(request, "admin/js_view.html",{'b':a})
 
-
+#ajax get country
 @login_required(login_url="/login")
 def ajax_country(request):
         c_id = request.GET['country']
@@ -153,7 +153,7 @@ def ajax_country(request):
         return JsonResponse(dat, safe=False)
 
 
-
+#ajax get states
 @login_required(login_url="/login")
 def ajax_state(request):
     s_id = request.GET['state']
@@ -164,13 +164,14 @@ def ajax_state(request):
         print(dat)
     return JsonResponse(dat, safe=False)
 
-
+#add destinstion area template display
 @login_required(login_url="/login")
 def dot_destination_area(request):
     cntry = country.objects.all()
     stat = state.objects.all()
     return render(request, "destinationarea.html",{'country':cntry, 'state':stat})
 
+#save destinatin area to database
 @login_required(login_url="/login")
 def dot_add_destination_area(request):
     if request.method == 'POST':
@@ -187,29 +188,35 @@ def dot_add_destination_area(request):
         d_area.save()
     return redirect("dot_destination_area")
 
-
-
+#edit destination area
+@login_required(login_url="/login")
 def dot_edit_destinationarea(request):
     ed_id = request.GET['a']
     destn = destination_area.objects.all().filter(id=ed_id)
-    return render(request, "edit_destinations.html",{'destn':destn})
+    return render(request, "edit_destinationarea.html",{'destn':destn})
 
+#delete destination area
+@login_required(login_url="/login")
 def delete_darea(request):
     d_id = request.GET['d_id']
-    destn = destination_area.objects.all().filter(id=d_id)
+    destn = destination_area.objects.all().filter(id=d_id).delete()
     dat = ['Destination area deleted']
     return JsonResponse(dat, safe=False)
 
+#view destination area list
 @login_required(login_url="/login")
 def dot_view_destinationarea(request):
     destn_area = destination_area.objects.all()
     return render(request, "view_destinationarea.html",{'destn_area':destn_area})
 
+#add destination template
 @login_required(login_url="/login")
 def dot_destinations(request):
     destn_area = destination_area.objects.all()
     return render(request, "add_destinations.html",{'destn_area':destn_area})
 
+#save destination to database 
+@login_required(login_url="/login")
 def dot_add_destination(request):
     if request.method ==  'POST':
         destn = request.POST['destn']
@@ -220,14 +227,17 @@ def dot_add_destination(request):
         description = request.POST['description']
         climate = request.POST['climate']
         culture = request.POST['culture']
-        dstn = destinstions(name=destn, d_area_id=destn_area, address=address, description=description, climate=climate, culture=culture)
+        lattitude = request.POST['lattitude']
+        longitude = request.POST['culture']
+        dstn = destinstions(name=destn, d_area_id=destn_area, address=address, description=description, climate=climate, culture=culture, longitude=longitude, lattitude=lattitude)
         dstn.save()
         for x in img:
             b=destination_img(destinstions_id=dstn.id, image=x)
-            # b= PostImage(places_idd_id=a.id,images=img)
             b.save()
     return redirect("dot_destinations")
 
+#view destination list
+@login_required(login_url="/login")
 def dot_view_destination(request):
     destn = destinstions.objects.all()
     print(destn)
@@ -244,8 +254,13 @@ def dot_view_destination(request):
         if img:
             im = img[0].image
         destn_list.append({'id':x.id, 'name':x.name,'address':x.address , 'description':x.description,'climate':x.climate,'culture':x.culture, 'image':im})
-
     return render(request, "view_destination.html",{'destn_list':destn_list})
+
+def dot_editdestination(request):
+    e_id = request.GET['a']
+    print(e_id)
+    destn = destinstions.objects.all().filter(id=e_id)
+    return render(request, 'edit_destination.html', {'destn':destn})
 
 
 @login_required(login_url="/login")

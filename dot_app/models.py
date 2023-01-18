@@ -20,8 +20,9 @@ class destinstions(models.Model):
     d_area = models.ForeignKey(destination_area, default=None, on_delete=models.CASCADE)
     address = models.CharField(max_length=200, default=None, blank=True)
     description = models.TextField()
-    climate = models.TextField()
+    
     culture = models.TextField()
+    climate = models.TextField()
     lattitude = models.DecimalField(max_digits=8, decimal_places=3, default=None, blank=True)
     longitude = models.DecimalField(max_digits=8, decimal_places=3, default=None, blank=True)
     status = models.BooleanField(default=False)
