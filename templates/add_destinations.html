@@ -21,18 +21,19 @@
         <form class="form-horizontal" method="POST" action="/dot/add_destination/" enctype="multipart/form-data">{% csrf_token %}
           <div class="row">
 
-              <div class="col-md-4">
-                <label for="title" class="form-label">Name</label>
-                <input type="text" class="form-control" name="destn" id="destn" required><br>
-              </div>
+              
               <div class="col-md-4">
                 <label for="inputState" class="form-label">Destination Area</label>
                 <select id="destn_area" name="destn_area" class="form-select">
                   <option value="0">Choose...</option>
                   {% for x in destn_area %}
-                  <option value="{{x.id}}">{{x.name}}</option>
+                  <option value="{{x.id}}">{{x.place}}</option>
                   {% endfor %}
                 </select>
+              </div>
+              <div class="col-md-4">
+                <label for="title" class="form-label">Destination</label>
+                <input type="text" class="form-control" name="destn" id="destn" required><br>
               </div>
               <div class="col-md-4">
                 <label for="images">Choose Images</label><br>

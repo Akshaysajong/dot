@@ -150,7 +150,9 @@ def ajax_state(request):
 
 @login_required(login_url="/login")
 def dot_destination_area(request):
-    return render(request, "destinationarea.html")
+    cntry = country.objects.all()
+    stat = state.objects.all()
+    return render(request, "destinationarea.html",{'country':cntry, 'state':stat})
 
 @login_required(login_url="/login")
 def dot_add_destination_area(request):
@@ -158,7 +160,13 @@ def dot_add_destination_area(request):
         destn_area = request.POST['destn_area']
         place = request.POST['place']
         statu = request.POST['status']
-        d_area = destination_area(name=destn_area, place=place, status=statu)
+        cuntry_id = request.POST['country']
+        state_id = request.POST['state']
+        coutry = country.objects.all().filter(id = cuntry_id)
+        stat = state.objects.all().filter(id = state_id)
+        lattitude = request.POST['lattitude']
+        longitude = request.POST['longitude']
+        d_area = destination_area(name=destn_area, place=place, status=statu, country=coutry[0].name, state=stat[0].name, lattitude=lattitude, longitude=longitude)
         d_area.save()
     return redirect("dot_destination_area")
 

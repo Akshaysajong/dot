@@ -4,6 +4,8 @@ from django.contrib.auth.models import AbstractUser, User
 class destination_area(models.Model):
     name = models.CharField(max_length=200, default=None, blank=True)
     place = models.CharField(max_length=100, default=None, blank=True)
+    country = models.CharField(max_length=100, default=None, blank=True)
+    state = models.CharField(max_length=100, default=None, blank=True) 
     lattitude = models.DecimalField(max_digits=8, decimal_places=3, default=None, blank=True)
     longitude = models.DecimalField(max_digits=8, decimal_places=3, default=None, blank=True)
     status = models.BooleanField()
