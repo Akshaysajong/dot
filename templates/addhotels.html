@@ -20,12 +20,12 @@
             <h5 class="text-uppercase fw-bold mb-4 col-8">&nbsp;</h5>
             <div class="row" style="margin-left: .5rem;">
 
-              <form class="form-horizontal" method="POST" action="/dot/addhotel//" enctype="multipart/form-data">{% csrf_token %}
+              <form class="form-horizontal" method="POST" action="/dot/addhoteldb/" enctype="multipart/form-data">{% csrf_token %}
                 <div class="row">
                  
                     <div class="col-md-4">
                       <label for=""  >Type:</label><br><br>
-                            <select name="cars" id="hotel" style="height:30px;width: 100%;"  onchange="get_type()">
+                            <select name="hoteltype" id="hotel" style="height:30px;width: 100%;"  onchange="get_type()">
                             <option value="0">--Select--</option>   
                             <option value="3_star_hotels">3 Star Hotels</option>
                             <option value="5_star_hotels">5 Star Hotels</option>  
@@ -41,7 +41,7 @@
                     </div>
                     <div class="col-md-4">
                       <label for="title" class="form-label">Contact Number</label>
-                      <input type="text" class="form-control" name="contact_number" value="" id="contact_number" required><br>
+                      <input type="text" class="form-control" name="phone" value="" id="phone" required><br>
                     </div>
                     <div class="col-md-4">
                       <label for="title" class="form-label">User Name</label>
@@ -58,7 +58,7 @@
                     
                     <div class="col-md-4">
                       <label for="" >Country</label><br>
-                              <select name="" id="country" class="form-control" onchange="get_country()">
+                              <select name="country" id="country" class="form-control" onchange="get_country()">
                                 <option value="0">--Select--</option>    
                                 {% for x in country %}
                                 <option value="{{x.id}}">{{x.name}}</option>
@@ -67,7 +67,7 @@
                     </div>
                     <div class="col-md-4">
                       <label for="" >State</label><br><br>
-                              <select name="" id="state" style="height:30px;width: 100%;" onchange="get_state()">
+                              <select name="state" id="state" style="height:30px;width: 100%;" onchange="get_state()">
                                 <option value="0">--Select--</option>    
                                 {% for x in states %}
                                 <option value="{{x.id}}">{{x.name}}</option>
@@ -76,7 +76,7 @@
                     </div>
                     <div class="col-md-4">
                       <label for="" >City</label><br><br>
-                              <select name="" id="city" style="height:30px;width: 100%;">
+                              <select name="city" id="city" style="height:30px;width: 100%;">
                                 <option value="0">--Select--</option>    
                                 {% for x in city %}
                                 <option value="{{x.id}}">{{x.name}}</option>

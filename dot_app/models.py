@@ -107,6 +107,8 @@ class userprofile(models.Model):
     user = models.ForeignKey(User, default=None, on_delete=models.CASCADE)
     phone = models.CharField(max_length=200,blank=True, null=True)
     address = models.CharField(max_length=200,blank=True, null=True)
+    hotel_type = models.CharField(max_length=200,blank=True, null=True)
+    contact_person = models.CharField(max_length=200,blank=True, null=True)
     organization = models.ForeignKey(organization, default=None, on_delete=models.CASCADE) 
     city = models.CharField(max_length=200,blank=True, null=True)
     state = models.CharField(max_length=200,blank=True, null=True)
