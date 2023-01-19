@@ -274,7 +274,6 @@ def dot_add_destination(request):
 @login_required(login_url="/login")
 def dot_view_destination(request):
     destn = destinstions.objects.all()
-  
     destn_list=[]
     for x in destn:
         # print(x.d_area.name)
@@ -313,6 +312,7 @@ def dot_update_destination(request):
         culture = request.POST['culture']
         lattitude = request.POST['lattitude']
         longitude = request.POST['longitude']
+        pic = request.FILES.getlist('image')
         images = request.POST['deletedfiles']
         img = [int(item) for item in images.split(', ') if item.isdigit()]
         length=len(img)  
@@ -328,6 +328,9 @@ def dot_update_destination(request):
         
         print(count)
         destinstions.objects.all().filter(id=d_id).update(name=destn,  address=address, description=description, climate=climate, culture=culture, longitude=longitude, lattitude=lattitude)
+        for x in pic:
+            ad_img=destination_img(destinstions_id=d_id, image=x)
+            ad_img.save()
     return redirect('dot_view_destination')
 
 @login_required(login_url="/login")

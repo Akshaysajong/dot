@@ -58,8 +58,11 @@
                 <label for="longitude">Longitude</label>
                 <input type="text" class="form-control" name="longitude" id="longitude" value="{{x.longitude}}" required><br>
               </div>
-              
-              <div class="col-md-4">
+              <div class="col-md-6">
+                <label for="images">Choose Images</label><br>
+                  <input type="file" class="form-control"  placeholder="" name="image" id="image" multiple >
+                </div> 
+              <div class="col-md-6">
                 <label for="status">Status </label>
                 <input type="checkbox" id="status" name="status" value="1" {% if x.status %}checked{% endif %}/>
                 
