@@ -68,15 +68,15 @@ function get_state()
 
 
 
-function delete_hotel(){
-    var result = confirm("Are you sure to delete?");
-    if(result){
-      console.log("Deleted")
-    }
-    else{
-      event.preventDefault();
-    }
-  }
+// function delete_hotel(){
+//     var result = confirm("Are you sure to delete?");
+//     if(result){
+//       console.log("Deleted")
+//     }
+//     else{
+//       event.preventDefault();
+//     }
+//   }
 
   
 function delete_hotel(id){
@@ -90,6 +90,7 @@ function delete_hotel(id){
         success: function(data)
         {
             alert('Hotel deleted')
+            window.location.reload()
             
         }
     })

@@ -72,7 +72,7 @@ class AddHotelsForm(forms.ModelForm):
                                 widget=forms.TextInput(attrs={'class': 'form-control'}))
     username = forms.CharField(max_length=100,required=True,
                                 widget=forms.TextInput(attrs={'class': 'form-control'}))
-    password1= forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    password= forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
     address = forms.CharField(max_length=100,required=True,
                                 widget=forms.TextInput(attrs={'class': 'form-control'}))
     country = forms.ChoiceField(

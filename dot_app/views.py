@@ -108,11 +108,11 @@ def dot_addhotel(request):
 # add hotels
 def dot_addhoteldb(request):
     if request.method == "POST":
-        hoteltype = request.POST['hoteltype']
+        hotel_type = request.POST['hotel_type']
         contact_person = request.POST['contact_person']
-        phone= request.POST['phone']
-        user_name = request.POST['user_name']
-        pwd = request.POST['pwd']
+        phone= request.POST['contact_number']
+        name = request.POST['name']
+        password = request.POST['password']
         address = request.POST['address']
         cotry_id = request.POST['country'] 
         sts_id = request.POST['state']
@@ -124,16 +124,16 @@ def dot_addhoteldb(request):
         password = 'PASSWORD_HERE'
         form = AddHotelsForm
         if request.method == "POST":
-         form = RegisterForm(request.POST)
+            form = AddHotelsForm(request.POST)
         if form.is_valid():
             user = form.save()
-            username = form.cleaned_data.get('username')
-            print(username)
+            name = form.cleaned_data.get('username')
+            print(name)
         # if form.is_valid():
         #     user = form.save()
         form.password = make_password(password)
         # form.save()
-        ho = User(username=user_name, password=pwd)
+        ho = User(username=name, password=password)
         ho.save()
         print(ho.id) 
         gr_id = request.POST.getlist('groups')
@@ -142,7 +142,7 @@ def dot_addhoteldb(request):
         for x in  gr_id:
                 print(x)
                 # user.groups.add(x)
-        hotl = userprofile(user_id=ho.id, organization_id=organtn_id, hotel_type=hoteltype, contact_person=contact_person, phone=phone, address=address, country=cnty[0].name, state=sts[0].name, city=citi[0].name)
+        hotl = userprofile(user_id=ho.id, organization_id=organtn_id, hotel_types=hotel_type, contact_person=contact_person, contact_number=phone, address=address, country=cnty[0].name, state=sts[0].name, city=citi[0].name)
         hotl.save()
 
     return redirect('dot_addhotel')
@@ -150,7 +150,9 @@ def dot_addhoteldb(request):
 # view hotels
 def dot_viewhotels(request):
     upro= userprofile.objects.all()
+ 
     return render(request, "viewhotels.html",{'hotel':upro})
+
 
 #edit hotel
 @login_required(login_url="/login")
@@ -164,7 +166,11 @@ def dot_edit_hotel(request):
 @login_required(login_url="/login")
 def delete_hotel(request):
     d_id = request.GET['d_id']
-    htl = userprofile.objects.all().filter(id=d_id).delete()
+    print(d_id)
+    htl = userprofile.objects.all().filter(id=d_id)
+    print(htl[0].user.id)
+    User.objects.all().filter(id=htl[0].user.id).delete()
+    htl.delete()
     dat = ['hotel deleted']
     return JsonResponse(dat, safe=False)
 
