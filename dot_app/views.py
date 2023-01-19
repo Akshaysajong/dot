@@ -99,25 +99,27 @@ def dot_add_groups_permissions(request):
 #hoteladmin add hotels
 @login_required(login_url="/login")
 def dot_addhotel(request):
+    h_type=hotel_type.objects.all()
     ctry=country.objects.all()
     st=state.objects.all()
     cty=city.objects.all()
     org=organization.objects.all()
-    return render(request,'addhotels.html',{'country':ctry,'states':st,'city':cty,'organization':org})
+    return render(request,'addhotels.html',{'country':ctry,'states':st,'city':cty,'organization':org,'hotel_type':h_type})
 
 # add hotels
 def dot_addhoteldb(request):
     if request.method == "POST":
-        hotel_type = request.POST['hotel_type']
+        h_type_id = request.POST['hotel_type']
         contact_person = request.POST['contact_person']
-        phone= request.POST['contact_number']
+        phone= request.POST['phone']
         name = request.POST['name']
-        password = request.POST['password']
+        password = request.POST['pwd']
         address = request.POST['address']
         cotry_id = request.POST['country'] 
         sts_id = request.POST['state']
         citi_id = request.POST['city']
         organtn_id = request.POST['organization']
+        h_type = hotel_type.objects.all().filter(id=h_type_id)
         cnty = country.objects.all().filter(id=cotry_id)
         sts = state.objects.all().filter(id=sts_id)
         citi = city.objects.all().filter(id=citi_id)
@@ -142,7 +144,7 @@ def dot_addhoteldb(request):
         for x in  gr_id:
                 print(x)
                 # user.groups.add(x)
-        hotl = userprofile(user_id=ho.id, organization_id=organtn_id, hotel_types=hotel_type, contact_person=contact_person, contact_number=phone, address=address, country=cnty[0].name, state=sts[0].name, city=citi[0].name)
+        hotl = userprofile(user_id=ho.id, organization_id=organtn_id, contact_person=contact_person, phone=phone, address=address,hotel_type=h_type[0].types, country=cnty[0].name, state=sts[0].name, city=citi[0].name)
         hotl.save()
 
     return redirect('dot_addhotel')
@@ -150,7 +152,6 @@ def dot_addhoteldb(request):
 # view hotels
 def dot_viewhotels(request):
     upro= userprofile.objects.all()
- 
     return render(request, "viewhotels.html",{'hotel':upro})
 
 
@@ -161,6 +162,11 @@ def dot_edit_hotel(request):
     print(ed_id)
     htl = userprofile.objects.all().filter(id=ed_id)
     return render(request, "edit_hotel.html",{'htl':htl})
+
+@login_required(login_url="/login")
+def dot_edit_hoteldb(request):
+    return render(request, "edit_hotel.html")
+
 
 #delete hotel
 @login_required(login_url="/login")
@@ -173,6 +179,31 @@ def delete_hotel(request):
     htl.delete()
     dat = ['hotel deleted']
     return JsonResponse(dat, safe=False)
+
+# update hotel
+def dot_update_hotel(request):
+    if request.method == 'POST':
+        h_type_id = request.POST['hotel_type']
+        # contact_person = request.POST['contact_person']
+        phone= request.POST['phone']
+        name = request.POST['name']
+        password = request.POST['pwd']
+        address = request.POST['address']
+        cotry_id = request.POST['country'] 
+        sts_id = request.POST['state']
+        citi_id = request.POST['city']
+        organtn_id = request.POST['organization']
+        h_type = hotel_type.objects.all().filter(id=h_type_id)
+        cnty = country.objects.all().filter(id=cotry_id)
+        sts = state.objects.all().filter(id=sts_id)
+        citi = city.objects.all().filter(id=citi_id)
+        ho = User(username=name, password=password)
+        ho.save()
+        print(ho.id) 
+        userprofile.objects.all().update(user_id=ho.id, organization_id=organtn_id, phone=phone, address=address,hotel_type=h_type[0].types, country=cnty[0].name, state=sts[0].name, city=citi[0].name)
+        # hotl.save()
+    return redirect('dot_viewhotels')
+
 
 #ajax get country
 @login_required(login_url="/login")
@@ -199,7 +230,6 @@ def ajax_state(request):
     return JsonResponse(dat, safe=False)
 
 #add destinstion area template display
-
 @login_required(login_url="/login")
 def dot_destination_area(request):
     cntry = country.objects.all()
@@ -256,7 +286,6 @@ def dot_add_destination(request):
     if request.method ==  'POST':
         destn = request.POST['destn']
         destn_area = request.POST['destn_area']
-        print(destn_area)
         img = request.FILES.getlist('image')
         address = request.POST['address']
         description = request.POST['description']
@@ -275,28 +304,60 @@ def dot_add_destination(request):
 @login_required(login_url="/login")
 def dot_view_destination(request):
     destn = destinstions.objects.all()
-    print(destn)
+  
     destn_list=[]
-    #c = PostImage.objects.all()
     for x in destn:
-        print('#################################################')
-        # print(x.place_name)
-        print(x.id)
+        # print(x.d_area.name)
         img= destination_img.objects.all().filter(destinstions=x.id)
         # print('>>>>>>>>>>>>>>')
         # print(img[0].id)
         im =''
         if img:
             im = img[0].image
-        destn_list.append({'id':x.id, 'name':x.name,'address':x.address , 'description':x.description,'climate':x.climate,'culture':x.culture, 'image':im})
+        destn_list.append({'id':x.id, 'name':x.name,'address':x.address , 'description':x.description,'climate':x.climate,'culture':x.culture, 'image':im, 'd_area':x.d_area.name})
     return render(request, "view_destination.html",{'destn_list':destn_list})
+
+
+def delete_destination(request):
+    d_id = request.GET['d_id']
+    print(d_id)
+
+    destinstions.objects.all().filter(id=d_id).delete()
+    dat = ['Destination area deleted']
+    return JsonResponse(dat, safe=False)  
 
 def dot_editdestination(request):
     e_id = request.GET['a']
-    print(e_id)
     destn = destinstions.objects.all().filter(id=e_id)
-    return render(request, 'edit_destination.html', {'destn':destn})
+    img = destination_img.objects.all().filter(destinstions=e_id)
+    return render(request, 'edit_destination.html', {'destn':destn, 'img':img})
 
+def dot_update_destination(request):
+    if request.method == 'POST':
+        d_id = request.POST['d_id'] 
+        destn_area = request.POST['destn_area']  
+        destn = request.POST['destn']     
+        address = request.POST['address']
+        description = request.POST['description']
+        climate = request.POST['climate']
+        culture = request.POST['culture']
+        lattitude = request.POST['lattitude']
+        longitude = request.POST['longitude']
+        images = request.POST['deletedfiles']
+        img = [int(item) for item in images.split(', ') if item.isdigit()]
+        length=len(img)  
+        count=destination_img.objects.all().filter(destinstions=d_id).count()
+        if length < count:
+            for x in img:
+                c=destination_img.objects.all().get(id=x)
+                # print(c)
+                if c.image:
+                    c.image.delete()
+                c.delete()
+                    
+        print(count)
+        destinstions.objects.all().filter(id=d_id).update(name=destn,  address=address, description=description, climate=climate, culture=culture, longitude=longitude, lattitude=lattitude)
+    return redirect('dot_view_destination')
 
 @login_required(login_url="/login")
 def dot_content(request):

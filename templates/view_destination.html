@@ -26,6 +26,7 @@
         
           <thead>
             <tr>
+              <th >Destination Area</th>
               <th >Destination</th>
               <th scope="col">Address</th>
               <th scope="col">Description</th>
@@ -38,6 +39,7 @@
           <tbody>
             {% for x in destn_list %}
             <tr>
+                <td >{{x.d_area}}</td>
                 <td >{{x.name}}</td>
                 <td >{{ x.address|truncatechars:40 }}</td>
                 <td >{{ x.description|truncatechars:40 }}</td>
@@ -58,7 +60,8 @@
             </td>
             <td>
               <div class="btn-group me-2">
-                <a href="/admin/removeplaces/?a={{x.id}}"><button class="btn-link border-0 bg-transparent text-body" onclick="confdelete()"><span data-feather="trash-2"></span></button></a>
+                <!-- <a href="/admin/removeplaces/?a={{x.id}}"><button class="btn-link border-0 bg-transparent text-body" onclick="deletedestination()"><span data-feather="trash-2"></span></button></a> -->
+                <button class="btn-link border-0 bg-transparent text-body" type="submit" onclick="delete_destination('{{x.id}}')"><span data-feather="trash-2" ></span></button>
               </div>
             </td>
             <!-- <td><button class="btn-link border-0 bg-transparent text-body"><span data-feather="edit-2"></span></button> <button class="btn-link border-0 bg-transparent text-body"><span data-feather="trash-2"></span></button> <button class="btn-link border-0 bg-transparent text-body"><span data-feather="download"></span></button></td> -->

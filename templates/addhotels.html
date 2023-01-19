@@ -24,13 +24,13 @@
                 <div class="row">
                  
                   <div class="col-md-4">
-                    <label for="" >Type:</label><br><br>
-                            <select name="hotel_types" id="hotel_types" style="height:30px;width: 100%;">
-                              <option value="3_star_hotels">3 Star Hotel</option>
-                              <option value="5_star_hotels">5 Star Hotel</option>
-                              <option value="4 Star Hotel">4 Star Hotel</option>
-                              
-                            </select>
+                    <label for="" >Hotel type</label><br>
+                            <select name="hotel_type" id="hotel_type" class="form-control" onchange="">
+                              <option value="0">--Select--</option>    
+                              {% for x in hotel_type %}
+                              <option value="{{x.id}}">{{x.types}}</option>
+                              {% endfor %}
+                            </select>  
                   </div>
                   
                     <div class="col-md-4">

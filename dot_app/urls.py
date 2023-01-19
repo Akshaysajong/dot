@@ -18,7 +18,9 @@ urlpatterns = [
     path('dot/addhoteldb/', views.dot_addhoteldb, name='dot_addhoteldb'),
     path('dot/viewhotels/', views.dot_viewhotels, name='dot_viewhotels'),
     path('dot/edit_hotel/', views.dot_edit_hotel, name='dot_edit_hotel'),
+    path('dot/edit_hoteldb/', views.dot_edit_hoteldb, name='dot_edit_hoteldb'),
     path('delete_hotel/', views.delete_hotel, name='delete_hotel'),
+    path('dot/update_hotel/', views.dot_update_hotel, name='dot_update_hotel'),
     path('ajax_country/', views.ajax_country, name='ajax_country'),
     path('ajax_state/', views.ajax_state, name='ajax_state'),
     path('dot/content/', views.dot_content, name='dot_content'),
@@ -33,6 +35,7 @@ urlpatterns = [
     path('dot/edit_destinationarea/', views.dot_edit_destinationarea, name='dot_edit_destinationarea'),
     path('delete_darea/', views.delete_darea, name='delete_darea'),
     path('dot/editdestination/', views.dot_editdestination, name='dot_editdestination'),
-    
+    path('delete_destination/', views.delete_destination, name='delete_destination'),
+    path('dot/update_destination/', views.dot_update_destination, name='dot_update_destination'),
 
 ]

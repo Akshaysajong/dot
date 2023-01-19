@@ -1,15 +1,4 @@
 
-// $(document).ready(function()
-// {
-// var country = $("#country");
-// var state = $("#state");
-// var city = $('#city');
-// var $options = state.find('option');
-
-// country.on('change',function(){
-//         state.html($options.filter('[value="'+ this.value +'"]'));
-//     }).trigger('change');
-// });
 
 function confdelete(){
     var result = confirm("Are you sure to delete?");
@@ -68,16 +57,6 @@ function get_state()
 
 
 
-// function delete_hotel(){
-//     var result = confirm("Are you sure to delete?");
-//     if(result){
-//       console.log("Deleted")
-//     }
-//     else{
-//       event.preventDefault();
-//     }
-//   }
-
   
 function delete_hotel(id){
     jQuery.ajax({
@@ -108,7 +87,40 @@ function delete_darea(id){
         success: function(data)
         {
             alert('Destination area deleted')
+            window.location.reload()
             
         }
     })
+}
+
+function delete_destination(id){
+    jQuery.ajax({
+        type : 'get',
+        url : "/delete_destination/",
+        data : {
+            d_id : id
+        },
+        dataType : 'jason',
+        success: function(data)
+        {
+            alert('Destination area deleted')
+            window.location.reload()
+            
+        }
+    })
+
+}
+
+
+function confdelete(obj, id) {
+var result = confirm("Are you sure to delete?");
+console.log(result.length)
+var count= 0
+console.log(count)
+if(result){
+
+    a=document.getElementById('deletedfiles').value = document.getElementById('deletedfiles').value+', '+id;
+    console.log(a)
+    obj.parentElement.parentElement.style.display = 'none';
+}
 }

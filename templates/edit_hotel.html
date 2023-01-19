@@ -18,7 +18,7 @@
       <div class="card p-4 rounded-1 border-0 shadow">
         <h5 class="text-uppercase fw-bold mb-4 col-8">&nbsp;</h5>
 
-        <form class="form-horizontal" method="POST" action="/dot/addhoteldb/" enctype="multipart/form-data">{% csrf_token %}
+        <form class="form-horizontal" method="POST" action="/dot/viewhotels/" enctype="multipart/form-data">{% csrf_token %}
           {% for x in htl %}
           <div class="row">
               <div class="col-md-6">
@@ -31,7 +31,7 @@
               </div>
               <div class="col-md-6">
                 <label for="contact_number">contact_number</label>
-                <input type="text" class="form-control" name="contact_number" id="contact_number" value="{{x.phone}}" required><br>
+                <input type="text" class="form-control" name="phone" id="phone" value="{{x.phone}}" required><br>
               </div>
               <div class="col-md-6">
                 <label for="address">address</label>
