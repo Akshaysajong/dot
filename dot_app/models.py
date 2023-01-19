@@ -61,8 +61,8 @@ class city(models.Model):
     state_id = models.ForeignKey(state, default=None, on_delete=models.CASCADE)  
     status = models.BooleanField(default=False)
 
-# class hotel_type(models.Model):
-#     types = models.CharField(max_length=200, default=None, blank=True)
+class hotel_type(models.Model):
+    types = models.CharField(max_length=200, default=None, blank=True)
     
 class organization(models.Model):
     title = models.CharField(max_length=200,blank=True, null=True)

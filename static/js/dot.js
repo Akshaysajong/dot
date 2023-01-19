@@ -1,15 +1,4 @@
 
-// $(document).ready(function()
-// {
-// var country = $("#country");
-// var state = $("#state");
-// var city = $('#city');
-// var $options = state.find('option');
-
-// country.on('change',function(){
-//         state.html($options.filter('[value="'+ this.value +'"]'));
-//     }).trigger('change');
-// });
 
 function confdelete(){
     var result = confirm("Are you sure to delete?");
@@ -67,16 +56,6 @@ function get_state()
 }
 
 
-
-// function delete_hotel(){
-//     var result = confirm("Are you sure to delete?");
-//     if(result){
-//       console.log("Deleted")
-//     }
-//     else{
-//       event.preventDefault();
-//     }
-//   }
 
   
 function delete_hotel(id){
