@@ -221,14 +221,13 @@ def dot_add_destination(request):
     if request.method ==  'POST':
         destn = request.POST['destn']
         destn_area = request.POST['destn_area']
-        print(destn_area)
         img = request.FILES.getlist('image')
         address = request.POST['address']
         description = request.POST['description']
         climate = request.POST['climate']
         culture = request.POST['culture']
         lattitude = request.POST['lattitude']
-        longitude = request.POST['culture']
+        longitude = request.POST['longitude']
         dstn = destinstions(name=destn, d_area_id=destn_area, address=address, description=description, climate=climate, culture=culture, longitude=longitude, lattitude=lattitude)
         dstn.save()
         for x in img:
@@ -240,28 +239,61 @@ def dot_add_destination(request):
 @login_required(login_url="/login")
 def dot_view_destination(request):
     destn = destinstions.objects.all()
-    print(destn)
+  
     destn_list=[]
-    #c = PostImage.objects.all()
     for x in destn:
-        print('#################################################')
-        # print(x.place_name)
-        print(x.id)
+        # print(x.d_area.name)
         img= destination_img.objects.all().filter(destinstions=x.id)
         # print('>>>>>>>>>>>>>>')
         # print(img[0].id)
         im =''
         if img:
             im = img[0].image
-        destn_list.append({'id':x.id, 'name':x.name,'address':x.address , 'description':x.description,'climate':x.climate,'culture':x.culture, 'image':im})
+        destn_list.append({'id':x.id, 'name':x.name,'address':x.address , 'description':x.description,'climate':x.climate,'culture':x.culture, 'image':im, 'd_area':x.d_area.name})
     return render(request, "view_destination.html",{'destn_list':destn_list})
+
+
+def delete_destination(request):
+    d_id = request.GET['d_id']
+    print(d_id)
+
+    destinstions.objects.all().filter(id=d_id).delete()
+    dat = ['Destination area deleted']
+    return JsonResponse(dat, safe=False)  
 
 def dot_editdestination(request):
     e_id = request.GET['a']
-    print(e_id)
     destn = destinstions.objects.all().filter(id=e_id)
-    return render(request, 'edit_destination.html', {'destn':destn})
+    img = destination_img.objects.all().filter(destinstions=e_id)
+    return render(request, 'edit_destination.html', {'destn':destn, 'img':img})
 
+def dot_update_destination(request):
+    if request.method == 'POST':
+        d_id = request.POST['d_id'] 
+        destn_area = request.POST['destn_area']  
+        destn = request.POST['destn']     
+        address = request.POST['address']
+        description = request.POST['description']
+        climate = request.POST['climate']
+        culture = request.POST['culture']
+        lattitude = request.POST['lattitude']
+        longitude = request.POST['longitude']
+        images = request.POST['deletedfiles']
+        img = [int(item) for item in images.split(', ') if item.isdigit()]
+        length=len(img)  
+        count=destination_img.objects.all().filter(destinstions=d_id).count()
+        if length < count:
+            for x in img:
+                c=destination_img.objects.all().get(id=x)
+                # print(c)
+                if c.image:
+                    c.image.delete()
+                c.delete()
+                    
+        
+        print(count)
+        destinstions.objects.all().filter(id=d_id).update(name=destn,  address=address, description=description, climate=climate, culture=culture, longitude=longitude, lattitude=lattitude)
+    return redirect('dot_view_destination')
 
 @login_required(login_url="/login")
 def dot_content(request):

@@ -11,29 +11,58 @@
         </h1>
         <div class="btn-toolbar mb-2 mb-md-0">
           <div class="btn-group me-2">
-            <a href="/dot/view_destinationarea/"><button type="button" class="btn btn-sm">View Destination</button></a>
+            <a href="/dot/view_destination/"><button type="button" class="btn btn-sm">View Destination</button></a>
           </div>
         </div>
       </div>
       <div class="card p-4 rounded-1 border-0 shadow">
         <h5 class="text-uppercase fw-bold mb-4 col-8">&nbsp;</h5>
 
-        <form class="form-horizontal" method="POST" action="/dot/add_destination_area/" enctype="multipart/form-data">{% csrf_token %}
+        <form class="form-horizontal" method="POST" action="/dot/update_destination/" enctype="multipart/form-data">{% csrf_token %}
           {% for x in destn %}
           <div class="row">
-              <div class="col-md-6">
-                <label for="title" class="form-label">Destination</label>
-                <input type="text" class="form-control" name="destn_area" id="destn_area" value="{{x.name}}" required>
-                
+            <div class="col-md-6">
+                <label for="destn_area" class="form-label">Destination Area</label>
+                <input type="text" class="form-control" name="destn_area" id="destn_area" value="{{x.d_area.name}}" readonly required><br>
               </div>
               <div class="col-md-6">
-                <label for="place">Place</label>
-                <input type="text" class="form-control" name="place" id="place" value="{{x.place}}" required><br>
+                <input type="text" class="form-control" name="d_id" id="d_id" value="{{x.id}}" hidden required>      
+                <label for="title" class="form-label">Destination</label>
+                <input type="text" class="form-control" name="destn" id="destn" value="{{x.name}}" required>
+              </div>
+              <div class="col-md-6">
+                <label for="address">Address</label>
+                <input type="text" class="form-control" name="address" id="address" value="{{x.address}}" required><br>
               </div>
               
               <div class="col-md-6">
-                <label for="place">Place</label>
-                <input type="text" class="form-control" name="place" id="place" value="{{x.place}}" required><br>
+                <label for="description">Description</label>
+                <textarea type="text"  class="form-control htmlarea" placeholder="" name="description" id="description" style="height: 100px" required>{{x.description}}</textarea><br>
+                
+              </div>
+              <div class="col-md-6">
+                <label for="culture">culture</label>
+                <textarea type="text"  class="form-control htmlarea" placeholder="" name="culture" id="culture" style="height: 100px" required>{{x.culture}}</textarea><br>
+
+              </div>
+              <div class="col-md-6">
+                <label for="climate">climate</label>
+                <textarea type="text"  class="form-control htmlarea" placeholder="" name="climate" id="climate" style="height: 100px" required>{{x.climate}}</textarea><br>
+
+              </div>
+              <div class="col-md-6">
+                <label for="lattitude">Lattitude</label>
+                <input type="text" class="form-control" name="lattitude" id="lattitude" value="{{x.lattitude}}" required><br>
+              </div>
+              <div class="col-md-6">
+                <label for="longitude">Longitude</label>
+                <input type="text" class="form-control" name="longitude" id="longitude" value="{{x.longitude}}" required><br>
+              </div>
+              
+              <div class="col-md-4">
+                <label for="status">Status </label>
+                <input type="checkbox" id="status" name="status" value="1" {% if x.status %}checked{% endif %}/>
+                
               </div>
               <!-- <div class="col-md-6">
                 <label for="status">Status </label>
@@ -41,17 +70,33 @@
                 
               </div> -->
                  
-            </div>
-            
-            <div class="col-12 mt-4">
-              <button type="submit" class="btn btn-primary">Submit</button>
-            </div>
-          </form>
           {% endfor %}
+          {% for x in img %}
+          <div class="row" style="display:inline-flex"  data-wow-delay="1.3s">
+            <div class="col-md-8 ">
+          <div class="imageField" style="margin-left:0;margin-top: 4rem;">
+          <div class="card" style="width: 15rem;">
+            <img class="card-img-top" src="{{x.image.url}}" alt="Card image cap">
+          </div><br>
+          
+          <div class="btn-group me-6" >
+            <button type="button" style="margin-left: 7rem" class="btn-link border-0 bg-transparent text-body " onClick="confdelete(this, '{{x.id}}');"><span data-feather="trash-2" ></span></button>
+          </div>
+          <!-- <input type="text" class="form-control" id="inpu" name="pla" id="place" value="{{c.id}}"><br><br> -->
+          <br>
+        </div>
+        </div>
+        </div>
+
+          {% endfor %}
+          <input type="hidden" class="form-control" id="deletedfiles" name="deletedfiles" value="" >
+        </div>
+            
+        <div class="col-12 mt-4">
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+      </form>
       </div>
-      
-    
-  
     </main>
     </div>
     </div>

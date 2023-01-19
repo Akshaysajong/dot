@@ -77,7 +77,40 @@ function delete_darea(id){
         success: function(data)
         {
             alert('Destination area deleted')
+            window.location.reload()
             
         }
     })
+}
+
+function delete_destination(id){
+    jQuery.ajax({
+        type : 'get',
+        url : "/delete_destination/",
+        data : {
+            d_id : id
+        },
+        dataType : 'jason',
+        success: function(data)
+        {
+            alert('Destination area deleted')
+            window.location.reload()
+            
+        }
+    })
+
+}
+
+
+function confdelete(obj, id) {
+var result = confirm("Are you sure to delete?");
+console.log(result.length)
+var count= 0
+console.log(count)
+if(result){
+
+    a=document.getElementById('deletedfiles').value = document.getElementById('deletedfiles').value+', '+id;
+    console.log(a)
+    obj.parentElement.parentElement.style.display = 'none';
+}
 }
