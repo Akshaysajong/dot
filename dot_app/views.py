@@ -263,7 +263,7 @@ def dot_add_destination(request):
         climate = request.POST['climate']
         culture = request.POST['culture']
         lattitude = request.POST['lattitude']
-        longitude = request.POST['culture']
+        longitude = request.POST['longitude']
         dstn = destinstions(name=destn, d_area_id=destn_area, address=address, description=description, climate=climate, culture=culture, longitude=longitude, lattitude=lattitude)
         dstn.save()
         for x in img:
