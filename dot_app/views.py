@@ -6,8 +6,9 @@ from .models import *
 from django.contrib.auth.models import User, Group, Permission
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth import update_session_auth_hash
-from .form import RegisterForm,EntrollmentForm
+from .form import RegisterForm,AddHotelsForm
 from django.http import JsonResponse
+from django.contrib.auth.hashers import make_password
 
 
 def login_user(request):
@@ -49,7 +50,6 @@ def dot_adduser(request):
             user = form.save()
             username = form.cleaned_data.get('username')
             print(username)
-            # groups = form.cleaned_data.get('groups')
             gr_id = request.POST.getlist('groups')
             idd= gr_id[0]
             print(gr_id)
@@ -77,20 +77,7 @@ def dot_add_groups(request):
 
 @login_required(login_url="/login")
 def dot_viewusers(request):
-    # if request.user.is_authenticated:
-    # u= User.objects.filter(is_superuser = '0')
-        # v= request.user.is_authenticated
         user = request.user
-        # userquery = User.objects.all()
-        # user_group = ''
-        # for x in userquery :
-        #     userid= x.id
-        #     print(x.groups)
-        #     print('########################################################')
-        #     group_name=user.groups.all().filter(user=userid)
-        #     print(group_name)
-        #     user_group = group_name[0].name  
-        #     print(user_group)
         if user.is_superuser:
             u= User.objects.filter(is_superuser = '0')
             g= user.groups.filter(user=user.id)
@@ -115,30 +102,77 @@ def dot_addhotel(request):
     ctry=country.objects.all()
     st=state.objects.all()
     cty=city.objects.all()
-    return render(request,'addhotels.html',{'country':ctry,'states':st,'city':cty})
+    org=organization.objects.all()
+    return render(request,'addhotels.html',{'country':ctry,'states':st,'city':cty,'organization':org})
 
+# add hotels
 def dot_addhoteldb(request):
     if request.method == "POST":
-        hoteltype = request.POST['hoteltype']
+        hotel_type = request.POST['hotel_type']
         contact_person = request.POST['contact_person']
-        contact_number = request.POST['phone']
-        user_name = request.POST['user_name']
-        pwd = request.POST['pwd']
+        phone= request.POST['contact_number']
+        name = request.POST['name']
+        password = request.POST['password']
         address = request.POST['address']
-        cotry = request.POST['country']
-        sts = request.POST['state']
-        citi = request.POST['city']
-        ho = User(username=user_name, password=pwd)
+        cotry_id = request.POST['country'] 
+        sts_id = request.POST['state']
+        citi_id = request.POST['city']
+        organtn_id = request.POST['organization']
+        cnty = country.objects.all().filter(id=cotry_id)
+        sts = state.objects.all().filter(id=sts_id)
+        citi = city.objects.all().filter(id=citi_id)
+        password = 'PASSWORD_HERE'
+        form = AddHotelsForm
+        if request.method == "POST":
+            form = AddHotelsForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            name = form.cleaned_data.get('username')
+            print(name)
+        # if form.is_valid():
+        #     user = form.save()
+        form.password = make_password(password)
+        # form.save()
+        ho = User(username=name, password=password)
         ho.save()
-        print(ho.id)
-        org=2
-        hotl = userprofile(user_id=ho.id,organization_id=org,hotel_type=hoteltype,contact_person=contact_person,phone=contact_number,address=address,country=cotry,state=sts,city=citi)
+        print(ho.id) 
+        gr_id = request.POST.getlist('groups')
+        # idd= gr_id[0]
+        print(gr_id)
+        for x in  gr_id:
+                print(x)
+                # user.groups.add(x)
+        hotl = userprofile(user_id=ho.id, organization_id=organtn_id, hotel_types=hotel_type, contact_person=contact_person, contact_number=phone, address=address, country=cnty[0].name, state=sts[0].name, city=citi[0].name)
         hotl.save()
+
     return redirect('dot_addhotel')
 
-# def admin_viewhotels(request):
-#     a= hotels.objects.all()
-#     return render(request, "admin/js_view.html",{'b':a})
+# view hotels
+def dot_viewhotels(request):
+    upro= userprofile.objects.all()
+ 
+    return render(request, "viewhotels.html",{'hotel':upro})
+
+
+#edit hotel
+@login_required(login_url="/login")
+def dot_edit_hotel(request):
+    ed_id = request.GET['a']
+    print(ed_id)
+    htl = userprofile.objects.all().filter(id=ed_id)
+    return render(request, "edit_hotel.html",{'htl':htl})
+
+#delete hotel
+@login_required(login_url="/login")
+def delete_hotel(request):
+    d_id = request.GET['d_id']
+    print(d_id)
+    htl = userprofile.objects.all().filter(id=d_id)
+    print(htl[0].user.id)
+    User.objects.all().filter(id=htl[0].user.id).delete()
+    htl.delete()
+    dat = ['hotel deleted']
+    return JsonResponse(dat, safe=False)
 
 #ajax get country
 @login_required(login_url="/login")
@@ -165,6 +199,7 @@ def ajax_state(request):
     return JsonResponse(dat, safe=False)
 
 #add destinstion area template display
+
 @login_required(login_url="/login")
 def dot_destination_area(request):
     cntry = country.objects.all()

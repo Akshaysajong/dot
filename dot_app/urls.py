@@ -16,10 +16,11 @@ urlpatterns = [
     #hoteladmin add hotels
     path('dot/addhotel/', views.dot_addhotel, name='dot_addhotel'),
     path('dot/addhoteldb/', views.dot_addhoteldb, name='dot_addhoteldb'),
-    # path('dot/viewhotel/', views.dot_viewhotel, name='dot_viewhotel'),
+    path('dot/viewhotels/', views.dot_viewhotels, name='dot_viewhotels'),
+    path('dot/edit_hotel/', views.dot_edit_hotel, name='dot_edit_hotel'),
+    path('delete_hotel/', views.delete_hotel, name='delete_hotel'),
     path('ajax_country/', views.ajax_country, name='ajax_country'),
     path('ajax_state/', views.ajax_state, name='ajax_state'),
-    # path('dot/add_hotels/', views.dot_add_hotels, name='dot_add_hotels'),
     path('dot/content/', views.dot_content, name='dot_content'),
 
 

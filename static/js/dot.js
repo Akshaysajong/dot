@@ -66,6 +66,37 @@ function get_state()
 
 }
 
+
+
+// function delete_hotel(){
+//     var result = confirm("Are you sure to delete?");
+//     if(result){
+//       console.log("Deleted")
+//     }
+//     else{
+//       event.preventDefault();
+//     }
+//   }
+
+  
+function delete_hotel(id){
+    jQuery.ajax({
+        type : 'get',
+        url : "/delete_hotel/",
+        data : {
+            d_id : id
+        },
+        dataType : 'jason',
+        success: function(data)
+        {
+            alert('Hotel deleted')
+            window.location.reload()
+            
+        }
+    })
+}
+
+
 function delete_darea(id){
     jQuery.ajax({
         type : 'get',

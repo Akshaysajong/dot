@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, User
+from django.contrib.auth.hashers import make_password
 
 class destination_area(models.Model):
     name = models.CharField(max_length=200, default=None, blank=True)
@@ -60,6 +61,9 @@ class city(models.Model):
     state_id = models.ForeignKey(state, default=None, on_delete=models.CASCADE)  
     status = models.BooleanField(default=False)
 
+# class hotel_type(models.Model):
+#     types = models.CharField(max_length=200, default=None, blank=True)
+    
 class organization(models.Model):
     title = models.CharField(max_length=200,blank=True, null=True)
     org_type = models.CharField(max_length=200,blank=True, null=True)
@@ -207,3 +211,8 @@ class coupon(models.Model):
     created = models.DateTimeField(blank=True, null=True)
     updated = models.DateTimeField(blank=True, null=True)
     status = models.BooleanField(default=False)
+
+
+    # def save(self, *username, **password):
+    #     self.password = make_password(self.password)
+    #     super(User, self).save(*username, **password)
