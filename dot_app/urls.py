@@ -25,6 +25,9 @@ urlpatterns = [
     path('ajax_state/', views.ajax_state, name='ajax_state'),
     path('dot/content/', views.dot_content, name='dot_content'),
 
+    # api
+     path('api/register/',views.Register.as_view(),name='register'),
+
 
     path('dot/destination_area/', views.dot_destination_area, name='dot_destination_area'),
     path('dot/add_destination_area/', views.dot_add_destination_area, name='dot_add_destination_area'),

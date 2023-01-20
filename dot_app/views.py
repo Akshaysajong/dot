@@ -123,7 +123,7 @@ def dot_addhoteldb(request):
         cnty = country.objects.all().filter(id=cotry_id)
         sts = state.objects.all().filter(id=sts_id)
         citi = city.objects.all().filter(id=citi_id)
-        password = 'PASSWORD_HERE'
+        password = '12wsxftht234!@#$rfGYHJKBV'
         form = AddHotelsForm
         if request.method == "POST":
             form = AddHotelsForm(request.POST)
@@ -183,12 +183,12 @@ def delete_hotel(request):
 # update hotel
 def dot_update_hotel(request):
     if request.method == 'POST':
-        h_type_id = request.POST['hotel_type']
         # contact_person = request.POST['contact_person']
         phone= request.POST['phone']
         name = request.POST['name']
         password = request.POST['pwd']
         address = request.POST['address']
+        h_type_id = request.POST['hotel_type']
         cotry_id = request.POST['country'] 
         sts_id = request.POST['state']
         citi_id = request.POST['city']
@@ -364,3 +364,43 @@ def dot_content(request):
     ctnt=content.objects.all()
     print(ctnt)
     return render(request,'content.html',{'content':ctnt})
+
+
+
+# API
+from  rest_framework.views import APIView
+from rest_framework.response import Response
+from .models import *
+from rest_framework.response import Response
+from rest_framework import viewsets
+from rest_framework import status 
+from .serializers import customerRegister
+from rest_framework.authtoken.models import Token
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from .models import *
+from rest_framework.authentication import TokenAuthentication
+import json
+from rest_framework.response import Response
+import random 
+# Register customers
+class Register(APIView):
+    def post(self,request,format=None):
+        serializer = customerRegister(data=request.data)
+        data={}
+        if serializer.is_valid():
+            account=serializer.save()
+            data['response']='registered'
+            data['username']=account.username
+            data['first_name']=account.first_name
+            data['last_name']=account.last_name
+            data['email']=account.email
+            data['phone']=account.phone            
+            data['cust_type']=account.cust_type
+            data['status']=account.status
+            
+        else:
+            data=serializer.errors
+        return Response(data)
+  

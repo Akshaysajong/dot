@@ -160,8 +160,9 @@ class customer_type(models.Model):
     status = models.BooleanField(default=False)
 
 class customer(models.Model):
-    name = models.CharField(max_length=50,blank=True, null=True)
-    pwd = models.CharField(max_length=50,blank=True, null=True)
+    username = models.CharField(max_length=50,blank=True, null=True)
+    password = models.CharField(max_length=50,blank=True, null=True)
+    password2 = models.CharField(max_length=50,blank=True, null=True)
     first_name = models.CharField(max_length=50,blank=True, null=True)
     last_name = models.CharField(max_length=50,blank=True, null=True)
     email = models.EmailField(max_length = 254)
