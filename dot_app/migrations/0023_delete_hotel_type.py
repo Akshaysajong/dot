@@ -6,9 +6,11 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dot_app', '0020_hotel_type'),
-        ('dot_app', '0021_alter_destinstions_culture'),
+        ('dot_app', '0022_merge_0020_hotel_type_0021_alter_destinstions_culture'),
     ]
 
     operations = [
+        migrations.DeleteModel(
+            name='hotel_type',
+        ),
     ]

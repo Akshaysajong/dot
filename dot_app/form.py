@@ -60,35 +60,52 @@ class EntrollmentForm(UserCreationForm):
     )
 
 
+class AddHotelsForm(UserCreationForm):
 
-class AddHotelsForm(forms.ModelForm):
-    hotel_type = forms.ChoiceField(
-                                widget=forms.TextInput)
-    name = forms.CharField(max_length=100,required=True,
-                                widget=forms.TextInput(attrs={'class': 'form-control'}))
-    contact_person = forms.CharField(max_length=100,required=True,
-                                widget=forms.TextInput(attrs={'class': 'form-control'}))
-    contact_number = forms.CharField(max_length=100,required=True,
-                                widget=forms.TextInput(attrs={'class': 'form-control'}))
     username = forms.CharField(max_length=100,required=True,
                                 widget=forms.TextInput(attrs={'class': 'form-control'}))
     password= forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
-    address = forms.CharField(max_length=100,required=True,
-                                widget=forms.TextInput(attrs={'class': 'form-control'}))
-    country = forms.ChoiceField(
-                                widget=forms.TextInput)
-    state = forms.ChoiceField(
-                                widget=forms.TextInput)
-    city = forms.ChoiceField(
-                                widget=forms.TextInput)
+
 
     class Meta:
         model = User
-        fields = ['username','first_name', 'password','groups']
-    groups = forms.ModelChoiceField(
-        queryset=Group.objects.all(),
-        to_field_name='id',
+        fields = ['username', 'password']
+    # groups = forms.ModelChoiceField(
+    #     queryset=Group.objects.all(),
+    #     to_field_name='id',
        
-        required=True,  
-        widget=forms.Select(attrs={'class': 'form-control'})
-    )
+    #     required=True,  
+    #     widget=forms.Select(attrs={'class': 'form-control'})
+    # )
+
+# class AddHotelsForm(forms.ModelForm):
+#     hotel_type = forms.ChoiceField(
+#                                 widget=forms.TextInput)
+#     name = forms.CharField(max_length=100,required=True,
+#                                 widget=forms.TextInput(attrs={'class': 'form-control'}))
+#     contact_person = forms.CharField(max_length=100,required=True,
+#                                 widget=forms.TextInput(attrs={'class': 'form-control'}))
+#     contact_number = forms.CharField(max_length=100,required=True,
+#                                 widget=forms.TextInput(attrs={'class': 'form-control'}))
+#     username = forms.CharField(max_length=100,required=True,
+#                                 widget=forms.TextInput(attrs={'class': 'form-control'}))
+#     password= forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+#     address = forms.CharField(max_length=100,required=True,
+#                                 widget=forms.TextInput(attrs={'class': 'form-control'}))
+#     country = forms.ChoiceField(
+#                                 widget=forms.TextInput)
+#     state = forms.ChoiceField(
+#                                 widget=forms.TextInput)
+#     city = forms.ChoiceField(
+#                                 widget=forms.TextInput)
+
+#     class Meta:
+#         model = User
+#         fields = ['username','first_name', 'password','groups']
+#     groups = forms.ModelChoiceField(
+#         queryset=Group.objects.all(),
+#         to_field_name='id',
+       
+#         required=True,  
+#         widget=forms.Select(attrs={'class': 'form-control'})
+#     )

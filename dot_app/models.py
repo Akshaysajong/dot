@@ -10,6 +10,7 @@ class destination_area(models.Model):
     lattitude = models.DecimalField(max_digits=8, decimal_places=3, default=None, blank=True)
     longitude = models.DecimalField(max_digits=8, decimal_places=3, default=None, blank=True)
     status = models.BooleanField()
+    c_user = models.CharField(max_length=100, default=None, blank=True)
 
 class destination_type(models.Model):
     name = models.CharField(max_length=50, blank=True, default=None)
@@ -26,6 +27,7 @@ class destinstions(models.Model):
     lattitude = models.DecimalField(max_digits=8, decimal_places=3, default=None, blank=True)
     longitude = models.DecimalField(max_digits=8, decimal_places=3, default=None, blank=True)
     status = models.BooleanField(default=False)
+    c_user = models.CharField(max_length=100, default=None, blank=True)
 
 class destination_img(models.Model):
     destinstions = models.ForeignKey(destinstions, default=None, on_delete=models.CASCADE)

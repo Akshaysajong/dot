@@ -99,53 +99,56 @@ def dot_add_groups_permissions(request):
 #hoteladmin add hotels
 @login_required(login_url="/login")
 def dot_addhotel(request):
+    form = AddHotelsForm
     h_type=hotel_type.objects.all()
     ctry=country.objects.all()
     st=state.objects.all()
     cty=city.objects.all()
     org=organization.objects.all()
-    return render(request,'addhotels.html',{'country':ctry,'states':st,'city':cty,'organization':org,'hotel_type':h_type})
+    return render(request,'addhotels.html',{'form':form,'country':ctry,'states':st,'city':cty,'organization':org,'hotel_type':h_type})
 
 # add hotels
 def dot_addhoteldb(request):
     if request.method == "POST":
-        h_type_id = request.POST['hotel_type']
-        contact_person = request.POST['contact_person']
-        phone= request.POST['phone']
-        name = request.POST['name']
-        password = request.POST['pwd']
-        address = request.POST['address']
-        cotry_id = request.POST['country'] 
-        sts_id = request.POST['state']
-        citi_id = request.POST['city']
-        organtn_id = request.POST['organization']
-        h_type = hotel_type.objects.all().filter(id=h_type_id)
-        cnty = country.objects.all().filter(id=cotry_id)
-        sts = state.objects.all().filter(id=sts_id)
-        citi = city.objects.all().filter(id=citi_id)
-        password = 'PASSWORD_HERE'
-        form = AddHotelsForm
-        if request.method == "POST":
-            form = AddHotelsForm(request.POST)
+        form = AddHotelsForm(request.POST)
         if form.is_valid():
             user = form.save()
-            name = form.cleaned_data.get('username')
-            print(name)
-        # if form.is_valid():
-        #     user = form.save()
-        form.password = make_password(password)
-        # form.save()
-        ho = User(username=name, password=password)
-        ho.save()
-        print(ho.id) 
-        gr_id = request.POST.getlist('groups')
-        # idd= gr_id[0]
-        print(gr_id)
-        for x in  gr_id:
-                print(x)
-                # user.groups.add(x)
-        hotl = userprofile(user_id=ho.id, organization_id=organtn_id, contact_person=contact_person, phone=phone, address=address,hotel_type=h_type[0].types, country=cnty[0].name, state=sts[0].name, city=citi[0].name)
-        hotl.save()
+            print(user)
+            h_type_id = request.POST['hotel_type']
+            contact_person = request.POST['contact_person']
+            phone= request.POST['phone']
+            address = request.POST['address']
+            cotry_id = request.POST['country'] 
+            sts_id = request.POST['state']
+            citi_id = request.POST['city']
+            organtn_id = request.POST['organization']
+            h_type = hotel_type.objects.all().filter(id=h_type_id)
+            cnty = country.objects.all().filter(id=cotry_id)
+            sts = state.objects.all().filter(id=sts_id)
+            citi = city.objects.all().filter(id=citi_id)
+            # password = 'PASSWORD_HERE'
+            # form = AddHotelsForm
+            # if request.method == "POST":
+            #     form = AddHotelsForm(request.POST)
+            # if form.is_valid():
+            #     user = form.save()
+            #     name = form.cleaned_data.get('username')
+            #     print(name)
+            # if form.is_valid():
+            #     user = form.save()
+            # form.password = make_password(password)
+            # form.save()
+            # ho = User(username=name, password=password)
+            # ho.save()
+            # print(ho.id) 
+            # gr_id = request.POST.getlist('groups')
+            # idd= gr_id[0]
+            # print(gr_id)
+            # for x in  gr_id:
+            #         print(x)
+                    # user.groups.add(x)
+            # hotl = userprofile(user_id=ho.id, organization_id=organtn_id, contact_person=contact_person, phone=phone, address=address,hotel_type=h_type[0].types, country=cnty[0].name, state=sts[0].name, city=citi[0].name)
+            # hotl.save()
 
     return redirect('dot_addhotel')
 
@@ -240,6 +243,7 @@ def dot_destination_area(request):
 @login_required(login_url="/login")
 def dot_add_destination_area(request):
     if request.method == 'POST':
+        user = request.user.id
         destn_area = request.POST['destn_area']
         place = request.POST['place']
         statu = request.POST['status']
@@ -249,23 +253,29 @@ def dot_add_destination_area(request):
         stat = state.objects.all().filter(id = state_id)
         lattitude = request.POST['lattitude']
         longitude = request.POST['longitude']
-        d_area = destination_area(name=destn_area, place=place, status=statu, country=coutry[0].name, state=stat[0].name, lattitude=lattitude, longitude=longitude)
+        d_area = destination_area(name=destn_area, place=place, status=statu, country=coutry[0].name, state=stat[0].name, lattitude=lattitude, longitude=longitude, c_user=user)
         d_area.save()
     return redirect("dot_destination_area")
 
 #edit destination area
 @login_required(login_url="/login")
 def dot_edit_destinationarea(request):
+    user = request.user.id
     ed_id = request.GET['a']
     destn = destination_area.objects.all().filter(id=ed_id)
+    if int(destn[0].c_user) == user:
+        pass
     return render(request, "edit_destinationarea.html",{'destn':destn})
 
 #delete destination area
 @login_required(login_url="/login")
 def delete_darea(request):
+    user = request.user.id
     d_id = request.GET['d_id']
-    destn = destination_area.objects.all().filter(id=d_id).delete()
-    dat = ['Destination area deleted']
+    destn = destination_area.objects.all().filter(id=d_id)
+    if int(destn[0].c_user) == user:
+        destn.delete()
+    dat = {'msg':'Destination deleted'}
     return JsonResponse(dat, safe=False)
 
 #view destination area list
@@ -284,6 +294,7 @@ def dot_destinations(request):
 @login_required(login_url="/login")
 def dot_add_destination(request):
     if request.method ==  'POST':
+        user = request.user.id
         destn = request.POST['destn']
         destn_area = request.POST['destn_area']
         img = request.FILES.getlist('image')
@@ -293,7 +304,7 @@ def dot_add_destination(request):
         culture = request.POST['culture']
         lattitude = request.POST['lattitude']
         longitude = request.POST['longitude']
-        dstn = destinstions(name=destn, d_area_id=destn_area, address=address, description=description, climate=climate, culture=culture, longitude=longitude, lattitude=lattitude)
+        dstn = destinstions(name=destn, d_area_id=destn_area, address=address, description=description, climate=climate, culture=culture, longitude=longitude, lattitude=lattitude, c_user=user)
         dstn.save()
         for x in img:
             b=destination_img(destinstions_id=dstn.id, image=x)
@@ -318,10 +329,11 @@ def dot_view_destination(request):
 
 
 def delete_destination(request):
+    user = request.user.id
     d_id = request.GET['d_id']
-    print(d_id)
-
-    destinstions.objects.all().filter(id=d_id).delete()
+    destn = destinstions.objects.all().filter(id=d_id)
+    if int(destn[0].c_user) == user:
+        destn.delete()
     dat = ['Destination area deleted']
     return JsonResponse(dat, safe=False)  
 
@@ -333,6 +345,7 @@ def dot_editdestination(request):
 
 def dot_update_destination(request):
     if request.method == 'POST':
+        user = request.user.id
         d_id = request.POST['d_id'] 
         destn_area = request.POST['destn_area']  
         destn = request.POST['destn']     
@@ -347,19 +360,21 @@ def dot_update_destination(request):
         img = [int(item) for item in images.split(', ') if item.isdigit()]
         length=len(img)  
         count=destination_img.objects.all().filter(destinstions=d_id).count()
-        if length < count:
-            for x in img:
-                c=destination_img.objects.all().get(id=x)
-                # print(c)
-                if c.image:
-                    c.image.delete()
-                c.delete()
-                    
-        print(count)
-        destinstions.objects.all().filter(id=d_id).update(name=destn,  address=address, description=description, climate=climate, culture=culture, longitude=longitude, lattitude=lattitude)
-        for x in pic:
-            ad_img=destination_img(destinstions_id=d_id, image=x)
-            ad_img.save()
+        dn = destinstions.objects.all().filter(id=d_id)
+        if int(dn[0].c_user) == user:
+            if length < count:
+                for x in img:
+                    c=destination_img.objects.all().get(id=x)
+                    # print(c)
+                    if c.image:
+                        c.image.delete()
+                    c.delete()
+                        
+            print(count)
+            destinstions.objects.all().filter(id=d_id).update(name=destn,  address=address, description=description, climate=climate, culture=culture, longitude=longitude, lattitude=lattitude)
+            for x in pic:
+                ad_img=destination_img(destinstions_id=d_id, image=x)
+                ad_img.save()
     return redirect('dot_view_destination')
 
 @login_required(login_url="/login")
