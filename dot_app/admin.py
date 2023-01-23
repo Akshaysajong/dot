@@ -2,7 +2,6 @@ from django.contrib import admin
 from .models import *
 from django.contrib.auth.models import Permission
 
-# admin.site.register(User)
 admin.site.register(Permission)
 admin.site.register(destination_area)
 admin.site.register(destinstions)
@@ -20,5 +19,4 @@ admin.site.register(city)
 admin.site.register(content)
 admin.site.register(hotel_type)
 admin.site.register(customer)
-
-# admin.site.register(organization_images)
+admin.site.register(cust_profile)

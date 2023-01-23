@@ -21,6 +21,14 @@
         <form class="form-horizontal" method="POST" action="/dot/add_destination_area/" enctype="multipart/form-data">{% csrf_token %}
           {% for x in destn %}
           <div class="row">
+            <div class="col-md-6">
+              <label for="country">Country</label>
+              <input type="text" class="form-control" name="country" id="country" value="{{x.country}}" readonly required><br>
+            </div>
+            <div class="col-md-6">
+              <label for="state">State</label>
+              <input type="text" class="form-control" name="state" id="state" value="{{x.state}}" readonly required><br>
+            </div>
               <div class="col-md-6">
                 <label for="title" class="form-label">Destination Area</label>
                 <input type="text" class="form-control" name="destn_area" id="destn_area" value="{{x.name}}" required>
@@ -30,6 +38,19 @@
               <div class="col-md-6">
                 <label for="place">Place</label>
                 <input type="text" class="form-control" name="place" id="place" value="{{x.place}}" required><br>
+              </div>
+              <div class="col-md-6">
+                <label for="lattitude">Lattitude</label>
+                <input type="text" class="form-control" name="lattitude" id="lattitude" value="{{x.lattitude}}" required><br>
+              </div>
+              <div class="col-md-6">
+                <label for="longitude">Longitude</label>
+                <input type="text" class="form-control" name="longitude" id="longitude" value="{{x.longitude}}" required><br>
+              </div>
+              <div class="col-md-6">
+                <label for="status">Status </label>
+                <input type="checkbox" id="status" name="status" value="1" {% if x.status %}checked{% endif %}/>
+                
               </div>
               <!-- <div class="col-md-6">
                 <label for="status">Status </label>

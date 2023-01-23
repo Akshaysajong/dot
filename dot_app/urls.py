@@ -26,7 +26,11 @@ urlpatterns = [
     path('dot/content/', views.dot_content, name='dot_content'),
 
     # api
-     path('api/register/',views.Register.as_view(),name='register'),
+    path('api/register/',views.Register.as_view(),name='register'),
+    # path('api/cust_profile/',views.cust_profileRegister.as_view(),name='cust_profileRegister'),
+    path('api/destination_area/',views.destination_areaView.as_view({'get': 'list'}),name='destination_area'),
+    path('api/destinstions/',views.destinstionsView.as_view({'get': 'list'}),name='destinstions'),
+    path('api/destination_images/',views.destination_imageView.as_view({'get': 'list'}),name='destination_images'),
 
 
     path('dot/destination_area/', views.dot_destination_area, name='dot_destination_area'),
