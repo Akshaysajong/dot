@@ -65,7 +65,6 @@ function delete_hotel(id){
         data : {
             d_id : id
         },
-        dataType : 'jason',
         success: function(data)
         {
             alert('Hotel deleted')
@@ -77,7 +76,7 @@ function delete_hotel(id){
 
 
 function delete_darea(id){
-    
+    alert('Are you sure to delete destination area?');
     jQuery.ajax({
         type : 'get',
         url : "/delete_darea/",
@@ -87,8 +86,9 @@ function delete_darea(id){
         dataType : 'jason',
         success: function(data)
         {
-            alert(data.msg);
+            alert(data);
             window.location.reload();
+            
             
         }
     })
@@ -105,7 +105,7 @@ function delete_destination(id){
         success: function(data)
         {
             alert('Destination deleted')
-            window.location.reload()
+        
             
         }
     })

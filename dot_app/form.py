@@ -69,14 +69,14 @@ class AddHotelsForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ['username', 'password']
-    # groups = forms.ModelChoiceField(
-    #     queryset=Group.objects.all(),
-    #     to_field_name='id',
+        fields = ['username', 'password', 'groups']
+    groups = forms.ModelChoiceField(
+        queryset=Group.objects.all().filter(name__contains='hotels'),
+        to_field_name='id',
        
-    #     required=True,  
-    #     widget=forms.Select(attrs={'class': 'form-control'})
-    # )
+        required=True,  
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
 
 # class AddHotelsForm(forms.ModelForm):
 #     hotel_type = forms.ChoiceField(

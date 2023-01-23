@@ -111,6 +111,7 @@ class organization_images(models.Model):
 
 class userprofile(models.Model):
     user = models.ForeignKey(User, default=None, on_delete=models.CASCADE)
+    name = models.CharField(max_length=200, default=None, blank=True)
     phone = models.CharField(max_length=200,blank=True, null=True)
     address = models.CharField(max_length=200,blank=True, null=True)
     hotel_type = models.CharField(max_length=200,blank=True, null=True)

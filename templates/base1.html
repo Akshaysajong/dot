@@ -25,32 +25,37 @@
       <div class="position-sticky">
         <ul class="nav flex-column">
           <li class="nav-item"> <a class="nav-link" aria-current="page" href="/dot/dashboard/"> <span data-feather="home"></span> Dashboard </a> </li>
-          
+          {% if perms.pms_app.view_user %}
           <li class="nav-item"> <a class="nav-link" data-bs-toggle="collapse" href="#menu-product" aria-expanded="false" aria-controls="menu-product"> <span data-feather="users"></span> Users </a> 
             <ul class="list-group collapse multi-collapse ms-4 mb-2" id="menu-product">
               <li class="list-group-item border-0 p-1"><a href="/dot/viewusers/" class="nav-sublink">View Users</a></li>
-              
+              {% if perms.pms_app.add_user %}
               <li class="list-group-item border-0 p-1"><a href="/dot/adduser/" class="nav-sublink">Add Users</a></li>
-             
+              {% endif %}
             </ul>
           </li>
+          {% endif %}
+          {% if perms.pms_app.view_userprofile %}
           <li class="nav-item"> <a class="nav-link" data-bs-toggle="collapse" href="#menu" aria-expanded="false" aria-controls="menu-product"> <span data-feather="shopping-cart"></span> Entrollment </a> 
             <ul class="list-group collapse multi-collapse ms-4 mb-1" id="menu">
               
               <li class="list-group-item border-0 p-1"><a href="/dot/viewhotels/" class="nav-sublink">View Hotel</a></li>
-           
+              {% if perms.pms_app.add_userprofile %}
               <li class="list-group-item border-0 p-1"><a href="/dot/addhotel/" class="nav-sublink">Add Hotel</a></li>
-        
+              {% endif %}
             </ul>
           </li>
+          {% endif %}
+          {% if perms.pms_app.view_destination_area %}
           <li class="nav-item"> <a class="nav-link" data-bs-toggle="collapse" href="#menu-or" aria-expanded="false" aria-controls="menu-order"> <span data-feather="file"></span> Destinstions </a> 
           <ul class="list-group collapse multi-collapse ms-4 mb-2" id="menu-or"> 
             <li class="list-group-item border-0 p-1"><a href="/dot/destination_area/" class="nav-sublink">Destinstion Area</a></li>
-           
+            {% if perms.pms_app.add_destinstions %}
             <li class="list-group-item border-0 p-1"><a href="/dot/destinations/" class="nav-sublink">Destinstions</a></li>
-         
+            {% endif %}
           </ul>
           </li>
+          {% endif %}
 
           
         
