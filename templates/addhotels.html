@@ -22,8 +22,21 @@
 
               <form class="form-horizontal" method="POST" action="/dot/addhoteldb/" enctype="multipart/form-data">{% csrf_token %}
                 <div class="row">
-                 
                   <div class="col-md-4">
+                    <label for="title" class="form-label">Groups</label>
+                    <div class="col">{{ form.groups }}</div><br>
+                  </div>
+                  <div class="col-md-4">
+                    <label for="" class="form-label">organization</label><br>
+                            <select name="organization" id="organization" class="form-control">
+                              <option value="0">--Select--</option>    
+                              {% for x in organization %}
+                              <option value="{{x.id}}">{{x.org_type}}</option>
+                              {% endfor %}
+                            </select>
+                  </div>
+                 
+                  <!-- <div class="col-md-4">
                     <label for="" >Hotel type</label><br>
                             <select name="hotel_type" id="hotel_type" class="form-control" onchange="">
                               <option value="0">--Select--</option>    
@@ -31,7 +44,7 @@
                               <option value="{{x.id}}">{{x.types}}</option>
                               {% endfor %}
                             </select>  
-                  </div>
+                  </div> -->
                   
                     <div class="col-md-4">
                       <label for="title" class="form-label">Name</label>
@@ -59,7 +72,7 @@
                     </div>
                     
                     <div class="col-md-4">
-                      <label for="" >Country</label><br>
+                      <label for="" class="form-label">Country</label><br>
                               <select name="country" id="country" class="form-control" onchange="get_country()">
                                 <option value="0">--Select--</option>    
                                 {% for x in country %}
@@ -68,8 +81,8 @@
                               </select>  
                     </div>
                     <div class="col-md-4">
-                      <label for="" >State</label><br><br>
-                              <select name="state" id="state" style="height:30px;width: 100%;" onchange="get_state()">
+                      <label for="" class="form-label" >State</label><br>
+                              <select name="state" id="state" class="form-control" onchange="get_state()">
                                 <option value="0">--Select--</option>    
                                 {% for x in states %}
                                 <option value="{{x.id}}">{{x.name}}</option>
@@ -77,23 +90,21 @@
                               </select>
                     </div>
                     <div class="col-md-4">
-                      <label for="" >City</label><br><br>
-                              <select name="city" id="city" style="height:30px;width: 100%;">
+                      <label for="" class="form-label">City</label><br>
+                              <select name="city" id="city" class="form-control">
                                 <option value="0">--Select--</option>    
                                 {% for x in city %}
                                 <option value="{{x.id}}">{{x.name}}</option>
                                 {% endfor %}
                               </select>
                     </div>
-                    <div class="col-md-4">
-                      <label for="" >organization</label><br><br>
-                              <select name="organization" id="organization" style="height:30px;width: 100%;">
-                                <option value="0">--Select--</option>    
-                                {% for x in organization %}
-                                <option value="{{x.id}}">{{x.org_type}}</option>
-                                {% endfor %}
-                              </select>
+                    <div class="col-md-4"><br>
+                      <label for="status">Status </label>
+                      <input type="checkbox" id="status" name="status" value="True">
+                      
                     </div>
+                    
+                    
                     
                    
                   </div>

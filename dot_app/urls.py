@@ -41,6 +41,7 @@ urlpatterns = [
     path('dot/view_destination/', views.dot_view_destination, name='dot_view_destination'),
     path('dot/edit_destinationarea/', views.dot_edit_destinationarea, name='dot_edit_destinationarea'),
     path('delete_darea/', views.delete_darea, name='delete_darea'),
+    path('dot/update_destinationarea/', views.dot_update_destinationarea, name='dot_update_destinationarea'),
     path('dot/editdestination/', views.dot_editdestination, name='dot_editdestination'),
     path('delete_destination/', views.delete_destination, name='delete_destination'),
     path('dot/update_destination/', views.dot_update_destination, name='dot_update_destination'),
