@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
-from django.contrib.auth.models import User
+from .models import *
 # from phone_field import PhoneField
 from django.contrib.auth.password_validation import validate_password
 from django.core import validators
@@ -77,6 +77,22 @@ class AddHotelsForm(UserCreationForm):
         required=True,  
         widget=forms.Select(attrs={'class': 'form-control'})
     )
+
+
+# class FacilitytypeForm(forms.ModelForm):
+#     title = forms.CharField(max_length=100,required=True,
+#                                 widget=forms.TextInput(attrs={'class': 'form-control'}))
+#     description= forms.CharField(max_length=100,required=True,
+#                              widget=forms.TextInput(attrs={'class': 'form-control'}))
+#     # status= forms.CharField(
+#     #                          widget=forms.CheckboxInput(attrs={'class': 'form-control'}))
+
+#     status= forms.BooleanField(required=True, widget=forms.CheckboxInput())
+
+#     class Meta:
+#         model = facility_type
+#         fields = ['title', 'description', 'status']
+
 
 # class AddHotelsForm(forms.ModelForm):
 #     hotel_type = forms.ChoiceField(

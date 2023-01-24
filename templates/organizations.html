@@ -1,0 +1,147 @@
+{% extends "./base1.html" %}
+{% block main %}
+
+<main class="col-md-9 bgmain ms-sm-auto col-lg-10 px-md-4">     
+                                        
+          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2">
+            <h1 class="h4">Add Organization
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/dot">Home</a></li>
+                <li class="breadcrumb-item">Add Hotels</li>
+              </ol>
+            </h1>
+            <div class="btn-toolbar mb-2 mb-md-0">
+              <div class="btn-group me-2">
+                <a href="/dot/organizationlist/"><button type="button" class="btn btn-sm">Organization List</button></a>
+              </div>
+            </div>
+          </div>
+          <div class="card p-4 rounded-1 border-0 shadow">
+            <h5 class="text-uppercase fw-bold mb-4 col-8">&nbsp;</h5>
+            <div class="row" style="margin-left: .5rem;">
+
+              <form class="form-horizontal" method="POST" action="/dot/addorganization_db/" enctype="multipart/form-data">{% csrf_token %}
+                <div class="row">
+                    <div class="col-md-4">
+                      <label for="title" class="form-label">Title</label>
+                      <input type="text" class="form-control" name="title" value="" id="title" required><br>
+                    </div>
+                    <div class="col-md-4">
+                      <label for="organization_type" class="form-label">Organization Type</label>
+                      <select name="org_type" id="org_type" class="form-control" onchange="">
+                        <option value="0">--Select--</option>    
+                        <option value="hotel">Hotel</option>
+                        <option value="resort">Resort</option>
+                      </select> 
+                    </div>
+                    <div class="col-md-4">
+                        <label for="destn" class="form-label" >Destination</label><br>
+                                <select name="destn" id="destn" class="form-control" onchange="">
+                                  <option value="0">--Select--</option>    
+                                  {% for x in destn %}
+                                  <option value="{{x.id}}">{{x.name}}</option>
+                                  {% endfor %}
+                                </select>  
+                    </div>
+                    <div class="col-md-4">
+                        <label for="contact_person" class="form-label">Contact Person</label>
+                        <input type="text" class="form-control" name="contact_person" value="" id="contact_person" required><br>
+                      </div>
+                    <div class="col-md-4">
+                      <label for="contact_number" class="form-label">Contact Number</label>
+                      <input type="text" class="form-control" name="contact_number" value="" id="contact_number" required><br>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="website" class="form-label">Website</label>
+                        <input type="text" class="form-control" name="website" value="" id="website" required><br>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" name="email" value="" id="email" required><br>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="" class="form-label" >State</label><br>
+                                <select name="state" id="state" class="form-control" onchange="get_state()">
+                                  <option value="0">--Select--</option>    
+                                  {% for x in stat %}
+                                  <option value="{{x.id}}">{{x.name}}</option>
+                                  {% endfor %}    
+                                </select>
+                      </div>
+                      <div class="col-md-4">
+                        <label for="" class="form-label">City</label><br>
+                                <select name="city" id="city" class="form-control">
+                                  <option value="0">--Select--</option>    
+                                  {% for x in citi %}
+                                  <option value="{{x.id}}">{{x.name}}</option>
+                                  {% endfor %}
+                                </select>
+                      </div>
+                    
+                    <div class="col-md-8">
+                      <label for="title" class="form-label">Address</label>
+                      <input type="text" class="form-control" name="address" value="" id="address" required><br>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="proof" class="form-label">Proof</label>
+                        <input type="proof" class="form-control" name="proof" value="" id="proof" required><br>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="images" class="form-label">Choose Images</label><br>
+                          <input type="file" class="form-control"  placeholder="" name="image" id="image" multiple >
+                        </div>
+                    <div class="col-md-4"><br>
+                      <label for="status">Status </label>
+                      <input type="checkbox" id="status" name="status" value="True">        
+                    </div>
+                  </div>
+                  
+                  <div class="col-6 mt-4">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                  </div>
+                </form>
+           
+        </div>
+        
+        <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
+        
+</main>
+{% endblock %}  
+
+<!-- <form class="form-horizontal" method="POST">{% csrf_token %}    
+  <div class="row">
+    <label class="col-2 col-form-label text-nowrap" for="{{ form.hotel_name.id_for_label }}">{{form.hotel_name.label}} :</label>
+    <div class="col">{{form.hotel_name}}</div>
+  </div><br>
+  <div class="row">
+    <label class="col-2 col-form-label text-nowrap" for="{{ form.address.id_for_label }}">{{form.address.label}} :</label>
+    <div class="col">{{form.address}}</div>
+  </div><br>
+  <div class="row">
+    <label class="col-2 col-form-label text-nowrap" for="{{ form.destination.id_for_label }}">{{form.destination.label}} :</label>
+    <div class="col">{{form.destination}}</div>
+  </div><br>
+  <div class="row">
+    <label class="col-2 col-form-label text-nowrap" for="{{ form.phone_number.id_for_label }}">{{form.phone_number.label}} :</label>
+    <div class="col">{{form.phone_number}}</div>
+  </div><br>
+  <div class="row">
+    <label class="col-2 col-form-label text-nowrap" for="{{ form.username.id_for_label }}">{{form.username.label}} :</label>
+    <div class="col">{{form.username}}</div>
+  {{ form.username.errors }}
+  </div><br>
+  <div class="row">
+    <label class="col-2 col-form-label text-nowrap" for="{{ form.password1.id_for_label }}">{{form.password.label}} :</label>
+    <div class="col">{{form.password}}</div>
+    {{ form.password.errors }}
+  </div><br>
+  <div class="row" >
+    <label class="col-2 col-form-label text-nowrap"  for="{{ form.password2.id_for_label }}">{{form.Confirm_password.label}} :</label>
+    <div class="col" >{{form.Confirm_password}}</div>
+    {{ form.password2.errors }}
+  </div><br>
+
+  <div class="col-12 mt-4" style="margin-left: .5rem;">
+    <button type="submit" id="btnSubmit" class="btn btn-primary">Submit</button>
+  </div><br><br>
+</form> -->

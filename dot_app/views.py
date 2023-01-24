@@ -411,6 +411,134 @@ def dot_update_destination(request):
             pass
     return redirect('dot_view_destination')
 
+
+def dot_addorganization(request):
+    destn = destinstions.objects.all()
+    stat = state.objects.all()
+    citi = city.objects.all()
+    return render(request,'organizations.html',{'destn':destn, 'stat':stat, 'citi':citi})
+
+
+def dot_addorganization_db(request):
+    if request.method == 'POST':
+        user = request.user.id
+        title = request.POST['title']
+        org_type = request.POST['org_type']
+        destn = request.POST['destn']
+        contact_person = request.POST['contact_person']
+        contact_number = request.POST['contact_number']
+        website = request.POST['website']
+        email = request.POST['email']
+        sts_id = request.POST['state']
+        city_id = request.POST['city']
+        address = request.POST['address']
+        proof = request.POST['proof']
+        status = request.POST['status']
+        img = request.FILES.getlist('image')
+        # stat = state.objects.all().filter(id=sts_id)
+        
+        # citi = city.objects.all().filter(id=city_id)
+        org = organization(title=title, org_type=org_type, destinstion_id=destn, contact_person=contact_person, contact_number=contact_number, website=website,
+         state=sts_id, city=city_id, address=address, email=email, proof=proof, status=status, c_user=user)
+        org.save()
+        for x in img:
+            b=organization_images(organization_id=org.id, images=x)
+            b.save()
+        return redirect('dot_organizationlist')
+
+def dot_organizationlist(request):
+    org = organization.objects.all()
+    orgstn = []
+    for x in org:
+        # print(x.d_area.name)
+        img= organization_images.objects.all().filter(organization=x.id)
+        # print('>>>>>>>>>>>>>>')
+        # print(img[0].id)
+        im =''
+        if img:
+            im = img[0].images
+        orgstn.append({'id':x.id, 'title':x.title,'org_type':x.org_type , 'detn_name':x.destinstion.name,'contact_person':x.contact_person,'contact_number':x.contact_number, 'website':x.website,
+         'address':x.address, 'email':x.email, 'state':x.state, 'city':x.city, 'proof':x.proof, 'status':x.status, 'image':im,})
+    return render(request, "organizationlist.html",{'org':orgstn})
+
+
+
+def dot_edite_organization(request):
+    org_id = request.GET['a']
+    orgn = organization.objects.all().filter(id=org_id)
+    img = organization_images.objects.all().filter(organization=org_id)
+    destn = destinstions.objects.all()
+    stat = state.objects.all()
+    citi = city.objects.all()
+    return render(request, 'editOrganization.html', {'orgn':orgn, 'destn':destn, 'stat':stat, 'citi':citi, 'img':img})
+
+
+def dot_updateorganization(request):
+    if request.method == 'POST':
+        or_id = request.POST['or_id']
+        title = request.POST['title']
+        org_type = request.POST['org_type']
+        destn = request.POST['destn']
+        print(destn)
+        contact_person = request.POST['contact_person']
+        contact_number = request.POST['contact_number']
+        website = request.POST['website']
+        email = request.POST['email']
+        state = request.POST['state']
+        city = request.POST['city']
+        print(state)
+        print(city)
+        address = request.POST['address']
+        proof = request.POST['proof']
+        img = request.FILES.getlist('image')
+        deletedfiles = request.POST['deletedfiles']
+        organization.objects.filter(id=or_id).update(title=title, org_type=org_type, destinstion_id=destn, contact_person=contact_person, contact_number=contact_number, website=website,
+         state=stat[0].name, city=citi[0].name, address=address, email=email, proof=proof, status=status)
+
+
+def dot_addfacilitytype(request):  
+    if request.method == 'POST':
+        form = FacilitytypeForm(request.POST)
+        if form.is_valid():
+            title = form.cleaned_data['title']
+            description = form.cleaned_data['description']
+            status = form.cleaned_data['status']
+            print(status)
+            faclty_typ = facility_type(title=title, description=description, status=status)
+            faclty_typ.save()
+            return redirect('dot_viewfacilitytype')
+
+    else:
+        form = FacilitytypeForm
+    return render(request,'facilitytype.html',{'form':form})
+
+
+def dot_viewfacilitytype(request):
+    faclty_type = facility_type.objects.all()
+    return render(request,'viewfacilitytype.html',{'faclty_type':faclty_type})
+
+def dot_addfacility(request):
+    faclty_type = facility_type.objects.all()
+    destn = destinstions.objects.all()
+    
+    return render(request,'facility.html',{'faclty_type':faclty_type, 'destn':destn})
+
+def dot_addfacilitydb(request):
+    if request.method == 'POST':
+        destn = request.POST['destn']
+        typ = request.POST['type']
+        title = request.POST['title']
+        description = request.POST['description']
+        price = request.POST['price']
+        img = request.FILES.getlist('image')
+        status = request.POST['status']
+
+
+
+def dot_viewfacilitylist(request):
+    return render(request, 'viewfacilitylist.html')
+
+
 @login_required(login_url="/login")
 def dot_content(request):
     ctnt=content.objects.all()

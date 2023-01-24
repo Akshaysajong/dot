@@ -38,5 +38,14 @@ urlpatterns = [
     path('dot/editdestination/', views.dot_editdestination, name='dot_editdestination'),
     path('delete_destination/', views.delete_destination, name='delete_destination'),
     path('dot/update_destination/', views.dot_update_destination, name='dot_update_destination'),
-
+    path('dot/addorganization/', views.dot_addorganization, name='dot_addorganization'),
+    path('dot/addorganization_db/', views.dot_addorganization_db, name='dot_addorganization_db'),
+    path('dot/organizationlist/', views.dot_organizationlist, name='dot_organizationlist'),
+    path('dot/edite_organization/', views.dot_edite_organization, name='dot_edite_organization'),
+    path('dot/updateorganization/', views.dot_updateorganization, name='dot_updateorganization'),
+    path('dot/addfacilitytype/', views.dot_addfacilitytype, name='dot_addfacilitytype'),
+    path('dot/viewfacilitytype/', views.dot_viewfacilitytype, name='dot_viewfacilitytype'),
+    path('dot/addfacility/', views.dot_addfacility, name='dot_addfacility'),
+    path('dot/addfacilitydb/', views.dot_addfacilitydb, name='dot_addfacilitydb'),
+    path('dot/viewfacilitylist/', views.dot_viewfacilitylist, name='dot_viewfacilitylist'),
 ]
