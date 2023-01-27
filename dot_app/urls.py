@@ -43,9 +43,13 @@ urlpatterns = [
     path('dot/organizationlist/', views.dot_organizationlist, name='dot_organizationlist'),
     path('dot/edite_organization/', views.dot_edite_organization, name='dot_edite_organization'),
     path('dot/updateorganization/', views.dot_updateorganization, name='dot_updateorganization'),
+    path('delete_organization/', views.delete_organization, name='delete_organization'),
     path('dot/addfacilitytype/', views.dot_addfacilitytype, name='dot_addfacilitytype'),
     path('dot/viewfacilitytype/', views.dot_viewfacilitytype, name='dot_viewfacilitytype'),
+    path('dot/edit_facilitytype/', views.dot_edit_facilitytype, name='dot_edit_facilitytype'),
     path('dot/addfacility/', views.dot_addfacility, name='dot_addfacility'),
     path('dot/addfacilitydb/', views.dot_addfacilitydb, name='dot_addfacilitydb'),
     path('dot/viewfacilitylist/', views.dot_viewfacilitylist, name='dot_viewfacilitylist'),
+    path('dot/orderlist/', views.dot_orderlist, name='dot_orderlist'),
+    path('dot/bookinglist/', views.dot_bookinglist, name='dot_bookinglist'),
 ]

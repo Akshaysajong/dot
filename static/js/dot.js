@@ -112,6 +112,24 @@ function delete_destination(id){
 
 }
 
+function delete_organization(id){
+    alert('Organization deleted')  
+    jQuery.ajax({
+        type : 'get',
+        url : "/delete_organization/",
+        data : {
+            org_id : id
+        },
+        dataType : 'jason',
+        success: function(data)
+        {
+            alert(data.msg)    
+            
+        }
+    })
+
+}
+
 
 function confdelete(obj, id) {
 var result = confirm("Are you sure to delete?");

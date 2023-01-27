@@ -3,15 +3,15 @@
   <main class="col-md-9 bgmain ms-sm-auto col-lg-10 px-md-4">     
                                         
       <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2">
-        <h1 class="h4">Edit Organization
+        <h1 class="h4">Edit FacilityType
           <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/admin/">Home</a></li>
-            <li class="breadcrumb-item">Edit Organization</li>
+            <li class="breadcrumb-item">Edit FacilityType</li>
           </ol>
         </h1>
         <div class="btn-toolbar mb-2 mb-md-0">
           <div class="btn-group me-2">
-            <a href="/dot/organizationlist/"><button type="button" class="btn btn-sm">Organization List</button></a>
+            <a href="/dot/organizationlist/"><button type="button" class="btn btn-sm">FacilityType List</button></a>
           </div>
         </div>
       </div>
@@ -20,7 +20,7 @@
 
         <form class="form-horizontal" method="POST" action="/dot/updateorganization/" enctype="multipart/form-data">{% csrf_token %}
             <div class="row">
-                {% for x in orgn %}
+                
                 <input type="hidden" class="form-control" name="or_id" value="{{x.id}}" id="or_id" required><br>
                 <div class="col-md-4">
                   <label for="title" class="form-label">Title</label>
@@ -94,24 +94,7 @@
                   <label for="status">Status </label>
                   <input type="checkbox" id="status" name="status" value="1" {% if x.status %}checked{% endif %}/>        
                 </div>
-                {% endfor %}
-                {% for x in img %}
-                <div class="row" style="display:inline-flex"  data-wow-delay="1.3s">
-                  <div class="col-md-8 ">
-                <div class="imageField" style="margin-left:0;margin-top: 4rem;">
-                <div class="card" style="width: 15rem;">
-                  <img class="card-img-top" src="{{x.images.url}}" alt="Card image cap">
-                </div><br>
-                
-                <div class="btn-group me-6" >
-                  <button type="button" style="margin-left: 7rem" class="btn-link border-0 bg-transparent text-body " onClick="confdelete(this, '{{x.id}}');"><span data-feather="trash-2" ></span></button>
-                </div>
-                <!-- <input type="text" class="form-control" id="inpu" name="pla" id="place" value="{{c.id}}"><br><br> -->
-                <br>
-              </div>
-              </div>
-              </div>
-              {% endfor %}
+            
               <input type="hidden" class="form-control" id="deletedfiles" name="deletedfiles" value="" >
               
               
