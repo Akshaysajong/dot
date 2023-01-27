@@ -6,7 +6,7 @@ from .models import *
 from django.contrib.auth.models import User, Group, Permission
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth import update_session_auth_hash
-from .form import RegisterForm,AddHotelsForm
+from .form import RegisterForm,AddHotelsForm,AddHotel_staffForm
 from django.http import JsonResponse
 
 
@@ -108,70 +108,62 @@ def dot_addhotel(request):
     return render(request,'addhotels.html',{'form':form,'country':ctry,'states':st,'city':cty,'organization':org,'hotel_type':h_type})
 
 # add hotels
-from django.contrib.auth.hashers import make_password
-
 def dot_addhoteldb(request):
     if request.method == "POST":
-        h_type_id = request.POST['hotel_type']
+        username = request.POST['username']
+        password = request.POST['password']
+        user = User.objects.create_user(username=username,password=password)
+        print(user.id)
+        name = request.POST['name']
         contact_person = request.POST['contact_person']
         phone= request.POST['phone']
-        name = request.POST['name']
-        password = request.POST['pwd']
         address = request.POST['address']
         cotry_id = request.POST['country'] 
         sts_id = request.POST['state']
         citi_id = request.POST['city']
+        status = request.POST['status']
         organtn_id = request.POST['organization']
-        h_type = hotel_type.objects.all().filter(id=h_type_id)
+        gr_id = request.POST.getlist('groups')
         cnty = country.objects.all().filter(id=cotry_id)
         sts = state.objects.all().filter(id=sts_id)
         citi = city.objects.all().filter(id=citi_id)
-        password = '12wsxftht234!@#$rfGYHJKBV'
-        form = AddHotelsForm
-        if request.method == "POST":
-            form = AddHotelsForm(request.POST)
-        form = AddHotelsForm(request.POST)
-
-        if form.is_valid():
-            user = form.save()
-            print(user)
-            # h_type_id = request.POST['hotel_type']
-            contact_person = request.POST['contact_person']
-            phone= request.POST['phone']
-            address = request.POST['address']
-            cotry_id = request.POST['country'] 
-            sts_id = request.POST['state']
-            citi_id = request.POST['city']
-            organtn_id = request.POST['organization']
-            # h_type = hotel_type.objects.all().filter(id=h_type_id)
-            cnty = country.objects.all().filter(id=cotry_id)
-            sts = state.objects.all().filter(id=sts_id)
-            citi = city.objects.all().filter(id=citi_id)
-            # password = 'PASSWORD_HERE'
-            # form = AddHotelsForm
-            # if request.method == "POST":
-            #     form = AddHotelsForm(request.POST)
-            # if form.is_valid():
-            #     user = form.save()
-            #     name = form.cleaned_data.get('username')
-            #     print(name)
-            # if form.is_valid():
-            #     user = form.save()
-            # form.password = make_password(password)
-            # form.save()
-            # ho = User(username=name, password=password)
-            # ho.save()
-            # print(ho.id) 
-        gr_id = request.POST.getlist('groups')
-            # idd= gr_id[0]
-            # print(gr_id)
         for x in  gr_id:
                 print(x)
                 user.groups.add(x)
         hotl = userprofile(user_id=user.id,name=name, organization_id=organtn_id, contact_person=contact_person, phone=phone, address=address, country=cnty[0].name, state=sts[0].name, city=citi[0].name,status=status)
         hotl.save()
-
     return redirect('dot_addhotel')
+
+
+
+# # add hotel_staffs
+# def dot_add_staffdb(request):
+#     if request.method == "POST":
+#         username = request.POST['username']
+#         password = request.POST['password']
+#         user = User.objects.create_user(username=username,password=password)
+#         print(user.id)
+#         name = request.POST['name']
+#         phone= request.POST['phone']
+#         address = request.POST['address']
+#         status = request.POST['status']
+#         departmt= request.POST['department']
+#         gr_id = request.POST.getlist('groups') 
+#         dept = staff_department.objects.all().filter(id=departmt)     
+#         for x in  gr_id:
+#                 print(x)
+#                 user.groups.add(x)
+#         stff = userprofile(user_id=user.id,name=name, phone=phone, address=address,department_id=dept[0].department,status=status)
+#         stff.save()
+#     return redirect('dot_add_staff')
+
+# @login_required(login_url="/login")
+# def dot_addhotel(request):
+#     form = AddHotel_staffForm
+#     dept=staff_department.objects.all()
+#     return render(request,'add_hotelstaff.html',{'form':form,'department':dept})
+
+
 
 # view hotels
 def dot_viewhotels(request):
@@ -222,10 +214,17 @@ def dot_update_hotel(request):
         sts = state.objects.all().filter(id=sts_id)
         citi = city.objects.all().filter(id=citi_id)
         ho = User(username=name, password=password)
+        user_id = userprofile.objects.all().filter(id=user_id)
         ho.save()
         print(ho.id) 
-        userprofile.objects.all().update(user_id=ho.id, organization_id=organtn_id, phone=phone, address=address,hotel_type=h_type[0].types, country=cnty[0].name, state=sts[0].name, city=citi[0].name)
+        if int(id[0].c_user) == User.id or User.is_superuser:
+            userprofile.objects.all().filter(id=id).update( organization_id=organtn_id, phone=phone, address=address,hotel_type=h_type[0].types, country=cnty[0].name, state=sts[0].name, city=citi[0].name)
         # hotl.save()
+        # if int(dn_ar[0].c_user) == user.id or user.is_superuser:
+        #     destination_area.objects.all().filter(id=da_id).update(name=destn_area, place=place, longitude=longitude, lattitude=lattitude, status=status)
+        # else:
+        #     messages.success(request, f"you are not autherized to edit !!!!!  ")
+
     return redirect('dot_viewhotels')
 
 
@@ -361,10 +360,7 @@ def dot_view_destination(request):
     destn = destinstions.objects.all()
     destn_list=[]
     for x in destn:
-        # print(x.d_area.name)
         img= destination_img.objects.all().filter(destinstions=x.id)
-        # print('>>>>>>>>>>>>>>')
-        # print(img[0].id)
         im =''
         if img:
             im = img[0].image
@@ -451,6 +447,10 @@ from rest_framework.authentication import TokenAuthentication
 import json
 from rest_framework.response import Response
 import random 
+
+# def get_data(request):
+#     return JsonResponse(data, safe=False)
+
 # Register customers
 class Register(APIView):
     def post(self,request,format=None):
@@ -496,10 +496,6 @@ class Register(APIView):
 #                 data=(customer_profile_serializer.errors)
 #             return Response(data)
 
-
-
-
-
 # cust_profile
 # class cust_profileRegister(APIView):
 #     def post(self,request,format=None):
@@ -517,9 +513,39 @@ class Register(APIView):
 #             profile=serializer.errors       
 #         return Response(profile)
 
+
+# login customers(token generation)
+class LoginView(APIView):
+     def post(self,request):
+        cust = json.loads(request.body)
+        cust_exist= customer.objects.filter(username=cust['username']).count()
+        print(cust_exist)
+        if cust_exist>0:
+            cust_pass= customer.objects.filter(username=cust['username'], password=cust['password'])
+            print(cust_pass)
+            for x in cust_pass:
+                n= x.id
+                print(n)
+                if cust_exist:
+                    token= str(x.id) + "Token" + str(random.randint(19678999999,29876543210))
+                    cus= customer_auth(u_id_id=n, tokens=token)
+                    cus.save()
+                    return Response({
+                        'message':'User logged successfully',
+                        'token': token,
+                        'user_id' : x.id,
+                    })
+        else:
+            return Response({
+             'message':'User does not exist'
+            })          
+
+
 # destination_area
 class destination_areaView(viewsets.ModelViewSet):
     queryset=destination_area.objects.all()
+    # queryset={destination_area: 'destination_area'}
+    # print(queryset)
     serializer_class=destination_areaSerializer
 
 # view destinations
@@ -531,3 +557,798 @@ class destinstionsView(viewsets.ModelViewSet):
 class destination_imageView(viewsets.ModelViewSet):
     queryset=destination_img.objects.all()
     serializer_class=destination_imgSerializer
+
+
+# homepage api
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+
+@api_view(['GET'])
+def homepage_contentgreenkitchen(request):
+    data ={
+    "banners": [
+        {
+            "url": "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+            "img": "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+            "title": "Banner1",
+            "id": 4,           
+        },
+        {
+            "url": "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+            "img": "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+            "title": "Banner1",
+            "id": 4,           
+        },
+        {
+            "url": "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+            "img": "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+            "title": "Banner2",
+            "id": 4,
+            "type": "products"
+        },
+      
+    ],
+    "Deal_title": [
+        "Today's ",
+        "Deals"
+    ],
+    "Today's_products": [],
+    "Exclussive_title": [
+    "Exclussive ",
+    "Products"
+    ],
+    "Exclussive_products": [
+        {
+            "id": 13,
+            "title": "RICE",
+            "images": [
+                "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+            ],
+            "Product_variants": [
+                {
+                    "title": "rice",
+                    "id": 100,
+                    "price": 60,
+                    "original_price": 70
+                }
+            ]
+        },
+        {
+            "id": 42,
+            "title": "TOMATO",
+            "images": [
+                "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+            ],
+            "Product_variants": [
+                {
+                    "weight": "1 KG",
+                    "id": 19,
+                    "price": 72,
+                    "original_price": 80
+                },
+                {
+                    "weight": "500 gm",
+                    "id": 11,
+                    "price": 96,
+                    "original_price": 100
+                }
+            ]
+        },
+        {
+            "id": 4,
+            "title": "Ladies Finger",
+            "images": [
+                 "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                 ],
+            "Product_variants": [
+                {
+                    "weight": "1 KG",
+                    "id": 7,
+                    "price": 90,
+                    "original_price": 100
+                },
+                {
+                    "weight": "500 gms",
+                    "id": 2,
+                    "price": 50,
+                    "original_price": 60
+                },
+                {
+                    "weight": "250 gms",
+                    "id": 45,
+                    "price": 10,
+                    "original_price": 20
+                }
+            ]
+        }
+    ],
+    "Farmfresh_products": [
+        {
+            "id": 4,
+            "title": "Long Bean",
+            "images": [
+                "https://mygreenkitchen.in/media/cache/sylius_shop_product_thumbnail/05/25/b8f3a84e2a915d0b604b87d994d7.jpeg"
+            ],
+            "product_variants": [
+                {
+                    "weight": "1 KG",
+                    "id": 1,
+                    "price": 80,
+                    "original_price": 100
+                },
+                {
+                    "weight": "750 gm",
+                    "id": 6,
+                    "price": 50,
+                    "original_price": 55
+                }
+            ]
+        },
+        {
+            "id": 11,
+            "title": "Cucumber",
+            "images": [
+                "https://mygreenkitchen.in/media/cache/sylius_shop_product_thumbnail/05/25/b8f3a84e2a915d0b604b87d994d7.jpeg"
+            ],
+            "product_variants": [
+                {
+                    "weight": "1 KG",
+                    "id": 10,
+                    "price": 54,
+                    "original_price": 60
+                }
+            ]
+        },
+        {
+            "id": 12,
+            "title": "Green Brinjal",
+            "images": [
+                "https://mygreenkitchen.in/media/cache/sylius_shop_product_thumbnail/05/25/b8f3a84e2a915d0b604b87d994d7.jpeg"
+            ],
+            "product_variants": [
+                {
+                    "weight": "1 KG",
+                    "id": 15,
+                    "price": 70,
+                    "original_price": 74
+                },
+                {
+                    "weight": "500 gms",
+                    "id": 20,
+                    "price": 49,
+                    "original_price": 30
+                }
+            ]
+        },
+        {
+            "id": 5,
+            "title": "Snake Gourd",
+            "images": [
+                "https://mygreenkitchen.in/media/cache/sylius_shop_product_thumbnail/05/25/b8f3a84e2a915d0b604b87d994d7.jpeg"
+            ],
+            "Product_variants": [
+                {
+                    "weight": "1 KG",
+                    "id": 5,
+                    "price": 70,
+                    "original_price": 76
+                },
+                {
+                    "weight": "500 gms",
+                    "id": 39,
+                    "price": 99,
+                    "original_price": 99
+                }
+            ]
+        },
+        {
+            "id": 6,
+            "title": "Bitter Gourd",
+            "images": [
+                "https://mygreenkitchen.in/media/cache/sylius_shop_product_thumbnail/05/25/b8f3a84e2a915d0b604b87d994d7.jpeg"
+            ],
+            "product_variants": [
+                {
+                    "weight": "2 KG",
+                    "id": 9,
+                    "price": 90,
+                    "original_price": 98
+                },
+                {
+                    "weight": "250 gm",
+                    "id": 44,
+                    "price": 90,
+                    "original_price": 94
+                }
+            ]
+        },
+    ],
+    "New_title": [
+        "New ",
+        "Products"
+    ],
+    "New_products": [
+        {
+            "id": 56,
+            "title": "Raw Banana",
+            "images": [
+                "https://mygreenkitchen.in/media/cache/sylius_shop_product_thumbnail/dd/10/7fce79fb1fefdce6a1229a9fe56e.jpeg"
+            ],
+            "Product_variants": [
+                {
+                    "weight": "3 KG",
+                    "id": 83,
+                    "price": 96,
+                    "original_price": 100
+                }
+            ]
+        },
+        {
+            "id": 68,
+            "title": "Mint Leaves",
+            "images": [
+                "https://mygreenkitchen.in/media/cache/sylius_shop_product_thumbnail/dd/10/7fce79fb1fefdce6a1229a9fe56e.jpeg"
+            ],
+            "Product_variants": [
+                {
+                    "weight": "1 Bunch",
+                    "id": 98,
+                    "price": 80,
+                    "original_price": 90
+                }
+            ]
+        },
+        {
+            "id": 47,
+            "title": "Coriander Leaves",
+            "images": [
+                "https://mygreenkitchen.in/media/cache/sylius_shop_product_thumbnail/dd/10/7fce79fb1fefdce6a1229a9fe56e.jpeg"
+            ],
+            "product_variants": [
+                {
+                    "weight": "1 Bunch",
+                    "id": 23,
+                    "price": 95,
+                    "original_price": 100
+                }
+            ]
+        },
+        {
+            "id": 46,
+            "title": "Curry Leaves",
+            "images": [
+                "https://mygreenkitchen.in/media/cache/sylius_shop_product_thumbnail/dd/10/7fce79fb1fefdce6a1229a9fe56e.jpeg"
+            ],
+            "Product_variants": [
+                {
+                    "weight": "1 Bunch",
+                    "id": 82,
+                    "price": 10,
+                    "original_price": 12
+                },
+                {
+                    "weight": "1 KG",
+                    "id": 136,
+                    "price": 100,
+                    "original_price": 120
+                }
+            ]
+        },       
+        {
+            "id": 31,
+            "title": "Ginger",
+            "images": [
+                "https://mygreenkitchen.in/media/cache/sylius_shop_product_thumbnail/dd/10/7fce79fb1fefdce6a1229a9fe56e.jpeg"
+            ],
+            "Product_variants": [
+                {
+                    "weight": "1 KG",
+                    "id": 50,
+                    "price": 88,
+                    "original_price": 100
+                },
+                {
+                    "weight": "500 gms",
+                    "id": 52,
+                    "price": 44,
+                    "original_price": 50
+                },
+                {
+                    "weight": "100 gms",
+                    "id": 53,
+                    "price": 19,
+                    "original_price": 20
+                }
+            ]
+        }
+    ],
+    "user": "null"
+}
+    return Response(data)
+
+
+
+    #  {"banners":[{
+    #     'title': 'welcome to my green kitchen',
+    #     'header': 'our products',
+    #     'products': ['product1','product2','product3'],
+    #     'about': 'about us',
+    #     'about_content': 'we are a team of experts in our field and dedicated to providing the best service possible',
+    
+    # }
+    # ]
+    # }
+    # return Response(data)
+
+    
+@api_view(['GET'])
+def homepage_contentdot(request):
+    data ={
+"banner": [
+        {
+            "title": "India's new trip planner",
+            "sub title":"DOT we make your trips more memorable",
+            "url": "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+            "img": "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+            "id": 4,           
+        },
+        
+    ],
+    
+"button": [
+        {
+            "title": "KARNATAKA",
+            "sub title":"10 destinations in Karnataka",          
+            "id": 4,           
+        },
+        
+    ],
+        "karnataka": [
+            {
+                
+                "id": 13,
+                "title": "HUMPI",
+                "images": [
+                    "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                ],
+                "description":" Is a cultural and architectural heritage site built more than 200 years ago. The site was constructed between 1336 AD to 1565 AD. This location is famous for its temples, palaces, market streets and monuments, making up the Vijayanagara Empire.  "
+                
+            },
+            {
+                "id": 42,
+                "title": "BADAMI",
+                "images": [
+                    "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                ],
+                "description":" It is located in a ravine at the foot of a rugged, red sandstone outcrop that surrounds Agastya lake.  "
+            
+            },
+            {
+                "id": 45,
+                "title": "MYSORE",
+                "images": [
+                    "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                    ],
+                "description":"  Mysuru has an area of 6,307 sq km and a population of 30,01,127 (2011 census). The city is also known as the City of Palaces, Mysuru has always enchanted its visitors with its quaint charm. "
+                
+            },
+            {
+                "id": 43,
+                "title": "GOKARNA",
+                "images": [
+                    "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                    ],
+                "description":"  is a small temple town located in Uttara Kannada district of Karnataka state in India, It has a population of around 20,000.  "
+                
+            }
+        ],
+
+     "sub_title_A": [
+        "LET US PLAN FOR YOU ",
+        "What's next?",
+        
+    ],
+          
+
+            "sub_title1": [
+            "NATIONAL PARKS",
+            
+            ],
+    "img": [
+       "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+    
+    ],
+        "national parks": [
+            {
+                
+                "id": 13,
+                "title": "JIM CORBETT NATIONAL PARK",
+                "images": [
+                    "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                ],
+                
+            },
+            {
+                "id": 42,
+                "title": "GIR NATIONAL PARK",
+                "images": [
+                    "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                ],
+            
+            },
+            {
+                "id": 4,
+                "title": "BENNARGETTA NATIONAL PARK",
+                "images": [
+                    "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                    ],
+                
+            },
+            {
+                "id": 4,
+                "title": "PERIYAR NATIONAL PARK",
+                "images": [
+                    "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                    ],
+                
+            }
+        ],
+     "sub_title2": [
+       "TREKING",
+    
+    ],
+    "img": [
+       "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+    
+    ],
+        "Treking": [
+            {
+                
+                "id": 13,
+                "title": "CHOPTA CHANDRASHILA THUNGNATH",
+                "images": [
+                    "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                ],
+                
+            },
+            {
+                "id": 42,
+                "title": "CHADAR TREK FROZEN RIVER",
+                "images": [
+                    "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                ],
+            
+            },
+            {
+                "id": 4,
+                "title": "AUDENS COL EXPEDITION",
+                "images": [
+                    "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                    ],
+                
+            },
+            {
+                "id": 4,
+                "title": "BINSAR WEEKEND TREK",
+                "images": [
+                    "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                    ],
+                
+            }
+        ],
+     "sub_title3": [
+       "HILLSTATION",
+    
+    ],
+    "img": [
+       "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+    
+    ],
+        "Hillstations": [
+            {
+                
+                "id": 13,
+                "title": " Shimla",
+                "images": [
+                    "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                ],
+                
+            },
+            {
+                "id": 42,
+                "title": "Ooty",
+                "images": [
+                    "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                ],
+            
+            },
+            {
+                "id": 4,
+                "title": "Srinagar",
+                "images": [
+                    "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                    ],
+                
+            },
+            {
+                "id": 4,
+                "title": " Coorg",
+                "images": [
+                    "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                    ],
+                
+            }
+        ],
+     "sub_title4": [
+       "HONEYMOON",
+    
+    ],
+    "img": [
+       "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+    
+    ],
+        "Honeymoon": [
+            {
+                
+                "id": 13,
+                "title": "GOA",
+                "images": [
+                    "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                ],
+                
+            },
+            {
+                "id": 42,
+                "title": "ANDAMAN",
+                "images": [
+                    "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                ],
+            
+            },
+            {
+                "id": 4,
+                "title": "HIMACHAL",
+                "images": [
+                    "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                    ],
+                
+            },
+            {
+                "id": 4,
+                "title": "KASHMIR",
+                "images": [
+                    "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                    ],
+                
+            }
+        ],
+
+
+    "sub_title_B": [
+         "Seasonal suggestions",
+         "WHERE TO NEXT?",
+    ],
+        "sub_title5": [
+            "HIMACHAL PRADESH",
+        
+        ],
+            "img": [
+            "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+            
+            ],
+            "himachal pradesh": [
+                {
+                    
+                    "id": 13,
+                    "title": "manali",
+                    "images": [
+                        "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                    ],
+                    
+                },
+                {
+                    "id": 42,
+                    "title": "Dharamshala",
+                    "images": [
+                        "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                    ],
+                
+                },
+                {
+                    "id": 4,
+                    "title": "Dalhousie",
+                    "images": [
+                        "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                        ],
+                    
+                },
+                {
+                    "id": 4,
+                    "title": "Kasol",
+                    "images": [
+                        "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                        ],
+                    
+                }
+        ],
+        "sub_title6": [
+            "OOTY",  
+        ],
+            "img": [
+            "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+            
+            ],
+            "Ooty": [
+                {
+                    
+                    "id": 13,
+                    "title": "Government Rose Garden",
+                    "images": [
+                        "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                    ],
+                    
+                },
+                {
+                    "id": 42,
+                    "title": "Tamilnadu Tourism Ooty Boat House",
+                    "images": [
+                        "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                    ],
+                
+                },
+                {
+                    "id": 4,
+                    "title": "Mudumalai Tiger Reserve",
+                    "images": [
+                        "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                        ],
+                    
+                },
+                {
+                    "id": 4,
+                    "title": "Doddabetta Peak",
+                    "images": [
+                        "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                        ],
+                    
+                }
+            ],
+
+     "sub_title7": [
+       "MANALI",
+    
+    ],
+        "img": [
+        "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+        
+        ],
+            "Manali": [
+                {
+                    
+                    "id": 13,
+                    "title": " Hadimba Devi Temple",
+                    "images": [
+                        "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                    ],
+                    
+                },
+                {
+                    "id": 42,
+                    "title": "Old Manali",
+                    "images": [
+                        "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                    ],
+                
+                },
+                {
+                    "id": 4,
+                    "title": "Museum of Himachal Culture & Folk Art",
+                    "images": [
+                        "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                        ],
+                    
+                },
+                {
+                    "id": 4,
+                    "title": " Rohtang La",
+                    "images": [
+                        "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                        ],
+                    
+                }
+            ],
+            
+
+    
+    "sub_title_C": [
+         " DOT MEMBERSHIP CARD"
+        
+    ],
+        "card" : [
+            {
+                "id": 56,
+                "title": "MORE ABOUT DOT MEMBERSHIP CARD",
+                "images": [
+                    "https://mygreenkitchen.in/media/cache/sylius_shop_product_thumbnail/dd/10/7fce79fb1fefdce6a1229a9fe56e.jpeg"
+                ],
+            
+            },
+            
+        ],
+
+
+    "sub_title_D": [
+        "PICK THE BEST",
+        "TOP STAYS",
+        
+        
+    ],    
+                "stays": [
+                    {
+                        "id": 56,
+                        "title": "WANDERLUST HUMPI",
+                        "facility": "3 beds,2 bedrooms",
+                        "price":"35004/night",
+                        "images": [
+                            "https://mygreenkitchen.in/media/cache/sylius_shop_product_thumbnail/dd/10/7fce79fb1fefdce6a1229a9fe56e.jpeg"
+                        ],
+
+                    },
+                    {
+                        "id": 50,
+                        "title": "Waterfall guest house",
+                        "facility": "3 beds,2 bedrooms",
+                        "price":"4679/night",
+                        "images": [
+                            "https://mygreenkitchen.in/media/cache/sylius_shop_product_thumbnail/dd/10/7fce79fb1fefdce6a1229a9fe56e.jpeg"
+                        ],
+                    },
+                    {
+                        "id": 57,
+                        "title": "Wild Stone Humpi",
+                        "facility": "3beds,2 bedrooms",
+                        "price":"4679/night",
+                        "images": [
+                            "https://mygreenkitchen.in/media/cache/sylius_shop_product_thumbnail/dd/10/7fce79fb1fefdce6a1229a9fe56e.jpeg"
+                        ],
+                    },
+                    {
+                        "id": 59,
+                        "title": "Hakuna matata Inn",
+                        "facility": "3beds,2 bedrooms",
+                        "price":"4679/night",
+                        "images": [
+                            "https://mygreenkitchen.in/media/cache/sylius_shop_product_thumbnail/dd/10/7fce79fb1fefdce6a1229a9fe56e.jpeg"
+                        ],
+                    },
+                ],
+    "sub_title_E": [
+        "DOT EXCLUSIVE",   
+        "Discover travel memories",      
+    ], 
+            "things": [
+                {
+                    "id": 5,
+                    "title": "14 best things to do in Humpi",
+                    "images": [
+                        "https://mygreenkitchen.in/media/cache/sylius_shop_product_thumbnail/dd/10/7fce79fb1fefdce6a1229a9fe56e.jpeg"
+                    ],
+
+                },
+                {
+                    "id": 6,
+                    "title": "Top destinations for food and drink",
+                    "images": [
+                        "https://mygreenkitchen.in/media/cache/sylius_shop_product_thumbnail/dd/10/7fce79fb1fefdce6a1229a9fe56e.jpeg"
+                    ],
+                
+                },
+                
+                ],
+            
+        
+  "user": "null"
+},
+    return Response(data)
+
+

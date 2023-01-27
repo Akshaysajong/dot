@@ -1,0 +1,82 @@
+<!-- {% extends "./base1.html" %}
+{% block main %}
+
+<main class="col-md-9 bgmain ms-sm-auto col-lg-10 px-md-4">                                             
+          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2">
+            <h1 class="h4">Add Staff
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/dot">Home</a></li>
+                <li class="breadcrumb-item">Add Staff</li>
+              </ol>
+            </h1>
+            <div class="btn-toolbar mb-2 mb-md-0">
+              <div class="btn-group me-2">
+                <a href="/dot/view_staff/"><button type="button" class="btn btn-sm">View staff</button></a>
+              </div>
+            </div>
+          </div>
+          <div class="card p-4 rounded-1 border-0 shadow">
+            <h5 class="text-uppercase fw-bold mb-4 col-8">&nbsp;</h5>
+            <div class="row" style="margin-left: .5rem;">
+
+              <form class="form-horizontal" method="POST" action="/dot/add_staff/" enctype="multipart/form-data">{% csrf_token %}
+                <div class="row">
+                  <div class="col-md-4">
+                    <label for="title" class="form-label">Groups</label>
+                    <div class="col">{{ form.groups }}</div><br>
+                  </div>
+                  <div class="col-md-4">
+                    <label for="" class="form-label">department</label><br>
+                            <select name="staff_department" id="staff_department" class="form-control">
+                              <option value="0">--Select--</option>    
+                              {% for x in staff_department %}
+                              <option value="{{x.id}}">{{x.department}}</option>
+                              {% endfor %}
+                            </select>
+                  </div>
+                    <div class="col-md-4">
+                      <label for="title" class="form-label">Name</label>
+                      <input type="text" class="form-control" name="name" value="" id="name" required><br>
+                    </div>
+                   
+                    <div class="col-md-4">
+                      <label for="title" class="form-label">Contact Number</label>
+                      <input type="text" class="form-control" name="phone" value="" id="phone" required><br>
+                    </div>
+                    <div class="col-md-4">
+                      <label for="title" class="form-label">User Name</label>
+                      {{ form.username }}
+                    </div>
+                    <div class="col-md-4">
+                      <label for="title" class="form-label">Password</label>
+                      {{ form.password }}
+                    </div>
+                    <div class="col-md-8">
+                      <label for="title" class="form-label">Address</label>
+                      <input type="text" class="form-control" name="address" value="" id="address" required><br>
+                    </div>
+                    
+                   
+                    <div class="col-md-4"><br>
+                      <label for="status">Status </label>
+                      <input type="checkbox" id="status" name="status" value="True">
+                      
+                    </div>
+                    
+                    
+                    
+                   
+                  </div>
+                  
+                  <div class="col-12 mt-4">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                  </div>
+                </form>
+           
+        </div>
+        
+        < <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
+<!--         
+</main>
+{% endblock %}   -->
+

@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 import os
 from pathlib import Path
+# from dot_app import path,include
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -40,7 +42,11 @@ INSTALLED_APPS = [
     'dot_app',
     'rest_framework',
     'rest_framework.authtoken',
+
 ]
+# urlpatterns = [
+#     path('api/', include('dot_app.urls')),
+#     ]
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',

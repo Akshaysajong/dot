@@ -1,9 +1,16 @@
 from django.contrib import admin
 from django.urls import path,include
 from . import views
+# from .views import get_data
+from django.conf import settings
+from django.conf.urls.static import static
 # from django.conf import settings
 
 urlpatterns = [
+    # path('data/',get_data, name='data'),
+    # path('api/',include('dot_app.urls')),
+
+
     path('login/', views.login_user, name='login'),
     path('dot/dashboard/', views.dot_dashboard, name='dot_dashboard'),
     path('logout/', views.logoutuser, name="logout" ),
@@ -24,14 +31,17 @@ urlpatterns = [
     path('ajax_country/', views.ajax_country, name='ajax_country'),
     path('ajax_state/', views.ajax_state, name='ajax_state'),
     path('dot/content/', views.dot_content, name='dot_content'),
+    # path('dot/add_staff/', views.dot_add_staffdb, name='dot_add_staff'),
 
     # api
     path('api/register/',views.Register.as_view(),name='register'),
+    path('api/login/',views.LoginView.as_view(),name='login'),
     # path('api/cust_profile/',views.cust_profileRegister.as_view(),name='cust_profileRegister'),
     path('api/destination_area/',views.destination_areaView.as_view({'get': 'list'}),name='destination_area'),
     path('api/destinstions/',views.destinstionsView.as_view({'get': 'list'}),name='destinstions'),
     path('api/destination_images/',views.destination_imageView.as_view({'get': 'list'}),name='destination_images'),
-
+    path('api/greenktchen_homepage_content/',views.homepage_contentgreenkitchen, name='homepage-content'),
+    path('api/homepage_contentdot/',views.homepage_contentdot, name='homepage-contentdot'),
 
     path('dot/destination_area/', views.dot_destination_area, name='dot_destination_area'),
     path('dot/add_destination_area/', views.dot_add_destination_area, name='dot_add_destination_area'),
@@ -45,5 +55,5 @@ urlpatterns = [
     path('dot/editdestination/', views.dot_editdestination, name='dot_editdestination'),
     path('delete_destination/', views.delete_destination, name='delete_destination'),
     path('dot/update_destination/', views.dot_update_destination, name='dot_update_destination'),
-
 ]
+

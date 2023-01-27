@@ -68,3 +68,4 @@ class destination_imgSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model=destination_img
         fields=['id','destinstions_id','image']
+

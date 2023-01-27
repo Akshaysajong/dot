@@ -180,6 +180,13 @@ class cust_profile(models.Model):
     address = models.CharField(max_length=50,blank=True, null=True)
     status = models.BooleanField(default=False)
 
+class customer_auth(models.Model):
+    u_id=models.ForeignKey(customer,default=None,on_delete=models.CASCADE) 
+    tokens=models.CharField(max_length=100,default="")
+    username=models.CharField(max_length=50,default="") 
+    # def __str__(self):
+    #     return self.username
+
 class booking_type(models.Model):
     name = models.CharField(max_length=50,blank=True, null=True)
     description = models.CharField(max_length=200, default=None, blank=True)
@@ -213,3 +220,10 @@ class coupon(models.Model):
     created = models.DateTimeField(blank=True, null=True)
     updated = models.DateTimeField(blank=True, null=True)
     status = models.BooleanField(default=False)
+
+class staff_department(models.Model):   
+    department =models.CharField(max_length=50,blank=True, null=True)
+    status = models.BooleanField(default=False)
+
+
+
