@@ -6,7 +6,7 @@ from .models import *
 from django.contrib.auth.models import User, Group, Permission
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth import update_session_auth_hash
-from .form import RegisterForm,AddHotelsForm,AddHotel_staffForm
+from .form import RegisterForm,AddHotelsForm
 from django.http import JsonResponse
 
 
@@ -24,10 +24,8 @@ def login_user(request):
                 messages.info(request,  {username}) 
                 return redirect("dot_dashboard")
             else:
-                login(request, user) 
-                print("333333333333333333333333333333333333333")
+                login(request, user)  
                 messages.info(request, {username}) 
-                messages.info(request, f"You are now logged in as {id}") 
                 return redirect('dot_dashboard')
         else:
             return render(request,"login.html",{'msg':'username or password is incorrect'})
@@ -43,21 +41,25 @@ def logoutuser(request):
 
 @login_required(login_url="/login")
 def dot_adduser(request):
-    form = RegisterForm
-    if request.method == "POST":
-        form = RegisterForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            username = form.cleaned_data.get('username')
-            print(username)
-            gr_id = request.POST.getlist('groups')
-            idd= gr_id[0]
-            print(gr_id)
-            for x in  gr_id:
-                print(x)
-                user.groups.add(x)
-            messages.success(request, 'Account was created for' + username)
-            return redirect('dot_adduser')
+    
+    if request.user.groups.filter(name='marketing').exists():
+        form = Register
+    else:
+        form = RegisterForm
+        if request.method == "POST":
+            form = RegisterForm(request.POST)
+            if form.is_valid():
+                user = form.save()
+                username = form.cleaned_data.get('username')
+                print(username)
+                gr_id = request.POST.getlist('groups')
+                idd= gr_id[0]
+                print(gr_id)
+                for x in  gr_id:
+                    print(x)
+                    user.groups.add(x)
+                messages.success(request, 'Account was created for' + username)
+                return redirect('dot_adduser')
     return render(request, "add_user.html",{'form':form})
 
 @login_required(login_url="/login")
@@ -108,6 +110,8 @@ def dot_addhotel(request):
     return render(request,'addhotels.html',{'form':form,'country':ctry,'states':st,'city':cty,'organization':org,'hotel_type':h_type})
 
 # add hotels
+from django.contrib.auth.hashers import make_password
+
 def dot_addhoteldb(request):
     if request.method == "POST":
         username = request.POST['username']
@@ -167,7 +171,7 @@ def dot_addhoteldb(request):
 
 # view hotels
 def dot_viewhotels(request):
-    upro= userprofile.objects.all()
+    upro= userprofile.objects.all().filter(organization=1)
     return render(request, "viewhotels.html",{'hotel':upro})
 
 
@@ -303,7 +307,7 @@ def dot_update_destinationarea(request):
         if int(dn_ar[0].c_user) == user.id or user.is_superuser:
             destination_area.objects.all().filter(id=da_id).update(name=destn_area, place=place, longitude=longitude, lattitude=lattitude, status=status)
         else:
-            messages.success(request, f"you are not autherized to edit !!!!!  ")
+            messages.error(request, "You are not autherized to edit !!!!")
 
     return redirect("dot_view_destinationarea")
 #delete destination area
@@ -405,23 +409,203 @@ def dot_update_destination(request):
         length=len(img)  
         count=destination_img.objects.all().filter(destinstions=d_id).count()
         dn = destinstions.objects.all().filter(id=d_id)
-        if int(destn[0].c_user) == user.id or user.is_superuser:
+        if int(dn[0].c_user) == user.id or user.is_superuser:
             if length < count:
                 for x in img:
                     c=destination_img.objects.all().get(id=x)
                     # print(c)
                     if c.image:
                         c.image.delete()
-                    c.delete()
-                        
-            print(count)
+                    c.delete()           
+            # print(count)
             destinstions.objects.all().filter(id=d_id).update(name=destn,  address=address, description=description, climate=climate, culture=culture, longitude=longitude, lattitude=lattitude)
             for x in pic:
                 ad_img=destination_img(destinstions_id=d_id, image=x)
                 ad_img.save()
         else:
-            pass
+            messages.error(request, "You are not autherized to edit !!!!")
     return redirect('dot_view_destination')
+
+@login_required(login_url="/login")
+def dot_addorganization(request):
+    destn = destinstions.objects.all()
+    stat = state.objects.all()
+    citi = city.objects.all()
+    return render(request,'organizations.html',{'destn':destn, 'stat':stat, 'citi':citi})
+
+
+@login_required(login_url="/login")
+def dot_addorganization_db(request):
+    if request.method == 'POST':
+        user = request.user.id
+        title = request.POST['title']
+        org_type = request.POST['org_type']
+        destn = request.POST['destn']
+        contact_person = request.POST['contact_person']
+        contact_number = request.POST['contact_number']
+        website = request.POST['website']
+        email = request.POST['email']
+        sts_id = request.POST['state']
+        city_id = request.POST['city']
+        address = request.POST['address']
+        proof = request.POST['proof']
+        status = request.POST['status']
+        img = request.FILES.getlist('image')
+        # stat = state.objects.all().filter(id=sts_id)
+        
+        # citi = city.objects.all().filter(id=city_id)
+        org = organization(title=title, org_type=org_type, destinstion_id=destn, contact_person=contact_person, contact_number=contact_number, website=website,
+         state_id=sts_id, city_id=city_id, address=address, email=email, proof=proof, status=status, c_user=user)
+        org.save()
+        for x in img:
+            b=organization_images(organization_id=org.id, images=x)
+            b.save()
+        return redirect('dot_organizationlist')
+
+
+@login_required(login_url="/login")
+def dot_organizationlist(request):
+    org = organization.objects.all()
+    orgstn = []
+    for x in org:
+        # print(x.d_area.name)
+        img= organization_images.objects.all().filter(organization=x.id)
+        # print('>>>>>>>>>>>>>>')
+        # print(img[0].id)
+        im =''
+        if img:
+            im = img[0].images
+        orgstn.append({'id':x.id, 'title':x.title,'org_type':x.org_type , 'detn_name':x.destinstion.name,'contact_person':x.contact_person,'contact_number':x.contact_number, 'website':x.website,
+         'address':x.address, 'email':x.email, 'state':x.state, 'city':x.city, 'proof':x.proof, 'status':x.status, 'image':im,})
+    return render(request, "organizationlist.html",{'org':orgstn})
+
+
+@login_required(login_url="/login")
+def dot_edite_organization(request):
+    org_id = request.GET['a']
+    orgn = organization.objects.all().filter(id=org_id)
+    img = organization_images.objects.all().filter(organization=org_id)
+    destn = destinstions.objects.all()
+    stat = state.objects.all()
+    citi = city.objects.all()
+    return render(request, 'editOrganization.html', {'orgn':orgn, 'destn':destn, 'stat':stat, 'citi':citi, 'img':img})
+
+
+@login_required(login_url="/login")
+def dot_updateorganization(request):
+    if request.method == 'POST':
+        user = request.user
+        or_id = request.POST['or_id']
+        title = request.POST['title']
+        org_type = request.POST['org_type']
+        destn = request.POST['destn']
+        # print(destn)
+        contact_person = request.POST['contact_person']
+        contact_number = request.POST['contact_number']
+        website = request.POST['website']
+        email = request.POST['email']
+        state = request.POST['state']
+        city = request.POST['city']
+        # print(state)
+        # print(city)
+        address = request.POST['address']
+        proof = request.POST['proof']
+        img = request.FILES.getlist('image')
+        status = request.POST['status']
+        deletedimg = request.POST['deletedfiles']
+        orgatn = organization.objects.filter(id=or_id)
+        if int(orgatn[0].c_user) == user.id or user.is_superuser:
+            orgatn.update(title=title, org_type=org_type, destinstion_id=destn, contact_person=contact_person, contact_number=contact_number, website=website,
+            state=state, city=city, address=address, email=email, proof=proof, status=status)
+            for x in img:
+                    ad_img=organization_images(organization_id=or_id, images=x)
+                    ad_img.save()
+            img = [int(item) for item in deletedimg.split(', ') if item.isdigit()]
+            length=len(img) 
+            count=organization_images.objects.all().filter(organization_id=or_id).count() 
+            print(count)
+            if length < count:
+                    for x in img:
+                        c=organization_images.objects.all().get(id=x)
+                        print(c)
+                        if c.images:
+                            # pass
+                            c.images.delete()
+                        c.delete()
+            else:
+                messages.error(request, "You can't delete all images !!!!")
+        else:
+            messages.error(request, "You are not autherized to edit !!!!")
+
+        return redirect('dot_organizationlist')
+
+
+@login_required(login_url="/login")
+def delete_organization(request):
+    org_id = request.GET['org_id']
+    print(org_id)
+    orgtn = organization.objects.all().filter(id=org_id)
+    organization_images.objects.all().filter(organization_id=org_id)
+    # orgtn.delete()
+    dat = {'msg':'organization deleted'}
+    return JsonResponse(dat, safe=False)
+
+@login_required(login_url="/login")
+def dot_addfacilitytype(request):  
+    if request.method == 'POST':
+        form = FacilitytypeForm(request.POST)
+        if form.is_valid():
+            title = form.cleaned_data['title']
+            description = form.cleaned_data['description']
+            status = form.cleaned_data['status']
+            print(status)
+            faclty_typ = facility_type(title=title, description=description, status=status)
+            faclty_typ.save()
+            return redirect('dot_viewfacilitytype')
+
+    else:
+        form = FacilitytypeForm
+    return render(request,'facilitytype.html',{'form':form})
+
+@login_required(login_url="/login")
+def dot_viewfacilitytype(request):
+    faclty_type = facility_type.objects.all()
+    return render(request,'viewfacilitytype.html',{'faclty_type':faclty_type})
+
+@login_required(login_url="/login")
+def dot_edit_facilitytype(request):
+    return render(request,'editfacilitytype.html')
+
+@login_required(login_url="/login")
+def dot_addfacility(request):
+    faclty_type = facility_type.objects.all()
+    destn = destinstions.objects.all()
+    
+    return render(request,'facility.html',{'faclty_type':faclty_type, 'destn':destn})
+
+@login_required(login_url="/login")
+def dot_addfacilitydb(request):
+    if request.method == 'POST':
+        destn = request.POST['destn']
+        typ = request.POST['type']
+        title = request.POST['title']
+        description = request.POST['description']
+        price = request.POST['price']
+        img = request.FILES.getlist('image')
+        status = request.POST['status']
+
+
+@login_required(login_url="/login")
+def dot_viewfacilitylist(request):
+    return render(request, 'viewfacilitylist.html')
+
+
+def dot_orderlist(request):
+    return render(request, 'orderlist.html')
+
+def dot_bookinglist(request):
+    return render(request, 'bookinglist.html')
+
 
 @login_required(login_url="/login")
 def dot_content(request):
@@ -459,7 +643,7 @@ class Register(APIView):
         if serializer.is_valid():
             account=serializer.save()
             data['response']='registered'
-            data['username']=account.username
+            data['name']=account.name
             data['first_name']=account.first_name
             data['last_name']=account.last_name
             data['email']=account.email
@@ -518,10 +702,10 @@ class Register(APIView):
 class LoginView(APIView):
      def post(self,request):
         cust = json.loads(request.body)
-        cust_exist= customer.objects.filter(username=cust['username']).count()
+        cust_exist= customer.objects.filter(name=cust['name']).count()
         print(cust_exist)
         if cust_exist>0:
-            cust_pass= customer.objects.filter(username=cust['username'], password=cust['password'])
+            cust_pass= customer.objects.filter(name=cust['name'], pwd=cust['pwd'])
             print(cust_pass)
             for x in cust_pass:
                 n= x.id
@@ -559,7 +743,9 @@ class destination_imageView(viewsets.ModelViewSet):
     serializer_class=destination_imgSerializer
 
 
+
 # homepage api
+# statically adding data without database
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
@@ -888,8 +1074,8 @@ def homepage_contentdot(request):
         {
             "title": "India's new trip planner",
             "sub title":"DOT we make your trips more memorable",
-            "url": "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
-            "img": "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+            "url": "https://img.freepik.com/free-photo/full-shot-travel-concept-with-landmarks_23-2149153258.jpg?3",
+            "img": "https://www.fabhotels.com/blog/wp-content/uploads/2018/08/1400x600-6.jpg",
             "id": 4,           
         },
         
@@ -909,7 +1095,7 @@ def homepage_contentdot(request):
                 "id": 13,
                 "title": "HUMPI",
                 "images": [
-                    "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                    "https://karnatakatourism.org/wp-content/uploads/2020/05/Hampi.jpg",
                 ],
                 "description":" Is a cultural and architectural heritage site built more than 200 years ago. The site was constructed between 1336 AD to 1565 AD. This location is famous for its temples, palaces, market streets and monuments, making up the Vijayanagara Empire.  "
                 
@@ -918,7 +1104,7 @@ def homepage_contentdot(request):
                 "id": 42,
                 "title": "BADAMI",
                 "images": [
-                    "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                    "https://karnatakatourism.org/wp-content/uploads/2020/10/Bhootanatha-Temple-%E2%80%93-Badami.jpg",
                 ],
                 "description":" It is located in a ravine at the foot of a rugged, red sandstone outcrop that surrounds Agastya lake.  "
             
@@ -927,7 +1113,7 @@ def homepage_contentdot(request):
                 "id": 45,
                 "title": "MYSORE",
                 "images": [
-                    "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                    "https://karnatakatourism.org/wp-content/uploads/2020/06/mysore-palace-1.jpg",
                     ],
                 "description":"  Mysuru has an area of 6,307 sq km and a population of 30,01,127 (2011 census). The city is also known as the City of Palaces, Mysuru has always enchanted its visitors with its quaint charm. "
                 
@@ -936,7 +1122,7 @@ def homepage_contentdot(request):
                 "id": 43,
                 "title": "GOKARNA",
                 "images": [
-                    "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                    "https://www.treebo.com/blog/wp-content/uploads/2018/08/Places-to-See-Near-Gokarna.jpg",
                     ],
                 "description":"  is a small temple town located in Uttara Kannada district of Karnataka state in India, It has a population of around 20,000.  "
                 
@@ -954,8 +1140,8 @@ def homepage_contentdot(request):
             "NATIONAL PARKS",
             
             ],
-    "img": [
-       "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+    "main_img1": [
+       "https://static.toiimg.com/photo/msid-70428261/70428261.jpg",
     
     ],
         "national parks": [
@@ -964,7 +1150,7 @@ def homepage_contentdot(request):
                 "id": 13,
                 "title": "JIM CORBETT NATIONAL PARK",
                 "images": [
-                    "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                    "https://curlytales.com/wp-content/uploads/2022/10/Untitled-design-2022-10-06T184053.043-1170x658.jpg",
                 ],
                 
             },
@@ -972,7 +1158,7 @@ def homepage_contentdot(request):
                 "id": 42,
                 "title": "GIR NATIONAL PARK",
                 "images": [
-                    "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                    "https://img.traveltriangle.com/blog/wp-content/uploads/2017/08/Cover13.jpg",
                 ],
             
             },
@@ -980,7 +1166,7 @@ def homepage_contentdot(request):
                 "id": 4,
                 "title": "BENNARGETTA NATIONAL PARK",
                 "images": [
-                    "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                    "https://curlytales.com/wp-content/uploads/2018/07/bnp-4.jpg",
                     ],
                 
             },
@@ -988,7 +1174,7 @@ def homepage_contentdot(request):
                 "id": 4,
                 "title": "PERIYAR NATIONAL PARK",
                 "images": [
-                    "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                    "https://toim.b-cdn.net/pictures/travel_guide/attractions/thmb/periyar-194.jpeg?370x248",
                     ],
                 
             }
@@ -997,17 +1183,16 @@ def homepage_contentdot(request):
        "TREKING",
     
     ],
-    "img": [
-       "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
-    
-    ],
+        "main_img2": [
+            "https://www.shutterstock.com/image-photo/trekking-mountains-mountain-hiking-tourists-260nw-1183637155.jpg"
+        ],
         "Treking": [
             {
                 
                 "id": 13,
                 "title": "CHOPTA CHANDRASHILA THUNGNATH",
                 "images": [
-                    "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                    "https://www.trekupindia.com/wp-content/uploads/2022/06/Deoriatalchandrashila-trek-TrekupIndia.jpg",
                 ],
                 
             },
@@ -1015,7 +1200,7 @@ def homepage_contentdot(request):
                 "id": 42,
                 "title": "CHADAR TREK FROZEN RIVER",
                 "images": [
-                    "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIfVB6Q3oArRKLqXlFBFcUiwBcp_8-ZAr77A&usqp=CAU",
                 ],
             
             },
@@ -1023,7 +1208,7 @@ def homepage_contentdot(request):
                 "id": 4,
                 "title": "AUDENS COL EXPEDITION",
                 "images": [
-                    "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                    "https://aquaterra.in/wp-content/uploads/2019/09/Audens-Col-Aquaterra-Main-05.jpg",
                     ],
                 
             },
@@ -1031,7 +1216,7 @@ def homepage_contentdot(request):
                 "id": 4,
                 "title": "BINSAR WEEKEND TREK",
                 "images": [
-                    "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                    "https://static.meraevents.com/content/dashboard/tinymce/uploads/binsar-trek-31582880491.jpg",
                     ],
                 
             }
@@ -1040,8 +1225,8 @@ def homepage_contentdot(request):
        "HILLSTATION",
     
     ],
-    "img": [
-       "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+    "main_img3": [
+       "https://media.istockphoto.com/id/585282788/photo/view-of-gurtnellen-a-village-in-swiss-alps.jpg?s=612x612&w=0&k=20&c=uWy_ccZ9BVIkfu2JQ_2gWk_FcsXl6XCDIehvvr2En5A=",
     
     ],
         "Hillstations": [
@@ -1050,7 +1235,7 @@ def homepage_contentdot(request):
                 "id": 13,
                 "title": " Shimla",
                 "images": [
-                    "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                    "https://media.istockphoto.com/id/1223612773/photo/the-kalka-to-shimla-railway-is-a-2-ft-6-in-narrow-gauge-railway-in-north-india-which.jpg?s=612x612&w=0&k=20&c=vYxFBTbvcLcivcYjtFB-S_P7ETUwgIj0mAk84l9uC1g=",
                 ],
                 
             },
@@ -1058,7 +1243,7 @@ def homepage_contentdot(request):
                 "id": 42,
                 "title": "Ooty",
                 "images": [
-                    "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmWJu-Q2TAn-H_FvWj7Ye3O2HMD-JVQGmZ9wOsE8dTsUbH-lk0QAOXPDlOzts6s_fKMk8&usqp=CAU",
                 ],
             
             },
@@ -1066,7 +1251,7 @@ def homepage_contentdot(request):
                 "id": 4,
                 "title": "Srinagar",
                 "images": [
-                    "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                    "https://www.euttaranchal.com/tourism/photos/srinagar-1946181.jpg",
                     ],
                 
             },
@@ -1074,17 +1259,17 @@ def homepage_contentdot(request):
                 "id": 4,
                 "title": " Coorg",
                 "images": [
-                    "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                    "https://media.istockphoto.com/id/1216722235/photo/mountain-with-green-grass-and-beautiful-sky.jpg?s=612x612&w=0&k=20&c=UD4Rmexxtkci9q-gH_PCUaBw6suwTCKp7SkZTXukQ2U=",
                     ],
                 
             }
         ],
-     "sub_title4": [
+"sub_title4": [
        "HONEYMOON",
     
     ],
-    "img": [
-       "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+    "main_img4": [
+       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHVG6sSIUksvmDvPHBYH3HulKDzljVc6kwDbuRwyI9exkyuGFhaal3s3uraDnoWjbKWcU&usqp=CAU",
     
     ],
         "Honeymoon": [
@@ -1093,7 +1278,7 @@ def homepage_contentdot(request):
                 "id": 13,
                 "title": "GOA",
                 "images": [
-                    "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                    "https://www.holidify.com/images/bgImages/GOA.jpg",
                 ],
                 
             },
@@ -1101,7 +1286,7 @@ def homepage_contentdot(request):
                 "id": 42,
                 "title": "ANDAMAN",
                 "images": [
-                    "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                    "https://images.travelandleisureasia.com/wp-content/uploads/sites/2/2022/02/09094313/Andaman.jpg",
                 ],
             
             },
@@ -1109,7 +1294,7 @@ def homepage_contentdot(request):
                 "id": 4,
                 "title": "HIMACHAL",
                 "images": [
-                    "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                    "https://lp-cms-production.imgix.net/2019-06/GettyImages-149353949_high.jpg",
                     ],
                 
             },
@@ -1117,7 +1302,7 @@ def homepage_contentdot(request):
                 "id": 4,
                 "title": "KASHMIR",
                 "images": [
-                    "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                    "https://static.toiimg.com/thumb/msid-96567007,width-748,height-499,resizemode=4,imgsize-184030/.jpg",
                     ],
                 
             }
@@ -1132,8 +1317,8 @@ def homepage_contentdot(request):
             "HIMACHAL PRADESH",
         
         ],
-            "img": [
-            "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+        "main_img5": [
+            "https://upload.wikimedia.org/wikipedia/commons/0/03/Manali_City.jpg",
             
             ],
             "himachal pradesh": [
@@ -1142,7 +1327,7 @@ def homepage_contentdot(request):
                     "id": 13,
                     "title": "manali",
                     "images": [
-                        "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                        "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/05/0f/94/c2/paragliding-in-solang.jpg?w=600&h=400&s=1",
                     ],
                     
                 },
@@ -1150,7 +1335,7 @@ def homepage_contentdot(request):
                     "id": 42,
                     "title": "Dharamshala",
                     "images": [
-                        "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                        "https://cdn.onmycanvas.com/wp-content/uploads/2019/09/walkingfromdharamshalabhagsunagvillagemcleodgangarounddharamshalakangravalley.jpeg",
                     ],
                 
                 },
@@ -1158,7 +1343,7 @@ def homepage_contentdot(request):
                     "id": 4,
                     "title": "Dalhousie",
                     "images": [
-                        "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                        "https://cdn.s3waas.gov.in/s3577bcc914f9e55d5e4e4f82f9f00e7d4/uploads/bfi_thumb/2018041924-olw8nnx2pv9cfxvru4x0p97xxgagosg6fds49z5pca.jpg",
                         ],
                     
                 },
@@ -1166,7 +1351,7 @@ def homepage_contentdot(request):
                     "id": 4,
                     "title": "Kasol",
                     "images": [
-                        "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                        "https://images.herzindagi.info/image/2022/Jul/things-to-do-in-kasol-himachal-pradesh_g.jpg",
                         ],
                     
                 }
@@ -1174,8 +1359,8 @@ def homepage_contentdot(request):
         "sub_title6": [
             "OOTY",  
         ],
-            "img": [
-            "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+            "main_img6": [
+            "https://www.authenticindiatours.com/app/uploads/2022/03/Nilgiri-Hill-Toy-Train-Ooty-Tamil-Nadu-1400x550-c-default.jpg",
             
             ],
             "Ooty": [
@@ -1184,7 +1369,7 @@ def homepage_contentdot(request):
                     "id": 13,
                     "title": "Government Rose Garden",
                     "images": [
-                        "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                        "https://i.ytimg.com/vi/I5UukbPOBZQ/maxresdefault.jpg",
                     ],
                     
                 },
@@ -1192,7 +1377,7 @@ def homepage_contentdot(request):
                     "id": 42,
                     "title": "Tamilnadu Tourism Ooty Boat House",
                     "images": [
-                        "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                        "https://www.ttdconline.com/_next/boat-house/ooty/6.jpg"
                     ],
                 
                 },
@@ -1200,7 +1385,7 @@ def homepage_contentdot(request):
                     "id": 4,
                     "title": "Mudumalai Tiger Reserve",
                     "images": [
-                        "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                        "https://res.cloudinary.com/thrillophilia/image/upload/c_fill,f_auto,fl_progressive.strip_profile,g_auto,q_auto/v1/filestore/zyk5lqym1wik1t6zgopf73xkkqc8_shutterstock_1600599586.jpg",
                         ],
                     
                 },
@@ -1208,7 +1393,7 @@ def homepage_contentdot(request):
                     "id": 4,
                     "title": "Doddabetta Peak",
                     "images": [
-                        "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                        "https://www.goldentriangletour.com/userfiles/Doddabeta-DSC_169423.jpg",
                         ],
                     
                 }
@@ -1218,8 +1403,8 @@ def homepage_contentdot(request):
        "MANALI",
     
     ],
-        "img": [
-        "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+        "main_img7": [
+             "https://upload.wikimedia.org/wikipedia/commons/0/03/Manali_City.jpg",
         
         ],
             "Manali": [
@@ -1228,7 +1413,7 @@ def homepage_contentdot(request):
                     "id": 13,
                     "title": " Hadimba Devi Temple",
                     "images": [
-                        "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                        "https://i.ytimg.com/vi/CFgEZtnu_-k/maxresdefault.jpg",
                     ],
                     
                 },
@@ -1236,7 +1421,7 @@ def homepage_contentdot(request):
                     "id": 42,
                     "title": "Old Manali",
                     "images": [
-                        "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                        "https://media-cdn.tripadvisor.com/media/photo-s/12/ec/12/13/old-manali.jpg",
                     ],
                 
                 },
@@ -1244,7 +1429,7 @@ def homepage_contentdot(request):
                     "id": 4,
                     "title": "Museum of Himachal Culture & Folk Art",
                     "images": [
-                        "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                        "https://aminus3.s3.amazonaws.com/image/g0023/u00022998/i01221192/9f1a8101f523ce2070a81618f9fe53f3_large.jpg",
                         ],
                     
                 },
@@ -1252,7 +1437,7 @@ def homepage_contentdot(request):
                     "id": 4,
                     "title": " Rohtang La",
                     "images": [
-                        "https://mygreenkitchen.in/assets/shop/img/mgk_veg.jpg",
+                        "https://media-cdn.tripadvisor.com/media/photo-s/11/ff/78/6b/800px-cloud-volcano-largejpg.jpg",
                         ],
                     
                 }
@@ -1269,7 +1454,7 @@ def homepage_contentdot(request):
                 "id": 56,
                 "title": "MORE ABOUT DOT MEMBERSHIP CARD",
                 "images": [
-                    "https://mygreenkitchen.in/media/cache/sylius_shop_product_thumbnail/dd/10/7fce79fb1fefdce6a1229a9fe56e.jpeg"
+                    "https://www.nanotraveldiary.com/wp-content/uploads/2021/11/svetski-dan-turizma-2020.jpg"
                 ],
             
             },
@@ -1290,7 +1475,7 @@ def homepage_contentdot(request):
                         "facility": "3 beds,2 bedrooms",
                         "price":"35004/night",
                         "images": [
-                            "https://mygreenkitchen.in/media/cache/sylius_shop_product_thumbnail/dd/10/7fce79fb1fefdce6a1229a9fe56e.jpeg"
+                            "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0d/47/df/c9/the-gopi-island-guesthouse.jpg?w=700&h=-1&s=1"
                         ],
 
                     },
@@ -1300,7 +1485,7 @@ def homepage_contentdot(request):
                         "facility": "3 beds,2 bedrooms",
                         "price":"4679/night",
                         "images": [
-                            "https://mygreenkitchen.in/media/cache/sylius_shop_product_thumbnail/dd/10/7fce79fb1fefdce6a1229a9fe56e.jpeg"
+                            "https://cf.bstatic.com/xdata/images/hotel/max1280x900/77265336.jpg?k=a5927b37f752d71a5b1bf05b369e730fd29b621016b8076183a518d6bad20c6c&o=&hp=1"
                         ],
                     },
                     {
@@ -1309,7 +1494,7 @@ def homepage_contentdot(request):
                         "facility": "3beds,2 bedrooms",
                         "price":"4679/night",
                         "images": [
-                            "https://mygreenkitchen.in/media/cache/sylius_shop_product_thumbnail/dd/10/7fce79fb1fefdce6a1229a9fe56e.jpeg"
+                            "https://cf.bstatic.com/xdata/images/hotel/max1024x768/325565655.jpg?k=68a6d1f553db7a70081ff4d23e4262211f9d1240c69fb52cdfa274450522906f&o=&hp=1"
                         ],
                     },
                     {
@@ -1318,7 +1503,7 @@ def homepage_contentdot(request):
                         "facility": "3beds,2 bedrooms",
                         "price":"4679/night",
                         "images": [
-                            "https://mygreenkitchen.in/media/cache/sylius_shop_product_thumbnail/dd/10/7fce79fb1fefdce6a1229a9fe56e.jpeg"
+                            "https://b.zmtcdn.com/data/pictures/6/59446/cbf6f24316f06181f13919eea8441c81.jpg"
                         ],
                     },
                 ],
@@ -1331,7 +1516,7 @@ def homepage_contentdot(request):
                     "id": 5,
                     "title": "14 best things to do in Humpi",
                     "images": [
-                        "https://mygreenkitchen.in/media/cache/sylius_shop_product_thumbnail/dd/10/7fce79fb1fefdce6a1229a9fe56e.jpeg"
+                        "https://static.wixstatic.com/media/083278_d4820c98e76c41e2bdea3f10bb7f85c8~mv2.png/v1/fit/w_1000%2Ch_1000%2Cal_c/file.png"
                     ],
 
                 },
@@ -1339,7 +1524,7 @@ def homepage_contentdot(request):
                     "id": 6,
                     "title": "Top destinations for food and drink",
                     "images": [
-                        "https://mygreenkitchen.in/media/cache/sylius_shop_product_thumbnail/dd/10/7fce79fb1fefdce6a1229a9fe56e.jpeg"
+                        "https://www.aworldtotravel.com/wp-content/uploads/2018/10/best-countries-for-food-around-the-world-a-world-to-travel.jpg"
                     ],
                 
                 },
@@ -1350,5 +1535,8 @@ def homepage_contentdot(request):
   "user": "null"
 },
     return Response(data)
+
+
+
 
 

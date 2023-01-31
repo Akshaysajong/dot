@@ -1,0 +1,112 @@
+{% extends "./base1.html" %}
+{% block main %}
+  <main class="col-md-9 bgmain ms-sm-auto col-lg-10 px-md-4">     
+                                        
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2">
+        <h1 class="h4">Edit FacilityType
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/admin/">Home</a></li>
+            <li class="breadcrumb-item">Edit FacilityType</li>
+          </ol>
+        </h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+          <div class="btn-group me-2">
+            <a href="/dot/organizationlist/"><button type="button" class="btn btn-sm">FacilityType List</button></a>
+          </div>
+        </div>
+      </div>
+      <div class="card p-4 rounded-1 border-0 shadow">
+        <h5 class="text-uppercase fw-bold mb-4 col-8">&nbsp;</h5>
+
+        <form class="form-horizontal" method="POST" action="/dot/updateorganization/" enctype="multipart/form-data">{% csrf_token %}
+            <div class="row">
+                
+                <input type="hidden" class="form-control" name="or_id" value="{{x.id}}" id="or_id" required><br>
+                <div class="col-md-4">
+                  <label for="title" class="form-label">Title</label>
+                  <input type="text" class="form-control" name="title" value="{{x.title}}" id="title" required><br>
+                </div>
+                <div class="col-md-4">
+                  <label for="organization_type" class="form-label">Organization Type</label>
+                  <select name="org_type" id="org_type" class="form-control" onchange="">
+                    <option selected value="{{x.org_type}}">{{x.org_type}}</option>    
+                    <option value="hotel">Hotel</option>
+                    <option value="resort">Resort</option>
+                  </select> 
+                </div>
+                <div class="col-md-4">
+                    <label for="destn" class="form-label" >Destination</label><br>
+                            <select name="destn" id="destn" class="form-control" onchange="">
+                              <option selected value="{{x.destinstion.id}}">{{x.destinstion.name}}</option>    
+                              {% for x in destn %}
+                              <option value="{{x.id}}">{{x.name}}</option>
+                              {% endfor %}
+                            </select>  
+                </div>
+                <div class="col-md-4">
+                    <label for="contact_person" class="form-label">Contact Person</label>
+                    <input type="text" class="form-control" name="contact_person" value="{{x.contact_person}}" id="contact_person" required><br>
+                  </div>
+                <div class="col-md-4">
+                  <label for="contact_number" class="form-label">Contact Number</label>
+                  <input type="text" class="form-control" name="contact_number" value="{{x.contact_number}}" id="contact_number" required><br>
+                </div>
+                <div class="col-md-4">
+                    <label for="website" class="form-label">Website</label>
+                    <input type="text" class="form-control" name="website" value="{{x.website}}" id="website" required><br>
+                </div>
+                <div class="col-md-4">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" name="email" value="{{x.email}}" id="email" required><br>
+                </div>
+                <div class="col-md-4">
+                    <label for="" class="form-label" >State</label><br>
+                            <select name="state" id="state" class="form-control" onchange="get_state()">
+                            <option selected value="{{x.state_id}}">{{x.state.name}}</option>  
+                              {%  for x in stat %}
+                              <option value="{{x.id}}">{{x.name}}</option>
+                              {% endfor %}    
+                            </select>
+                  </div>
+                  <div class="col-md-4">
+                    <label for="" class="form-label">City</label><br>
+                            <select name="city" id="city" class="form-control">
+                                <option selected value="{{x.city_id}}">{{x.city.name}}</option>     
+                              {% for x in citi %}
+                              <option value="{{x.id}}">{{x.name}}</option>
+                              {% endfor %}
+                            </select>
+                  </div>
+                
+                <div class="col-md-8">
+                  <label for="title" class="form-label">Address</label>
+                  <input type="text" class="form-control" name="address" value="{{x.address}}" id="address" required><br>
+                </div>
+                <div class="col-md-4">
+                    <label for="proof" class="form-label">Proof</label>
+                    <input type="proof" class="form-control" name="proof" value="{{x.proof}}" id="proof" required><br>
+                </div>
+                <div class="col-md-4">
+                    <label for="images" class="form-label">Choose Images</label><br>
+                      <input type="file" class="form-control"  placeholder="" name="image" id="image" multiple >
+                    </div>
+                <div class="col-md-4"><br>
+                  <label for="status">Status </label>
+                  <input type="checkbox" id="status" name="status" value="1" {% if x.status %}checked{% endif %}/>        
+                </div>
+            
+              <input type="hidden" class="form-control" id="deletedfiles" name="deletedfiles" value="" >
+              
+              
+              <div class="col-6 mt-4">
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </div>
+              
+            </div>
+            </form>
+      </div>
+    </main>
+    </div>
+    </div>
+
+{% endblock %}

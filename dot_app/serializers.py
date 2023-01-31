@@ -6,26 +6,27 @@ from rest_framework.response import Response
 # register customers
 
 class customerRegister(serializers.ModelSerializer):
-    password2=serializers.CharField(style={'input_type':'password'},write_only=True)
+    # password2=serializers.CharField(style={'input_type':'password'},write_only=True)
     class Meta:
         model=customer
         fields='__all__'
 
     def save(self):
-        password=self.validated_data['password']
-        password2=self.validated_data['password2']
-        username=self.validated_data['username'],
-        print(username)
-        cst= customer.objects.filter(username=self.validated_data['username']).count()
+        pwd=self.validated_data['pwd']
+        # password2=self.validated_data['password2']
+        name=self.validated_data['name'],
+        print(name)
+        cst= customer.objects.filter(name=self.validated_data['name']).count()
         print(cst)
-        if password != password2:
-            raise serializers.ValidationError({'password':'password does not match'})
-        elif cst>0:
-            raise serializers.ValidationError({'username':'User already exist'})
+        # if password != password2:
+        #     raise serializers.ValidationError({'password':'password does not match'})
+        if cst>0:
+            raise serializers.ValidationError({'name':'User already exist'})
         else:
             reg=customer(
-                    username=self.validated_data['username'],
-                    email=self.validated_data['email'],                    
+                    name=self.validated_data['name'],
+                    email=self.validated_data['email'], 
+                    pwd=self.validated_data['pwd'],                   
                     first_name=self.validated_data['first_name'],
                     last_name=self.validated_data['last_name'],
                     phone=self.validated_data['phone'],

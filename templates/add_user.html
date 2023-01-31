@@ -13,7 +13,7 @@
             <div class="btn-toolbar mb-2 mb-md-0">
               
               <div class="btn-group me-2">
-                <a href="/dot/viewusers"><button type="button" class="btn btn-sm">View Users</button></a>
+                <a href="/dot/viewusers/"><button type="button" class="btn btn-sm">View Users</button></a>
               </div>
            
             </div>
@@ -52,15 +52,13 @@
                       <div class="col">{{ form.password2 }}</div>
                       {{ form.password2.errors }}
                     </div>
-                    {% if request.user.is_authenticated %}
-                    {%if  user.is_superuser %}
+                   
 
-                    <div class="col-md-4"><br><br>
-                      <label for="title" class="form-label">Groups</label>
-                      <div class="col">{{ form.groups }}</div>
-                    </div>
-                    {% endif %}
-                    {% endif %}
+                      <div class="col-md-4"><br><br>
+                        <label for="title" class="form-label">Groups</label>
+                        <div class="col">{{ form.groups }}</div>
+                      </div>
+                     
                     
                  
                    

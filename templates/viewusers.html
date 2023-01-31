@@ -13,7 +13,7 @@
             <div class="btn-toolbar mb-2 mb-md-0">
               {% if perms.app1.add_user %}
                 <div class="btn-group me-2">
-                  <a href="/dot/adduser"><button type="button" class="btn btn-sm">Add Users</button></a>
+                  <a href="/dot/adduser/"><button type="button" class="btn btn-sm">Add Users</button></a>
                 </div>
                 {% endif %}
               </div>
@@ -51,10 +51,12 @@
                       <div class="btn-group me-2">
                             <a href="/dot/edit_user/?a={{x.id}}"><button class="btn-link border-0 bg-transparent text-body" ><span data-feather="edit-2"></span></button> </a>
                           </div>
-                          
+                    </td>
+                    <td>
                           <div class="btn-group me-2">
                             <a href="/dot/remove_user/?a={{x.id}}"><b<button class="btn-link border-0 bg-transparent text-body" onClick="confdelete();"><span data-feather="trash-2" ></span></button> </a>
                           </div>
+                        </td>
                           
                 </tr>
               </tbody>

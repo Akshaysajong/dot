@@ -27,7 +27,7 @@ class destinstions(models.Model):
     lattitude = models.DecimalField(max_digits=8, decimal_places=3, default=None, blank=True)
     longitude = models.DecimalField(max_digits=8, decimal_places=3, default=None, blank=True)
     status = models.BooleanField(default=False)
-    c_user = models.CharField(max_length=100, default=None, blank=True)
+    # c_user = models.CharField(max_length=100, default=None, blank=True)
 
 class destination_img(models.Model):
     destinstions = models.ForeignKey(destinstions, default=None, on_delete=models.CASCADE)
@@ -73,12 +73,18 @@ class organization(models.Model):
     contact_person = models.CharField(max_length=200,blank=True, null=True)
     contact_number = models.CharField(max_length=200,blank=True, null=True)
     website = models.CharField(max_length=200,blank=True, null=True)
-    city = models.CharField(max_length=200,blank=True, null=True)
-    state = models.CharField(max_length=200,blank=True, null=True)
+    city = models.ForeignKey(city, default=None, on_delete=models.CASCADE) 
+    state = models.ForeignKey(state, default=None, on_delete=models.CASCADE) 
     address = models.CharField(max_length=200,blank=True, null=True)
     phone = models.CharField(max_length=200,blank=True, null=True)
     email = models.EmailField(max_length=200,blank=True, null=True)
     proof = models.CharField(max_length=200,blank=True, null=True)
+    status = models.BooleanField(default=True)
+    c_user = models.CharField(max_length=100, default=None, blank=True)
+
+class facility_type(models.Model):
+    title = models.CharField(max_length=100,blank=True, null=True)
+    description = models.CharField(max_length=200, blank=True, null=True)
     status = models.BooleanField(default=False)
 
 class destn_facility(models.Model):
@@ -89,6 +95,7 @@ class destn_facility(models.Model):
     types = models.CharField(max_length=100, default=None, blank=True)
     lattitude = models.DecimalField(max_digits=8, decimal_places=3, default=None, blank=True)
     longitude = models.DecimalField(max_digits=8, decimal_places=3, default=None, blank=True)
+    amount = models.FloatField(default=None, blank=True)
     status = models.BooleanField(default=False)
 
 class facility_price(models.Model):
@@ -163,9 +170,8 @@ class customer_type(models.Model):
     status = models.BooleanField(default=False)
 
 class customer(models.Model):
-    username = models.CharField(max_length=50,blank=True, null=True)
-    password = models.CharField(max_length=50,blank=True, null=True)
-    password2 = models.CharField(max_length=50,blank=True, null=True)
+    name = models.CharField(max_length=50,blank=True, null=True)
+    pwd= models.CharField(max_length=50,blank=True, null=True)
     first_name = models.CharField(max_length=50,blank=True, null=True)
     last_name = models.CharField(max_length=50,blank=True, null=True)
     email = models.EmailField(max_length = 254)
@@ -178,6 +184,8 @@ class cust_profile(models.Model):
     city = models.CharField(max_length=50,blank=True, null=True)
     state = models.CharField(max_length=50,blank=True, null=True)
     address = models.CharField(max_length=50,blank=True, null=True)
+    phone = models.CharField(max_length=50,blank=True, null=True)
+    email = models.EmailField(max_length=200,blank=True, null=True)
     status = models.BooleanField(default=False)
 
 class customer_auth(models.Model):
@@ -224,6 +232,43 @@ class coupon(models.Model):
 class staff_department(models.Model):   
     department =models.CharField(max_length=50,blank=True, null=True)
     status = models.BooleanField(default=False)
+
+# # api
+# class banner(models.Model):
+#     title=models.CharField(max_length=50,blank=True, null=True)
+#     sub_title=models.CharField(max_length=50,blank=True, null=True)
+#     img=models.ImageField(upload_to = 'images/', blank=True)
+
+# class national_parks(models.Model):
+#     title=models.CharField(max_length=50,blank=True, null=True)
+#     img=models.ImageField(upload_to = 'images/', blank=True)
+# class treking(models.Model):
+#     title=models.CharField(max_length=50,blank=True, null=True)
+#     img=models.ImageField(upload_to = 'images/', blank=True)
+# class hillstation(models.Model):
+#     title=models.CharField(max_length=50,blank=True, null=True)
+#     img=models.ImageField(upload_to = 'images/', blank=True)
+# class honeymoon(models.Model):
+#     title=models.CharField(max_length=50,blank=True, null=True)
+#     img=models.ImageField(upload_to = 'images/', blank=True)
+
+# class dot_card(models.Model):
+#     title=models.CharField(max_length=50,blank=True, null=True)
+#     img=models.ImageField(upload_to = 'images/', blank=True)
+
+# class stays(models.Model):
+#     title=models.CharField(max_length=50,blank=True, null=True)
+#     facility=models.CharField(max_length=50,blank=True, null=True)
+#     amount = models.FloatField(default=None, blank=True)
+#     img=models.ImageField(upload_to = 'images/', blank=True)
+
+class best_things(models.Model):
+    title=models.CharField(max_length=50,blank=True, null=True)
+    img=models.ImageField(upload_to = 'images/', blank=True)
+
+
+
+
 
 
 
