@@ -43,13 +43,22 @@
                     </div>
                     <div class="col-md-6">
                         <label for="type" class="form-label" >Type</label><br>
-                                <select name="type" id="type" class="form-control" onchange="">
+                                <select name="typ" id="typ" class="form-control" onchange="">
                                 <option value="0">--Select--</option>    
                                 {% for x in faclty_type %}
-                                <option value="{{x.id}}">{{x.title}}</option><br>
+                                <option value="{{x.title}}">{{x.title}}</option><br>
                                 {% endfor %}
                                 </select>  
                     </div><br>
+                    <!-- <div class="col-md-6">
+                      <label for="organization" class="form-label" >Organization</label><br>
+                              <select name="organization" id="organization" class="form-control" onchange="">
+                              <option value="0">--Select--</option>    
+                              {% for x in orgtn %}
+                              <option value="{{x.id}}">{{x.title}}</option><br>
+                              {% endfor %}
+                              </select>  
+                    </div><br> -->
                   
                     <div class="col-md-6">
                       <label for="title" class="form-label">Title</label>

@@ -1,8 +1,7 @@
 {% extends "./base1.html" %}
 {% block main %}
 
-<main class="col-md-9 bgmain ms-sm-auto col-lg-10 px-md-4">     
-                                        
+<main class="col-md-9 bgmain ms-sm-auto col-lg-10 px-md-4">                                       
           <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2">
             <h1 class="h4">Add Organization
               <ol class="breadcrumb">
@@ -44,6 +43,22 @@
                                 </select>  
                     </div>
                     <div class="col-md-4">
+                      <label for="first_name" class="form-label">First Name</label>
+                      {{ form.first_name }}<br>
+                    </div>
+                    <div class="col-md-4">
+                      <label for="last_name" class="form-label">Last Name</label>
+                      {{ form.last_name }}<br>
+                    </div>
+                    <div class="col-md-4">
+                      <label for="username" class="form-label">Username</label>
+                      {{ form.username }}<br>
+                    </div>
+                    <div class="col-md-4">
+                      <label for="password" class="form-label">Password</label>
+                      {{ form.password }}<br>
+                    </div>
+                    <div class="col-md-4">
                         <label for="contact_person" class="form-label">Contact Person</label>
                         <input type="text" class="form-control" name="contact_person" value="" id="contact_person" required><br>
                       </div>
@@ -57,7 +72,7 @@
                     </div>
                     <div class="col-md-4">
                         <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" name="email" value="" id="email" required><br>
+                        {{ form.email }}<br>
                     </div>
                     <div class="col-md-4">
                         <label for="" class="form-label" >State</label><br>

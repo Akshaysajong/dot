@@ -11,6 +11,7 @@ urlpatterns = [
     path('dot/groups/', views.dot_groups, name='dot_groups'), 
     path('dot/addgroups/', views.dot_add_groups, name='dot_add_groups'), 
     path('dot/viewusers/', views.dot_viewusers, name='dot_viewusers'),
+    path('dot/edit_user/', views.dot_edit_user, name='dot_edit_user'),
     path('dot/addgroup/permissions/', views.dot_add_groups_permissions, name='dot_add_groups_permissions'),
 
     #hoteladmin add hotels
@@ -42,6 +43,7 @@ urlpatterns = [
     path('dot/addorganization_db/', views.dot_addorganization_db, name='dot_addorganization_db'),
     path('dot/organizationlist/', views.dot_organizationlist, name='dot_organizationlist'),
     path('dot/edite_organization/', views.dot_edite_organization, name='dot_edite_organization'),
+    path('dot/delete_organization/', views.dot_delete_organization, name='dot_delete_organization'),
     path('dot/updateorganization/', views.dot_updateorganization, name='dot_updateorganization'),
     path('delete_organization/', views.delete_organization, name='delete_organization'),
     path('dot/addfacilitytype/', views.dot_addfacilitytype, name='dot_addfacilitytype'),

@@ -18,6 +18,17 @@
       <div class="card p-4 rounded-1 border-0 shadow">
         <h5 class="text-uppercase fw-bold mb-4 col-8">&nbsp;</h5>
 
+        {% if messages %}
+                  <div class="alert alert-danger">
+                      {% for message in messages %}
+                          {% if message.tags == "error" and message.message == "Username already exists" %}
+                          
+                              {{ message }}
+                          {% endif %}
+                      {% endfor %}
+                  </div>
+              {% endif %}
+
         <form class="form-horizontal" method="POST" action="/dot/updateorganization/" enctype="multipart/form-data">{% csrf_token %}
             <div class="row">
                 {% for x in orgn %}
@@ -42,6 +53,24 @@
                               <option value="{{x.id}}">{{x.name}}</option>
                               {% endfor %}
                             </select>  
+                </div>
+                {% for x in orgn_user %}
+                <div class="col-md-4">
+                  <label for="first_name" class="form-label">first_name</label>
+                  <input type="text" class="form-control" name="first_name" value="{{x.first_name}}" id="first_name" required><br>
+                </div>
+                <div class="col-md-4">
+                  <label for="last_name" class="form-label">last_name</label>
+                  <input type="text" class="form-control" name="last_name" value="{{x.last_name}}" id="last_name" required><br>
+                </div>
+                <div class="col-md-4">
+                  <label for="username" class="form-label">username</label>
+                  <input type="text" class="form-control" name="username" value="{{x.username}}" id="username" required><br>
+                </div>
+                {% endfor %}
+                <div class="col-md-4">
+                  <label for="contact_number" class="form-label">Contact Number</label>
+                  <input type="text" class="form-control" name="contact_number" value="{{x.contact_number}}" id="contact_number" required><br>
                 </div>
                 <div class="col-md-4">
                     <label for="contact_person" class="form-label">Contact Person</label>

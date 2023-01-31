@@ -28,6 +28,7 @@ class destinstions(models.Model):
     longitude = models.DecimalField(max_digits=8, decimal_places=3, default=None, blank=True)
     status = models.BooleanField(default=False)
     c_user = models.CharField(max_length=100, default=None, blank=True)
+    destn_type = models.CharField(max_length=100, default=None, blank=True)
 
 class destination_img(models.Model):
     destinstions = models.ForeignKey(destinstions, default=None, on_delete=models.CASCADE)
@@ -67,6 +68,7 @@ class hotel_type(models.Model):
     types = models.CharField(max_length=200, default=None, blank=True)
     
 class organization(models.Model):
+    user = models.ForeignKey(User, default=None, on_delete=models.CASCADE)
     title = models.CharField(max_length=200,blank=True, null=True)
     org_type = models.CharField(max_length=200,blank=True, null=True)
     destinstion = models.ForeignKey(destinstions, default=None, on_delete=models.CASCADE)  
@@ -93,13 +95,12 @@ class destn_facility(models.Model):
     title = models.CharField(max_length=100, default=None, blank=True)
     description = models.CharField(max_length=200, default=None, blank=True)
     types = models.CharField(max_length=100, default=None, blank=True)
-    lattitude = models.DecimalField(max_digits=8, decimal_places=3, default=None, blank=True)
-    longitude = models.DecimalField(max_digits=8, decimal_places=3, default=None, blank=True)
     amount = models.FloatField(default=None, blank=True)
     status = models.BooleanField(default=False)
 
 class facility_price(models.Model):
     dstn_facility = models.ForeignKey(destinstions, default=None, on_delete=models.CASCADE)
+    title = models.CharField(max_length=100, default=None, blank=True)
     amount = models.FloatField(default=None, blank=True)
     discount = models.FloatField(default=None, blank=True)
     total = models.FloatField(default=None, blank=True)

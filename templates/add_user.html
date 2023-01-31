@@ -53,19 +53,20 @@
                       {{ form.password2.errors }}
                     </div>
                    
-
+                    {% if user.is_superuser %}
                       <div class="col-md-4"><br><br>
                         <label for="title" class="form-label">Groups</label>
                         <div class="col">{{ form.groups }}</div>
                       </div>
-                     
+                    {% endif %}
                     
                  
-                   
-                  <div class="col-md-4"><br><br>
-                    <label for="title" class="form-label">Staff</label>
-                    <div class="col">{{ form.is_staff }}</div>
-                  </div>
+                  {% if user.is_superuser %}
+                    <div class="col-md-4"><br><br>
+                      <label for="title" class="form-label">Staff</label>
+                      <div class="col">{{ form.is_staff }}</div>
+                    </div>
+                  {% endif %}
                    
                   <div class="col-12 mt-4">
                     <button type="submit" class="btn btn-primary">Submit</button>

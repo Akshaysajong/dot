@@ -59,19 +59,22 @@
                     <td >{{x.lattitude}}</td>
                     <td >{{x.longitude}}</td>
                     <td >{{x.status}}</td>
-                    <td ></td>  
                     
+                    {% if perms.dot_app.change_destination_area %}  
                     <td>         
                       <div class="btn-group me-2">
-                            <a href="/dot/edit_destinationarea/?a={{x.id}}"><button class="btn-link border-0 bg-transparent text-body" ><span data-feather="edit-2"></span></button> </a>
-                          </div> 
-                        </td>  
-                        <td>
-                          <div class="btn-group me-2">
-                            <!-- <a href="/dot/delete_destinationarea/?a={{x.id}}"><b<button class="btn-link border-0 bg-transparent text-body" onClick="delete_darea();"><span data-feather="trash-2" ></span></button> </a> -->
-                            <button class="btn-link border-0 bg-transparent text-body" type="submit" onclick="delete_darea('{{x.id}}')"><span data-feather="trash-2" ></span></button>
-                          </div>
-                        </td>
+                        <a href="/dot/edit_destinationarea/?a={{x.id}}"><button class="btn-link border-0 bg-transparent text-body" ><span data-feather="edit-2"></span></button> </a>
+                      </div> 
+                    </td> 
+                    {% endif %} 
+                    {% if perms.dot_app.delete_destination_area %}  
+                    <td>            
+                      <div class="btn-group me-2">
+                        <!-- <a href="/dot/delete_destinationarea/?a={{x.id}}"><b<button class="btn-link border-0 bg-transparent text-body" onClick="delete_darea();"><span data-feather="trash-2" ></span></button> </a> -->
+                        <button class="btn-link border-0 bg-transparent text-body" type="submit" onclick="delete_darea('{{x.id}}')"><span data-feather="trash-2" ></span></button>
+                      </div>  
+                    </td>
+                    {% endif %}
                           
                           
                 </tr>

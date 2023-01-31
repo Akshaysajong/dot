@@ -26,7 +26,8 @@
             
               <thead>
                 <tr>
-                  
+
+                  <th scope="col">USERNAME</th>
                   <th scope="col">NAME</th>
                   <th scope="col">NUMBER</th>
                   <th scope="col">ADDRESS</th>
@@ -39,8 +40,8 @@
               {% for x in hotel %}
               <tbody>
                 <tr>
-                    
                     <td >{{x.user.username}}</td>
+                    <td >{{x.name}}</td>
                     <td >{{x.phone}}</td>
                     <td >{{x.address|truncatechars:40 }}</td>
                     <td >{{x.country}}</td>
