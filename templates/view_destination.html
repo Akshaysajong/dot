@@ -55,17 +55,21 @@
                 <td >{{x.climate|truncatechars:40 }}</td>
                 <td >{{x.culture|truncatechars:40 }}</td>
                 <td class="pic"> <img  src="{{x.image.url}}" alt="" style="width:50px;height:60px;" ></td>
+            {% if perms.dot_app.change_destinstions %}   
             <td>
               <div class="btn-group me-2">
                 <a href="/dot/editdestination/?a={{x.id}}"><button class="btn-link border-0 bg-transparent text-body"><span data-feather="edit-2"></span></button> </a>
               </div>
             </td>
+            {% endif %}
+            {% if perms.dot_app.delete_destinstions %} 
             <td>
               <div class="btn-group me-2">
                 <!-- <a href="/admin/removeplaces/?a={{x.id}}"><button class="btn-link border-0 bg-transparent text-body" onclick="deletedestination()"><span data-feather="trash-2"></span></button></a> -->
                 <button class="btn-link border-0 bg-transparent text-body" type="submit" onclick="delete_destination('{{x.id}}')"><span data-feather="trash-2" ></span></button>
               </div>
             </td>
+            {% endif %}
             <!-- <td><button class="btn-link border-0 bg-transparent text-body"><span data-feather="edit-2"></span></button> <button class="btn-link border-0 bg-transparent text-body"><span data-feather="trash-2"></span></button> <button class="btn-link border-0 bg-transparent text-body"><span data-feather="download"></span></button></td> -->
             </tr>
             {% endfor %}

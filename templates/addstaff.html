@@ -1,0 +1,92 @@
+{% extends "./base1.html" %}
+
+{% block main %}
+<main class="col-md-9 bgmain ms-sm-auto col-lg-10 px-md-4">     
+                                        
+          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2">
+            <h1 class="h4">Add Staff
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/dot">Home</a></li>
+                <li class="breadcrumb-item">Add User</li>
+              </ol>
+            </h1>
+            <div class="btn-toolbar mb-2 mb-md-0">
+              
+              <div class="btn-group me-2">
+                <a href="/dot/stafflist/"><button type="button" class="btn btn-sm">Staff List</button></a>
+              </div>
+           
+            </div>
+          </div>
+          <div class="card p-4 rounded-1 border-0 shadow">
+            <h5 class="text-uppercase fw-bold mb-4 col-8">&nbsp;</h5>
+            <div class="" >
+              <form class="form-horizontal" method="POST" action="/dot/savestaff/" enctype="multipart/form-data" >{% csrf_token %}
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="username" class="form-label">User Name</label>
+                        <input type="text" class="form-control" name="username" value="" id="username" required><br>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="first_name" class="form-label">First name</label>
+                        <input type="text" class="form-control" name="first_name" value="" id="first_name" required><br>
+                    </div>        
+                    <div class="col-md-4">
+                      <label for="last_name" class="form-label">Last Name</label>
+                      <input type="text" class="form-control" name="last_name" value="" id="last_name" required><br>
+                    </div>
+                    <div class="col-md-4">
+                      <label for="email" class="form-label">Email</label>
+                      <input type="email" class="form-control" name="email" value="" id="email" required><br>
+                    </div>
+                    <div class="col-md-4">
+                      <label for="password" class="form-label">Password</label>
+                      <input type="text" class="form-control" name="password" value="" id="password" required><br>
+                    </div>
+                    <div class="col-md-4">
+                      <label for="password_confirmation" class="form-label">Password confirmation</label>
+                      <input type="text" class="form-control" name="password_confirmation" value="" id="password_confirmation" required><br>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="contact_number" class="form-label">Contact Number</label>
+                        <input type="text" class="form-control" name="contact_number" value="" id="contact_number" required><br>
+                    </div>
+                    <div class="col-md-8">
+                        <label for="address" class="form-label">Address</label>
+                        <input type="text" class="form-control" name="address" value="" id="address" required><br>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="roll" class="form-label">Roll</label>
+                        <select name="roll" id="roll" class="form-control" onchange="">
+                            <option value="0">--Select--</option>    
+                            {% for x in gp %}
+                            <option value="{{x.id}}">{{x.name}}</option><br>
+                            {% endfor %}
+                            </select> 
+                    </div>
+
+                    <div class="col-md-6"><br>
+                        <label for="status">Status </label>
+                        <input type="checkbox" id="status" name="status" value="True">
+                        
+                    </div>
+
+                    
+                 
+                  {% if user.is_superuser %}
+                    <div class="col-md-4"><br><br>
+                      <label for="title" class="form-label">Staff</label>
+                      <div class="col">{{ form.is_staff }}</div>
+                    </div>
+                  {% endif %}
+                   
+                  <div class="col-12 mt-4">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                  </div>
+                </div>
+                </form>
+
+        </div>
+        </div>
+</main>
+{% endblock %}  

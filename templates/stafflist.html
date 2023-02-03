@@ -4,16 +4,16 @@
   <main class="col-md-9 bgmain ms-sm-auto col-lg-10 px-md-4">
      
       <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2">
-        <h1 class="h4">Facility List
+        <h1 class="h4">Staff List
          <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/dot/">Home</a></li>
-            <li class="breadcrumb-item">Facility List</li>
+            <li class="breadcrumb-item">Staff List</li>
           </ol></h1>
         <div class="btn-toolbar mb-2 mb-md-0">
             <div class="btn-toolbar mb-2 mb-md-0">
               {% if perms.dot_app.add_destn_facility %}
                 <div class="btn-group me-2">
-                  <a href="/dot/addfacility/"><button type="button" class="btn btn-sm">Add Facility</button></a>
+                  <a href="/dot/addstaff/"><button type="button" class="btn btn-sm">Add Staff</button></a>
                 </div>
                 {% endif %}
               </div>
@@ -21,12 +21,12 @@
       </div>
       
       <div class="table-responsive card rounded-1 border-0 shadow mt-4 mb-4">
-            <h5 class="text-uppercase fw-bold mb-0 p-4 pt-3 pb-3">Facility List</h5>
+            <h5 class="text-uppercase fw-bold mb-0 p-4 pt-3 pb-3">Staff List</h5>
             <table id="example" class="table table-striped table-sm">
               {% if messages %}
                 <div class="alert alert-danger">
                     {% for message in messages %}
-                        {% if message.tags == "error" and message.message == "You can't delete all images !!!!" or message.message == "You are not autherized to edit !!!!" or message.message == "You are not autherized to delete !!!!" %}
+                        {% if message.tags == "error" and message.message == "Username already exists" or message.message == "You are not autherized to edit !!!!" or message.message == "You are not autherized to delete !!!!" %}
                             {{ message }}
                         {% endif %}
                     {% endfor %}
@@ -35,36 +35,36 @@
             
               <thead>
                 <tr> 
-                  <th scope="col">Destinstion</th>                             
-                  <th scope="col">Type</th>
-                  <th scope="col">Title</th>
-                  <th scope="col">Description</th>
-                  <th scope="col">Price</th>
-                  <th scope="col">Image</th>
+                  <th scope="col">Username</th>                             
+                  <th scope="col">First Name</th>
+                  <th scope="col">Last Name</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Phone</th>
+                  <th scope="col">Address</th>
                   <th scope="col">Status</th>
                 </tr>
               </thead>
-              {% for x in destn_facilty %}
+              {% for x in staff %}
               <tbody>
                 <tr>
-                    <td >{{x.destinstion}}</td>
-                    <td >{{x.types}}</td>   
-                    <td >{{x.title}}</td>               
-                    <td >{{x.description}}</td> 
-                    <td >{{x.amount}}</td> 
-                    <td class="pic"> <img  src="{{x.image.url}}" alt="" style="width:50px;height:60px;" ></td>
+                    <td >{{x.user.username}}</td>
+                    <td >{{x.user.first_name}}</td>   
+                    <td >{{x.user.last_name}}</td>               
+                    <td >{{x.user.email}}</td> 
+                    <td >{{x.phone}}</td> 
+                    <td >{{x.address}}</td>
                     <td >{{x.status}}</td> 
                     {% if perms.dot_app.change_destn_facility %}
                       <td>
                         <div class="btn-group me-2">
-                          <a href="/dot/edit_facility/?a={{x.id}}"><button class="btn-link border-0 bg-transparent text-body" ><span data-feather="edit-2"></span></button> </a>
+                          <a href="/dot/editstaff/?a={{x.id}}"><button class="btn-link border-0 bg-transparent text-body" ><span data-feather="edit-2"></span></button> </a>
                         </div> 
                       </td>
                     {% endif %}
                     {% if perms.dot_app.delete_destn_facility %}
                       <td>
                         <div class="btn-group me-2">
-                          <a href="/dot/delete_organization/?a={{x.id}}"><button class="btn-link border-0 bg-transparent text-body" ><span data-feather="trash-2" ></span></button> </a>
+                          <a href="/dot/deletestaff/?a={{x.id}}"><button class="btn-link border-0 bg-transparent text-body" ><span data-feather="trash-2" ></span></button> </a>
                           <!-- <button class="btn-link border-0 bg-transparent text-body" type="submit" onclick="delete_hotel('{{x.id}}')"><span data-feather="trash-2" ></span></button> -->
                         </div>
                       </td>

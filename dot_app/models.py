@@ -90,13 +90,14 @@ class facility_type(models.Model):
     status = models.BooleanField(default=False)
 
 class destn_facility(models.Model):
-    destinstions = models.ForeignKey(destinstions, default=None, on_delete=models.CASCADE)
-    orgatn = models.ForeignKey(organization, default=None, on_delete=models.CASCADE) 
+    destinstions = models.CharField(max_length=100, default=None, blank=True)
+    orgatn = models.CharField(max_length=100, default=None, blank=True)
     title = models.CharField(max_length=100, default=None, blank=True)
     description = models.CharField(max_length=200, default=None, blank=True)
     types = models.CharField(max_length=100, default=None, blank=True)
     amount = models.FloatField(default=None, blank=True)
     status = models.BooleanField(default=False)
+    c_user = models.CharField(max_length=100, default=None, blank=True)
 
 class facility_price(models.Model):
     dstn_facility = models.ForeignKey(destinstions, default=None, on_delete=models.CASCADE)
@@ -107,11 +108,12 @@ class facility_price(models.Model):
     status = models.BooleanField(default=False)
 
 class facility_image(models.Model):
-    destinstion = models.ForeignKey(destinstions, default=None, on_delete=models.CASCADE)  
+    destinstion =  models.CharField(max_length=100, default=None, blank=True)
     facility = models.ForeignKey(destn_facility, default=None, on_delete=models.CASCADE) 
     imagetype = models.CharField(max_length=200, default=None, blank=True)
     image = models.ImageField(upload_to = 'images/', blank=True)
     status = models.BooleanField(default=False)
+    c_user = models.CharField(max_length=100, default=None, blank=True)
 
 class organization_images(models.Model):
     organization = models.ForeignKey(organization, default=None, on_delete=models.CASCADE) 
@@ -122,14 +124,15 @@ class userprofile(models.Model):
     name = models.CharField(max_length=200, default=None, blank=True)
     phone = models.CharField(max_length=200,blank=True, null=True)
     address = models.CharField(max_length=200,blank=True, null=True)
-    hotel_type = models.CharField(max_length=200,blank=True, null=True)
-    contact_person = models.CharField(max_length=200,blank=True, null=True)
-    organization = models.ForeignKey(organization, default=None, on_delete=models.CASCADE) 
-    city = models.CharField(max_length=200,blank=True, null=True)
-    state = models.CharField(max_length=200,blank=True, null=True)
-    country = models.CharField(max_length=200,blank=True, null=True)
-    email = models.EmailField(max_length=200,blank=True, null=True)
+    # hotel_type = models.CharField(max_length=200,blank=True, null=True)
+    # contact_person = models.CharField(max_length=200,blank=True, null=True)
+    # organization = models.ForeignKey(organization, default=None, on_delete=models.CASCADE) 
+    # city = models.CharField(max_length=200,blank=True, null=True)
+    # state = models.CharField(max_length=200,blank=True, null=True)
+    # country = models.CharField(max_length=200,blank=True, null=True)
+    # email = models.EmailField(max_length=200,blank=True, null=True)
     status = models.BooleanField(default=False)
+    c_user = models.CharField(max_length=100, default=None, blank=True)
     
 class content(models.Model):
     content_type = models.CharField(max_length=200,blank=True, null=True)
@@ -222,6 +225,18 @@ class coupon(models.Model):
     created = models.DateTimeField(blank=True, null=True)
     updated = models.DateTimeField(blank=True, null=True)
     status = models.BooleanField(default=False)
+
+class feedback(models.Model):
+    name = models.CharField(max_length=50,blank=True, null=True)
+    created = models.DateTimeField(blank=True, null=True)
+    feedback = models.CharField(max_length=500,blank=True, null=True)
+
+class faq_category(models.Model):
+    name = models.CharField(max_length=50,blank=True, null=True)
+    description = models.CharField(max_length=200,blank=True, null=True)
+    popularity = models.CharField(max_length=100,blank=True, null=True)
+    status = models.BooleanField(default=False)
+
 
 
 #     # def save(self, *username, **password):

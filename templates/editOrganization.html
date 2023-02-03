@@ -133,7 +133,7 @@
                 </div><br>
                 
                 <div class="btn-group me-6" >
-                  <button type="button" style="margin-left: 7rem" class="btn-link border-0 bg-transparent text-body " onClick="confdelete(this, '{{x.id}}');"><span data-feather="trash-2" ></span></button>
+                  <button type="button" style="margin-left: 7rem" class="btn-link border-0 bg-transparent text-body " onClick="deleteorgtn(this, '{{x.id}}');"><span data-feather="trash-2" ></span></button>
                 </div>
                 <!-- <input type="text" class="form-control" id="inpu" name="pla" id="place" value="{{c.id}}"><br><br> -->
                 <br>
@@ -141,6 +141,7 @@
               </div>
               </div>
               {% endfor %}
+              <input type="hidden" class="form-control" id="imgcount" name="imgcount" value="{{img|length}}" >
               <input type="hidden" class="form-control" id="deletedfiles" name="deletedfiles" value="" >
               
               

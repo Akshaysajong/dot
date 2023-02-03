@@ -19,16 +19,17 @@
           <div class="card p-4 rounded-1 border-0 shadow">
             <h5 class="text-uppercase fw-bold mb-4 col-8">&nbsp;</h5>
             <div class="row" style="margin-left: .5rem;">
-              <form class="form-horizontal" method="POST" >{% csrf_token %}
+              <form class="form-horizontal" method="POST" action="/dot/update_facilitytype/" enctype="multipart/form-data">{% csrf_token %}
                 <div class="row">
                   {% for x in faclty_type %}     
                     <div class="col-md-6">
+                      <input type="hidden" class="form-control" name="flty_id" id="flty_id" value="{{x.id}}"  required>
                       <label for="title" class="form-label">Title</label>
-                      <input type="text" class="form-control" name="destn" id="destn" value="{{x.title}}"  required><br>
+                      <input type="text" class="form-control" name="title" id="title" value="{{x.title}}"  required><br>
                     </div>   
                     <div class="col-md-6">
                       <label for="description" class="form-label">Description</label>
-                      <input type="text" class="form-control" name="destn" id="destn" value="{{x.description}}" required><br>
+                      <input type="text" class="form-control" name="description" id="description" value="{{x.description}}" required><br>
                     </div>
                     <div class="col-md-6"><br>
                       <label for="status">Status </label>
