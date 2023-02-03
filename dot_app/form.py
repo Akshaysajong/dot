@@ -34,33 +34,7 @@ class RegisterForm(UserCreationForm):
         widget=forms.Select(attrs={'class': 'form-control'})
     )
 
-class Register(UserCreationForm):
-    username = forms.CharField(max_length=100,required=True,
-                                widget=forms.TextInput(attrs={'class': 'form-control'}))
-    first_name= forms.CharField(max_length=100,required=True,
-                             widget=forms.TextInput(attrs={'class': 'form-control'}))
-    last_name= forms.CharField(max_length=100,required=True,
-                             widget=forms.TextInput(attrs={'class': 'form-control'}))
-    email= forms.EmailField(max_length=100,required=True,
-                             widget=forms.TextInput(attrs={'class': 'form-control'}))
-    password1= forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
-    password2= forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
-    is_staff= forms.BooleanField(required=False,
-                                      initial=False,
-                                      label='')
-    
-    class Meta:
-        model = User
-        fields = ['first_name', 'last_name', 'username','email', 'password1', 'password2', 'is_staff','groups']
-    groups = forms.ModelChoiceField(
-        queryset=Group.objects.all().filter(name__contains='marketing'),
-        to_field_name='id',
-       
-        required=True,  
-        widget=forms.Select(attrs={'class': 'form-control'})
-    )
-
-# class EntrollmentForm(UserCreationForm):
+# class Register(UserCreationForm):
 #     username = forms.CharField(max_length=100,required=True,
 #                                 widget=forms.TextInput(attrs={'class': 'form-control'}))
 #     first_name= forms.CharField(max_length=100,required=True,
@@ -79,12 +53,37 @@ class Register(UserCreationForm):
 #         model = User
 #         fields = ['first_name', 'last_name', 'username','email', 'password1', 'password2', 'is_staff','groups']
 #     groups = forms.ModelChoiceField(
-#         queryset=Group.objects.all(),
+#         queryset=Group.objects.all().filter(name__contains='marketing'),
 #         to_field_name='id',
        
 #         required=True,  
 #         widget=forms.Select(attrs={'class': 'form-control'})
 #     )
+
+class EntrollmentForm(UserCreationForm):
+    username = forms.CharField(max_length=100,required=True,
+                                widget=forms.TextInput(attrs={'class': 'form-control'}))
+    first_name= forms.CharField(max_length=100,required=True,
+                             widget=forms.TextInput(attrs={'class': 'form-control'}))
+    last_name= forms.CharField(max_length=100,required=True,
+                             widget=forms.TextInput(attrs={'class': 'form-control'}))
+    email= forms.EmailField(max_length=100,required=True,
+                             widget=forms.TextInput(attrs={'class': 'form-control'}))
+    password= forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    # is_staff= forms.BooleanField(required=False,
+    #                                   initial=False,
+    #                                   label='')
+    
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'username','email', 'password', 'is_staff','groups']
+    # groups = forms.ModelChoiceField(
+    #     queryset=Group.objects.all(),
+    #     to_field_name='id',
+       
+    #     required=True,  
+    #     widget=forms.Select(attrs={'class': 'form-control'})
+    # )
 
 
 class AddHotelsForm(UserCreationForm):

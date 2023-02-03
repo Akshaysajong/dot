@@ -5,6 +5,8 @@ from django.contrib.auth.hashers import make_password
 class destination_area(models.Model):
     name = models.CharField(max_length=200, default=None, blank=True)
     place = models.CharField(max_length=100, default=None, blank=True)
+    description = models.TextField(max_length=200, default=None, blank=True)    
+    image = models.ImageField(upload_to = 'images/', blank=True)
     country = models.CharField(max_length=100, default=None, blank=True)
     state = models.CharField(max_length=100, default=None, blank=True) 
     lattitude = models.DecimalField(max_digits=8, decimal_places=3, default=None, blank=True)
@@ -21,13 +23,14 @@ class destinstions(models.Model):
     name = models.CharField(max_length=100, default=None, blank=True)
     d_area = models.ForeignKey(destination_area, default=None, on_delete=models.CASCADE)
     address = models.CharField(max_length=200, default=None, blank=True)
-    description = models.TextField()    
-    culture = models.TextField()
-    climate = models.TextField()
+    description = models.TextField(max_length=200, default=None, blank=True)    
+    culture = models.TextField(max_length=200, default=None, blank=True)
+    climate = models.TextField(max_length=200, default=None, blank=True)
     lattitude = models.DecimalField(max_digits=8, decimal_places=3, default=None, blank=True)
     longitude = models.DecimalField(max_digits=8, decimal_places=3, default=None, blank=True)
     status = models.BooleanField(default=False)
-    # c_user = models.CharField(max_length=100, default=None, blank=True)
+    c_user = models.CharField(max_length=100, default=None, blank=True)
+    destn_type = models.CharField(max_length=100, default=None, blank=True)
 
 class destination_img(models.Model):
     destinstions = models.ForeignKey(destinstions, default=None, on_delete=models.CASCADE)
@@ -67,6 +70,7 @@ class hotel_type(models.Model):
     types = models.CharField(max_length=200, default=None, blank=True)
     
 class organization(models.Model):
+    user = models.ForeignKey(User, default=None, on_delete=models.CASCADE)
     title = models.CharField(max_length=200,blank=True, null=True)
     org_type = models.CharField(max_length=200,blank=True, null=True)
     destinstion = models.ForeignKey(destinstions, default=None, on_delete=models.CASCADE)  
@@ -93,13 +97,12 @@ class destn_facility(models.Model):
     title = models.CharField(max_length=100, default=None, blank=True)
     description = models.CharField(max_length=200, default=None, blank=True)
     types = models.CharField(max_length=100, default=None, blank=True)
-    lattitude = models.DecimalField(max_digits=8, decimal_places=3, default=None, blank=True)
-    longitude = models.DecimalField(max_digits=8, decimal_places=3, default=None, blank=True)
     amount = models.FloatField(default=None, blank=True)
     status = models.BooleanField(default=False)
 
 class facility_price(models.Model):
     dstn_facility = models.ForeignKey(destinstions, default=None, on_delete=models.CASCADE)
+    title = models.CharField(max_length=100, default=None, blank=True)
     amount = models.FloatField(default=None, blank=True)
     discount = models.FloatField(default=None, blank=True)
     total = models.FloatField(default=None, blank=True)
@@ -134,7 +137,7 @@ class content(models.Model):
     content_type = models.CharField(max_length=200,blank=True, null=True)
     title = models.CharField(max_length=200,blank=True, null=True)
     page = models.CharField(max_length=200,blank=True, null=True)
-    path = models.FilePathField(path=None, match=None, recursive=False, max_length=100)
+    path = models.CharField(max_length=200,blank=True, null=True)
     body = models.CharField(max_length=200,blank=True, null=True)
     created = models.DateTimeField(blank=True, null=True)
     updated = models.DateTimeField(blank=True, null=True)
@@ -233,39 +236,13 @@ class staff_department(models.Model):
     department =models.CharField(max_length=50,blank=True, null=True)
     status = models.BooleanField(default=False)
 
-# # api
-# class banner(models.Model):
-#     title=models.CharField(max_length=50,blank=True, null=True)
-#     sub_title=models.CharField(max_length=50,blank=True, null=True)
-#     img=models.ImageField(upload_to = 'images/', blank=True)
-
-# class national_parks(models.Model):
-#     title=models.CharField(max_length=50,blank=True, null=True)
-#     img=models.ImageField(upload_to = 'images/', blank=True)
-# class treking(models.Model):
-#     title=models.CharField(max_length=50,blank=True, null=True)
-#     img=models.ImageField(upload_to = 'images/', blank=True)
-# class hillstation(models.Model):
-#     title=models.CharField(max_length=50,blank=True, null=True)
-#     img=models.ImageField(upload_to = 'images/', blank=True)
-# class honeymoon(models.Model):
-#     title=models.CharField(max_length=50,blank=True, null=True)
-#     img=models.ImageField(upload_to = 'images/', blank=True)
-
-# class dot_card(models.Model):
-#     title=models.CharField(max_length=50,blank=True, null=True)
-#     img=models.ImageField(upload_to = 'images/', blank=True)
-
-# class stays(models.Model):
-#     title=models.CharField(max_length=50,blank=True, null=True)
-#     facility=models.CharField(max_length=50,blank=True, null=True)
-#     amount = models.FloatField(default=None, blank=True)
-#     img=models.ImageField(upload_to = 'images/', blank=True)
-
 class best_things(models.Model):
     title=models.CharField(max_length=50,blank=True, null=True)
     img=models.ImageField(upload_to = 'images/', blank=True)
 
+class card(models.Model):
+    title=models.CharField(max_length=50,blank=True, null=True)
+    img=models.ImageField(upload_to = 'images/', blank=True)
 
 
 

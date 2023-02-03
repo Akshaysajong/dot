@@ -4,13 +4,18 @@ from . import views
 # from .views import get_data
 from django.conf import settings
 from django.conf.urls.static import static
+# from .import DestinationViewSet
+from rest_framework import routers
+router = routers.DefaultRouter()
+router.register('api/destinstions',views.DestinationViewSet, basename="destinations")
+
 # from django.conf import settings
 
 urlpatterns = [
     # path('data/',get_data, name='data'),
     # path('api/',include('dot_app.urls')),
 
-
+   
     path('login/', views.login_user, name='login'),
     path('dot/dashboard/', views.dot_dashboard, name='dot_dashboard'),
     path('logout/', views.logoutuser, name="logout" ),
@@ -18,6 +23,7 @@ urlpatterns = [
     path('dot/groups/', views.dot_groups, name='dot_groups'), 
     path('dot/addgroups/', views.dot_add_groups, name='dot_add_groups'), 
     path('dot/viewusers/', views.dot_viewusers, name='dot_viewusers'),
+    path('dot/edit_user/', views.dot_edit_user, name='dot_edit_user'),
     path('dot/addgroup/permissions/', views.dot_add_groups_permissions, name='dot_add_groups_permissions'),
 
     #hoteladmin add hotels
@@ -37,11 +43,19 @@ urlpatterns = [
     path('api/register/',views.Register.as_view(),name='register'),
     path('api/login/',views.LoginView.as_view(),name='login'),
     # path('api/cust_profile/',views.cust_profileRegister.as_view(),name='cust_profileRegister'),
-    path('api/destination_area/',views.destination_areaView.as_view({'get': 'list'}),name='destination_area'),
-    path('api/destinstions/',views.destinstionsView.as_view({'get': 'list'}),name='destinstions'),
-    path('api/destination_images/',views.destination_imageView.as_view({'get': 'list'}),name='destination_images'),
+    # path('api/destination_area/',views.destination_areaView.as_view({'get': 'list'}),name='destination_area'),
+    # path('api/destinstions/',views.destinstionsView.as_view({'get': 'list'}),name='destinstions'),
+    # path('api/destination_images/',views.destination_imageView.as_view({'get': 'list'}),name='destination_images'),
     path('api/greenktchen_homepage_content/',views.homepage_contentgreenkitchen, name='homepage-content'),
     path('api/homepage_contentdot/',views.homepage_contentdot, name='homepage-contentdot'),
+    path('api/dot_homepage/',views.dot_homepageAPI.as_view(), name='dot_homepage'),
+    path('api/dot_destination_details/',views.dot_destination_detailsAPI.as_view(), name='dot_destination_details'),
+    path('api/dot_destination_humpidetails/',views.dot_destination_humpidetailsAPI.as_view(), name='dot_destination_humpidetails'),
+    #  path('api/search_autocomplete/',views.searchAutocompleteAPIView.as_view(), name='search_autocomplete'),
+    path('api/search_autocomplete/', include(router.urls)),
+    
+
+
 
     path('dot/destination_area/', views.dot_destination_area, name='dot_destination_area'),
     path('dot/add_destination_area/', views.dot_add_destination_area, name='dot_add_destination_area'),
@@ -59,6 +73,7 @@ urlpatterns = [
     path('dot/addorganization_db/', views.dot_addorganization_db, name='dot_addorganization_db'),
     path('dot/organizationlist/', views.dot_organizationlist, name='dot_organizationlist'),
     path('dot/edite_organization/', views.dot_edite_organization, name='dot_edite_organization'),
+    path('dot/delete_organization/', views.dot_delete_organization, name='dot_delete_organization'),
     path('dot/updateorganization/', views.dot_updateorganization, name='dot_updateorganization'),
     path('delete_organization/', views.delete_organization, name='delete_organization'),
     path('dot/addfacilitytype/', views.dot_addfacilitytype, name='dot_addfacilitytype'),
@@ -69,5 +84,7 @@ urlpatterns = [
     path('dot/viewfacilitylist/', views.dot_viewfacilitylist, name='dot_viewfacilitylist'),
     path('dot/orderlist/', views.dot_orderlist, name='dot_orderlist'),
     path('dot/bookinglist/', views.dot_bookinglist, name='dot_bookinglist'),
+   
 ]
 
+# urlpatterns += router.urls

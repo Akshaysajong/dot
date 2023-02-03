@@ -1,6 +1,6 @@
 from rest_framework import serializers
 # from django.contrib.auth import get_user_model
-from .models import customer,destination_area,destinstions,destination_img
+from .models import customer,content,destinstions,destination_img,organization,organization_images,best_things,card,destination_area
 from rest_framework.response import Response
 
 # register customers
@@ -52,21 +52,126 @@ class customerRegister(serializers.ModelSerializer):
 #             return prof
 
 # destination_area
-class destination_areaSerializer(serializers.ModelSerializer):
+# class destination_areaSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model=destination_area
+#         fields = '__all__'
+
+# # view destinations
+# class destinstionsSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model=destinstions
+#         fields = '__all__'
+
+# # destination_img
+# class destination_imgSerializer(serializers.HyperlinkedModelSerializer):
+#     id = serializers.ReadOnlyField()
+#     class Meta:
+#         model=destination_img
+#         fields=['id','destinstions_id','image']
+
+
+class bannerSerializer(serializers.ModelSerializer):
     class Meta:
-        model=destination_area
+        model=content
         fields = '__all__'
 
-# view destinations
-class destinstionsSerializer(serializers.ModelSerializer):
+class destinationsSerializer(serializers.ModelSerializer):
     class Meta:
         model=destinstions
-        fields = '__all__'
+        fields = ['id','destn_type']
 
-# destination_img
 class destination_imgSerializer(serializers.HyperlinkedModelSerializer):
     id = serializers.ReadOnlyField()
     class Meta:
         model=destination_img
-        fields=['id','destinstions_id','image']
+        fields = ['id','destinstions_id','image']
+
+class placesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=destination_area
+        fields = ['id','name','image']
+
+# class places_imgSerializer(serializers.HyperlinkedModelSerializer):
+#     id = serializers.ReadOnlyField()
+#     class Meta:
+#         model=destination_area
+#         fields = ['id','image']
+class cardSerializer(serializers.HyperlinkedModelSerializer):
+    id = serializers.ReadOnlyField()
+    class Meta:
+        model=card
+        fields = ['id','title','img']
+
+
+class staysSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=organization
+        fields = ['id','title']
+
+class staysimgSerializer(serializers.HyperlinkedModelSerializer):
+    id = serializers.ReadOnlyField()
+    class Meta:
+        model=organization_images
+        fields = ['id','images']
+
+class bestthingsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=best_things
+        fields = ['id','title','img']
+
+class destinationsearchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=destinstions
+        fields = ['id','name'],
+
+# dot_destination_detailsAPI
+class destinationdetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=destination_area
+        fields = ['id','place','description']
+
+class destinationdetails_imgSerializer(serializers.HyperlinkedModelSerializer):
+    id = serializers.ReadOnlyField()
+    class Meta:
+        model=destination_img
+        fields = ['id','destinstions_id','image']
+
+class destination_humpidetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=destinstions
+        fields = ['id','name']
+
+class destination_humpidetails_imgSerializer(serializers.HyperlinkedModelSerializer):
+    id = serializers.ReadOnlyField()
+    class Meta:
+        model=destination_img
+        fields = ['id','destinstions_id','image']
+
+class destination_humpidescription_Serializer(serializers.ModelSerializer):
+    class Meta:
+        model=destinstions
+        fields = ['id','description']    
+# humpi_surrounding
+class humpi_surroundingsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=destinstions
+        fields = ['id','name','description']
+
+class humpi_surroundings_imgSerializer(serializers.HyperlinkedModelSerializer):
+    id = serializers.ReadOnlyField()
+    class Meta:
+        model=destination_img
+        fields = ['id','destinstions_id','image']
+        
+class stay_humpiSearializer(serializers.ModelSerializer):
+    class Meta:
+        model=organization
+        fields = ['id','title']
+
+class stay_humpi_imgSerializer(serializers.HyperlinkedModelSerializer):
+    id = serializers.ReadOnlyField()
+    class Meta:
+        model=organization_images
+        fields = ['id','images']
 

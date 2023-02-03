@@ -65,6 +65,7 @@ function delete_hotel(id){
         data : {
             d_id : id
         },
+        dataType : 'json',
         success: function(data)
         {
             alert('Hotel deleted')
@@ -83,7 +84,7 @@ function delete_darea(id){
         data : {
             d_id : id
         },
-        dataType : 'jason',
+        dataType : 'json',
         success: function(data)
         {
             alert(data);
@@ -101,7 +102,7 @@ function delete_destination(id){
         data : {
             d_id : id
         },
-        dataType : 'jason',
+        dataType : 'json',
         success: function(data)
         {
             alert('Destination deleted')
@@ -120,10 +121,11 @@ function delete_organization(id){
         data : {
             org_id : id
         },
-        dataType : 'jason',
+        dataType : 'json',
         success: function(data)
         {
-            alert(data.msg)    
+            alert(data.msg)  
+            window.location.reload();  
             
         }
     })

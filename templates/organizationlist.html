@@ -11,7 +11,7 @@
           </ol></h1>
         <div class="btn-toolbar mb-2 mb-md-0">
             <div class="btn-toolbar mb-2 mb-md-0">
-              {% if perms.dot_app.add_hotel %}
+              {% if perms.dot_app.add_organization %}
                 <div class="btn-group me-2">
                   <a href="/dot/addorganization/"><button type="button" class="btn btn-sm">Add Organization</button></a>
                 </div>
@@ -26,7 +26,7 @@
               {% if messages %}
                   <div class="alert alert-danger">
                       {% for message in messages %}
-                          {% if message.tags == "error" and message.message == "You can't delete all images !!!!" or message.message == "You are not autherized to edit !!!!" %}
+                          {% if message.tags == "error" and message.message == "You can't delete all images !!!!" or message.message == "You are not autherized to edit !!!!" or message.message == "Username already exists" %}
                               {{ message }}
                           {% endif %}
                       {% endfor %}

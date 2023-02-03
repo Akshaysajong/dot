@@ -11,7 +11,7 @@
           </ol></h1>
         <div class="btn-toolbar mb-2 mb-md-0">
             <div class="btn-toolbar mb-2 mb-md-0">
-              {% if perms.dot_app.add_hotel %}
+              {% if perms.dot_app.add_destn_facility %}
                 <div class="btn-group me-2">
                   <a href="/dot/addfacility/"><button type="button" class="btn btn-sm">Add Facility</button></a>
                 </div>
@@ -35,30 +35,33 @@
                   <th scope="col">Status</th>
                 </tr>
               </thead>
-              {% for x in org %}
+              {% for x in destn_facilty %}
               <tbody>
                 <tr>
-                    <td >{{x.destinstions}}</td>
-                    <td >{{x.org_type}}</td>   
-                    <td >{{x.destinstion.name}}</td>               
-                    <td >{{x.contact_person}}</td> 
-                    <td >{{x.contact_number}}</td> 
-                    <td >{{x.website}}</td> 
-                    <td >{{x.address}}</td> 
-
-        <td>
-          <div class="btn-group me-2">
-            <a href="/dot/edit_hotel/?a={{x.id}}"><button class="btn-link border-0 bg-transparent text-body" ><span data-feather="edit-2"></span></button> </a>
-          </div> 
-        </td>
-        <td>
-          <div class="btn-group me-2">
-           
-            <button class="btn-link border-0 bg-transparent text-body" type="submit" onclick="delete_hotel('{{x.id}}')"><span data-feather="trash-2" ></span></button>
-          </div>
-        </td>
-                </tr>
-              </tbody>
+                    <td >{{x.destinstion}}</td>
+                    <td >{{x.types}}</td>   
+                    <td >{{x.title}}</td>               
+                    <td >{{x.description}}</td> 
+                    <td >{{x.amount}}</td> 
+                    <td class="pic"> <img  src="{{x.image.url}}" alt="" style="width:50px;height:60px;" ></td>
+                    <td >{{x.status}}</td> 
+                    {% if perms.dot_app.change_destn_facility %}
+                      <td>
+                        <div class="btn-group me-2">
+                          <a href="/dot/edit_hotel/?a={{x.id}}"><button class="btn-link border-0 bg-transparent text-body" ><span data-feather="edit-2"></span></button> </a>
+                        </div> 
+                      </td>
+                    {% endif %}
+                    {% if perms.dot_app.delete_destn_facility %}
+                      <td>
+                        <div class="btn-group me-2">
+                          <a href="/dot/delete_organization/?a={{x.id}}"><button class="btn-link border-0 bg-transparent text-body" ><span data-feather="trash-2" ></span></button> </a>
+                          <!-- <button class="btn-link border-0 bg-transparent text-body" type="submit" onclick="delete_hotel('{{x.id}}')"><span data-feather="trash-2" ></span></button> -->
+                        </div>
+                      </td>
+                    {% endif %}
+                    </tr>
+                  </tbody>
               {% endfor %}
             
             </table>

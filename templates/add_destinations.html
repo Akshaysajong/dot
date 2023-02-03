@@ -1,7 +1,6 @@
 {% extends "./base1.html" %}
 {% block main %}
-  <main class="col-md-9 bgmain ms-sm-auto col-lg-10 px-md-4">     
-                                        
+  <main class="col-md-9 bgmain ms-sm-auto col-lg-10 px-md-4">                                            
       <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2">
         <h1 class="h4">Add Destinations
           <ol class="breadcrumb">
@@ -17,11 +16,8 @@
       </div>
       <div class="card p-4 rounded-1 border-0 shadow">
         <h5 class="text-uppercase fw-bold mb-4 col-8">&nbsp;</h5>
-
         <form class="form-horizontal" method="POST" action="/dot/add_destination/" enctype="multipart/form-data">{% csrf_token %}
-          <div class="row">
-
-              
+          <div class="row">     
               <div class="col-md-4">
                 <label for="inputState" class="form-label">Destination Area</label>
                 <select id="destn_area" name="destn_area" class="form-select">
@@ -56,6 +52,10 @@
                 <textarea   class="form-control htmlarea" placeholder="" name="culture" id="culture" style="height: 100px"></textarea><br>
               </div>
               <div class="col-md-4">
+                <label for="destn_type" class="form-label">Type</label>
+                <input type="text" class="form-control" name="destn_type" id="destn_type" required><br>
+              </div>
+              <div class="col-md-4">
                 <label for="lattitude" class="form-label">Lattitude</label>
                 <input type="text" class="form-control" name="lattitude" id="lattitude" required><br>
               </div>
@@ -63,24 +63,16 @@
                 <label for="longitude" class="form-label">Longitude</label>
                 <input type="" class="form-control" name="longitude" id="longitude" required><br>
               </div>
-              
-             
               <div class="col-md-4">
                 <label for="status" class="form-label">Status </label>
-                <input type="checkbox" id="status" name="status" value="1">
-                
-              </div>
-                 
-            </div>
-            
+                <input type="checkbox" id="status" name="status" value="1">       
+              </div>          
+            </div>       
             <div class="col-2 mt-4">
               <button type="submit" class="btn btn-primary">Submit</button>
             </div>
           </form>
       </div>
-      
-    
-  
     </main>
     </div>
     </div>

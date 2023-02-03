@@ -17,11 +17,12 @@ from django.contrib import admin
 from django.urls import path,include
 from django.conf import settings
 from django.conf.urls.static import static
+# from django import urls
 
 urlpatterns = [
     path('dot/superuser/', admin.site.urls),
     path('', include('dot_app.urls')),
-    # path('api/',include('dot_app.urls')),
+    # path('api/',include("rest_framework.urls")),
 ]
 
 if settings.DEBUG:
