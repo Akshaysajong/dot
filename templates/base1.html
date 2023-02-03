@@ -60,6 +60,17 @@
           </ul>
           </li>
           {% endif %} -->
+          {% if perms.dot_app.view_userprofile %}
+          <li class="nav-item"> <a class="nav-link" data-bs-toggle="collapse" href="#menu-staff" aria-expanded="false" aria-controls="menu-order"> <span data-feather="file"></span> Staff </a> 
+            <ul class="list-group collapse multi-collapse ms-4 mb-2" id="menu-staff"> 
+              <li class="list-group-item border-0 p-1"><a href="/dot/stafflist/" class="nav-sublink">Staff List</a></li>
+              {% if perms.dot_app.add_userprofile %}
+              <li class="list-group-item border-0 p-1"><a href="/dot/addstaff/" class="nav-sublink">Add Staff</a></li> 
+              {% endif %} 
+          </ul>
+          </li>
+          {% endif %}
+
           {% if perms.dot_app.view_destination_area %}
           <li class="nav-item"> <a class="nav-link" data-bs-toggle="collapse" href="#menu-or" aria-expanded="false" aria-controls="menu-order"> <span data-feather="file"></span> Destinstions </a> 
           <ul class="list-group collapse multi-collapse ms-4 mb-2" id="menu-or"> 
@@ -78,12 +89,10 @@
             {% endif %}
           </ul>
           </li>
-          {% endif %}
-        
+          {% endif %}   
           {% if perms.dot_app.view_facility_type %}
           <li class="nav-item"> <a class="nav-link" data-bs-toggle="collapse" href="#menu-facility" aria-expanded="false" aria-controls="menu-order"> <span data-feather="file"></span> Facility </a> 
-            <ul class="list-group collapse multi-collapse ms-4 mb-2" id="menu-facility"> 
-              
+            <ul class="list-group collapse multi-collapse ms-4 mb-2" id="menu-facility">  
               <li class="list-group-item border-0 p-1"><a href="/dot/viewfacilitytype/" class="nav-sublink">View Facility Type</a></li>
               {% if perms.dot_app.add_facility_type %}
               <li class="list-group-item border-0 p-1"><a href="/dot/addfacilitytype/" class="nav-sublink">Add Facility Type</a></li> 
@@ -93,35 +102,33 @@
               {% endif %}
               {% if perms.dot_app.add_destn_facility %}
               <li class="list-group-item border-0 p-1"><a href="/dot/addfacility/" class="nav-sublink">Add Facility</a></li>
-              {% endif %}
-             
+              {% endif %}     
           </ul>
           </li>
           {% endif %}
-          <li class="nav-item"> <a class="nav-link" data-bs-toggle="collapse" href="#menu-ordlst" aria-expanded="false" aria-controls="menu-order"> <span data-feather="file"></span> Orders </a> 
-            <ul class="list-group collapse multi-collapse ms-4 mb-2" id="menu-ordlst"> 
-              <li class="list-group-item border-0 p-1"><a href="/dot/orderlist/" class="nav-sublink">Orders List</a></li>
-              
-             
+          {% if perms.dot_app.add_content %}
+          <li class="nav-item"> <a class="nav-link" data-bs-toggle="collapse" href="#menu-content" aria-expanded="false" aria-controls="menu-order"> <span data-feather="file"></span> Content </a> 
+            <ul class="list-group collapse multi-collapse ms-4 mb-2" id="menu-content"> 
+              <li class="list-group-item border-0 p-1"><a href="/dot/addcontent/" class="nav-sublink">Add Content</a></li>  
           </ul>
           </li>
+          {% endif %}  
+          <li class="nav-item"> <a class="nav-link" data-bs-toggle="collapse" href="#menu-ordlst" aria-expanded="false" aria-controls="menu-order"> <span data-feather="file"></span> Orders </a> 
+            <ul class="list-group collapse multi-collapse ms-4 mb-2" id="menu-ordlst"> 
+              <li class="list-group-item border-0 p-1"><a href="/dot/orderlist/" class="nav-sublink">Orders List</a></li>  
+          </ul>
+          </li>
+          {% if perms.dot_app.view_booking %}
           <li class="nav-item"> <a class="nav-link" data-bs-toggle="collapse" href="#menu-bookinglist" aria-expanded="false" aria-controls="menu-order"> <span data-feather="file"></span> Booking </a> 
             <ul class="list-group collapse multi-collapse ms-4 mb-2" id="menu-bookinglist"> 
               <li class="list-group-item border-0 p-1"><a href="/dot/bookinglist/" class="nav-sublink">Booking List</a></li>
-              
-             
           </ul>
           </li>
-          
-        
-          
-          
-          
+          {% endif %}
           <!-- {% if perms.dot_app.add_hotels %} -->
           <li class="nav-item"> <a class="nav-link"> <span data-feather="users"></span> Customers </a> </li>
           <li class="nav-item"> <a class="nav-link" href="/dot/groups/"> <span data-feather="users"></span>Groups </a> </li>
-          <!-- {% endif %} -->
-         
+          <!-- {% endif %} -->   
         </ul>
       </div>
     </nav>

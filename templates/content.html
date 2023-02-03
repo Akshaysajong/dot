@@ -4,17 +4,17 @@
 <main class="col-md-9 bgmain ms-sm-auto col-lg-10 px-md-4">     
                                         
           <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2">
-            <h1 class="h4">content
+            <h1 class="h4">Add Content
               <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/dot">Home</a></li>
-                <li class="breadcrumb-item">content</li>
+                <li class="breadcrumb-item">Add Content</li>
               </ol>
             </h1>
-            <!-- <div class="btn-toolbar mb-2 mb-md-0">
+            <div class="btn-toolbar mb-2 mb-md-0">
               <div class="btn-group me-2">
-                <a href="/dot/viewhotel"><button type="button" class="btn btn-sm">View Hotels</button></a>
+                <a href="/dot/viewcontent"><button type="button" class="btn btn-sm">View Content</button></a>
               </div>
-            </div> -->
+            </div>
           </div>
           <div class="card p-4 rounded-1 border-0 shadow">
             <h5 class="text-uppercase fw-bold mb-4 col-8">&nbsp;</h5>
@@ -24,85 +24,53 @@
                 <div class="row">
                  
                     <div class="col-md-4">
-                        <label for="" >content type</label><br>
-                                <select name="" id="content" class="form-control" onchange="get_content()">
-                                  <option value="0">--Select--</option>    
-                                  {% for x in content %}
-                                  <option value="{{x.id}}">{{x.content}}</option>
-                                  {% endfor %}
+                        <label for=""  class="form-label">Content Type</label><br>
+                                <select name="" id="content" class="form-control">
+                                  <option value="0">--Select--</option> 
+                                  <option value="heading">Heading</option>
+                                  <option value="block">Block</option>
+                                  <option value="page">Page</option>
+                                  
                                 </select>  
-                      </div>
-                    <div class="col-md-4">
-                      <label for="title" class="form-label">title</label>
-                      <input type="text" class="form-control" name="name" value="" id="name" required><br>
                     </div>
                     <div class="col-md-4">
-                      <label for="title" class="form-label">page</label>
-                      <input type="text" class="form-control" name="contact_person" value="" id="contact_person" required><br>
+                      <label for="title" class="form-label">Title</label>
+                      <input type="text" class="form-control" name="title" value="" id="title" required><br>
                     </div>
                     <div class="col-md-4">
-                      <label for="title" class="form-label">path</label>
-                      <input type="text" class="form-control" name="contact_number" value="" id="contact_number" required><br>
+                      <label for="page" class="form-label">Page</label>
+                      <input type="text" class="form-control" name="page" value="" id="page" required><br>
                     </div>
                     <div class="col-md-4">
-                      <label for="title" class="form-label">body</label>
-                      <input type="text" class="form-control" name="user_name" value="" id="user_name" required><br>
+                      <label for="path" class="form-label">Path</label>
+                      <input type="text" class="form-control" name="path" value="" id="path" required><br>
+                    </div>
+                    <div class="col-md-4">
+                      <label for="body" class="form-label">Body</label>
+                      <input type="text" class="form-control" name="body" value="" id="body" required><br>
+                    </div>
+                    <div class="col-md-4">
+                      <label for="content" class="form-label">Content</label>
+                      <input type="text" class="form-control" name="content" value="" id="content" required><br>
+                    </div>
+                    <div class="col-md-4">
+                      <label for="overlay" class="form-label">Overlay</label>
+                      <input type="text" class="form-control" name="overlay" value="" id="overlay" required><br>
+                    </div>
+                    <div class="col-md-4">
+                      <label for="weight" class="form-label">Weight</label>
+                      <input type="text" class="form-control" name="weight" value="" id="weight" required><br>
                     </div>
                     <div class="col-md-6">
                         <label for="status">Status </label>
-                        <input type="checkbox" id="status" name="status" value="True">
-                        
-                      </div>
-                      <div class="col-12 mt-4">
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                      </div>
+                        <input type="checkbox" id="status" name="status" value="True"> 
+                    </div>
+                    <div class="col-12 mt-4">
+                      <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
                     </form>
-               
+          
             </div>
-            
-                    <!-- <div class="col-md-4">
-                      <label for="title" class="form-label">created</label>
-                      <input type="password" class="form-control" name="pwd" value="" id="pwd" required><br>
-                    </div>
-                    <div class="col-md-8">
-                      <label for="title" class="form-label">updated</label>
-                      <input type="text" class="form-control" name="address" value="" id="address" required><br>
-                    </div> -->
-                    
-                    <!-- <div class="col-md-4">
-                      <label for="" >Country</label><br>
-                              <select name="" id="country" class="form-control" onchange="get_country()">
-                                <option value="0">--Select--</option>    
-                                {% for x in country %}
-                                <option value="{{x.id}}">{{x.name}}</option>
-                                {% endfor %}
-                              </select>  
-                    </div>
-                    <div class="col-md-4">
-                      <label for="" >State</label><br><br>
-                              <select name="" id="state" style="height:30px;width: 100%;" onchange="get_state()">
-                                <option value="0">--Select--</option>    
-                                {% for x in states %}
-                                <option value="{{x.id}}">{{x.name}}</option>
-                                {% endfor %}    
-                              </select>
-                    </div>
-                    <div class="col-md-4">
-                      <label for="" >City</label><br><br>
-                              <select name="" id="city" style="height:30px;width: 100%;">
-                                <option value="0">--Select--</option>    
-                                {% for x in city %}
-                                <option value="{{x.id}}">{{x.name}}</option>
-                                {% endfor %}
-                              </select>
-                    </div> -->
-                    
-                   
-                  <!-- </div> -->
-                  
-                 
-        <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
-        
 </main>
 {% endblock %}  
 

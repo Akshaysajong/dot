@@ -132,16 +132,53 @@ function delete_organization(id){
 
 }
 
+function deleteorgtn(obj, id){
+    var result = confirm("Are you sure to delete?");
+    if(result){
+        df = document.getElementById('deletedfiles').value;
+        dfc  = df.split(", ");
+        if(dfc.length < document.getElementById('imgcount').value) {
+            document.getElementById('deletedfiles').value = df+', '+id;
+            a=document.getElementById('img_id')
+            console.log(a)
+            obj.parentElement.parentElement.style.display = 'none';
+        }
+        else {
+            alert('Please keep atleaimagest one ');
+        }        
+    }
+}
 
 function confdelete(obj, id) {
-var result = confirm("Are you sure to delete?");
-console.log(result.length)
-var count= 0
-console.log(count)
-if(result){
+    var result = confirm("Are you sure to delete?");
+    if(result){
+        df = document.getElementById('deletedfiles').value;
+        dfc  = df.split(", ");
+        if(dfc.length < document.getElementById('imgcount').value) {
+            document.getElementById('deletedfiles').value = df+', '+id;
+            a=document.getElementById('img_id')
+            console.log(a)
+            obj.parentElement.parentElement.style.display = 'none';
+        }
+        else {
+            alert('Please keep atleaimagest one ');
+        }        
+    }
+}
 
-    a=document.getElementById('deletedfiles').value = document.getElementById('deletedfiles').value+', '+id;
-    console.log(a)
-    obj.parentElement.parentElement.style.display = 'none';
-}
-}
+function deletefacility(obj, id) {
+    var result = confirm("Are you sure to delete?");
+    if(result){
+        df = document.getElementById('deletedfiles').value;
+        dfc  = df.split(", ");
+        if(dfc.length < document.getElementById('imgcount').value) {
+            document.getElementById('deletedfiles').value = df+', '+id;
+            a=document.getElementById('img_id')
+            console.log(a)
+            obj.parentElement.parentElement.style.display = 'none';
+        }
+        else {
+            alert('Please keep atleaimagest one ');
+        }        
+    }
+    }

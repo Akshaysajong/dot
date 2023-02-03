@@ -79,12 +79,24 @@ urlpatterns = [
     path('dot/addfacilitytype/', views.dot_addfacilitytype, name='dot_addfacilitytype'),
     path('dot/viewfacilitytype/', views.dot_viewfacilitytype, name='dot_viewfacilitytype'),
     path('dot/edit_facilitytype/', views.dot_edit_facilitytype, name='dot_edit_facilitytype'),
+    path('dot/update_facilitytype/', views.dot_update_facilitytype, name='dot_update_facilitytype'),
+    path('dot/delete_facilitytype/', views.dot_delete_facilitytype, name='dot_delete_facilitytype'),
     path('dot/addfacility/', views.dot_addfacility, name='dot_addfacility'),
     path('dot/addfacilitydb/', views.dot_addfacilitydb, name='dot_addfacilitydb'),
     path('dot/viewfacilitylist/', views.dot_viewfacilitylist, name='dot_viewfacilitylist'),
+    path('dot/edit_facility/', views.dot_edit_facility, name='dot_edit_facility'),
+    path('dot/updatefacility/', views.dot_updatefacility, name='dot_updatefacility'),
     path('dot/orderlist/', views.dot_orderlist, name='dot_orderlist'),
     path('dot/bookinglist/', views.dot_bookinglist, name='dot_bookinglist'),
    
+    path('dot/addstaff/', views.dot_addstaff, name='dot_addstaff'),
+    path('dot/savestaff/', views.dot_savestaff, name='dot_addstaff'),
+    path('dot/stafflist/', views.dot_stafflist, name='dot_stafflist'),
+    path('dot/editstaff/', views.dot_editstaff, name='dot_editstaff'),
+    path('dot/updatestaff/', views.dot_updatestaff, name='dot_updatestaff'),
+    path('dot/deletestaff/', views.dot_deletestaff, name='dot_deletestaff'),
+    path('dot/addcontent/', views.dot_addcontent, name='dot_addcontent'),
+
 ]
 
 # urlpatterns += router.urls

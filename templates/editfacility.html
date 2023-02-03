@@ -1,0 +1,93 @@
+{% extends "./base1.html" %}
+{% block main %}
+
+<main class="col-md-9 bgmain ms-sm-auto col-lg-10 px-md-4">     
+                                        
+          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2">
+            <h1 class="h4">Edit Facility
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/dot/">Home</a></li>
+                <li class="breadcrumb-item">Edit Facility</li>
+              </ol>
+            </h1>
+            <div class="btn-toolbar mb-2 mb-md-0">
+              <div class="btn-group me-2">
+                <a href="/dot/viewfacilitylist/"><button type="button" class="btn btn-sm">View Facility List</button></a>
+              </div>
+            </div>
+          </div>
+          <div class="card p-4 rounded-1 border-0 shadow">
+            <h5 class="text-uppercase fw-bold mb-4 col-8">&nbsp;</h5>
+            <div class="row" style="margin-left: .5rem;">
+
+              <form class="form-horizontal" method="POST" action="/dot/updatefacility/" enctype="multipart/form-data">{% csrf_token %}
+                <div class="row">
+                {% for x in faclity %}
+                    <input type="hidden" class="form-control" name="id" value="{{x.id}}" id="id" required>
+                    <div class="col-md-6">
+                        <label for="destination" class="form-label" >Destination</label><br>
+                        <input type="text" class="form-control" name="destination" value="{{x.destinstions}}" id="Destination" required><br>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="type" class="form-label" >Type</label><br>
+                        <input type="text" class="form-control" name="type" value="{{x.types}}" id="type" required><br> 
+                    </div><br>
+                  
+                    <div class="col-md-6">
+                      <label for="title" class="form-label">Title</label>
+                      <input type="text" class="form-control" name="title" value="{{x.title}}" id="title" required><br>
+                    </div>
+                    
+                    <div class="col-md-6">
+                      <label for="description" class="form-label">Description</label>
+                      <input type="text" class="form-control" name="description" value="{{x.description}}" id="description" required><br>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="price" class="form-label">Price</label>
+                      <input type="text" class="form-control" name="amount" value="{{x.amount}}" id="price" required><br>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="images" class="form-label">Choose Images</label><br>
+                      <input type="file" class="form-control"  placeholder="" name="image" id="image" multiple >
+                    </div>
+                    <div class="col-md-6"><br>
+                        <label for="status">Status </label>
+                        <input type="checkbox" id="status" name="status" value="1" {% if x.status %}checked{% endif %}/>
+                      </div>
+                      {% endfor %}
+                   
+                    <!-- <div class="col-md-6">
+                      <label for="type" class="form-label">Type</label>
+                      <input type="text" class="form-control" name="type" value="" id="type" required><br>
+                    </div> -->
+                {% for x in f_img %}
+                    <div class="row" style="display:inline-flex"  data-wow-delay="1.3s">
+                    <div class="col-md-8 ">
+                      <div class="imageField" style="margin-left:0;margin-top: 4rem;">
+                      <div class="card" style="width: 15rem;">
+                        <img class="card-img-top" src="{{x.image.url}}" alt="Card image cap">
+                      </div><br>      
+                      <div class="btn-group me-6" >
+                        <button type="button" style="margin-left: 7rem" class="btn-link border-0 bg-transparent text-body " onClick="deletefacility(this, '{{x.id}}');"><span data-feather="trash-2" ></span></button>
+                      </div>
+                      <!-- <input type="text" class="form-control" id="inpu" name="pla" id="place" value="{{c.id}}"><br><br> -->
+                      <br>
+                    </div>
+                    </div>
+                    </div>
+                {% endfor %}
+                <input type="hidden" class="form-control" id="imgcount" name="imgcount" value="{{f_img|length}}" >
+                <input type="hidden" class="form-control" id="deletedfiles" name="deletedfiles" value="" >
+        
+                </div>
+                
+                  <div class="col-12 mt-4">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                  </div>
+                </form>
+           
+        </div>
+        
+</main>
+{% endblock %}  
+

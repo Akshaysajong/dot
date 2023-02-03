@@ -477,6 +477,11 @@ def dot_addorganization_db(request):
         username = request.POST['username']
         password = request.POST['password']
         email = request.POST['email']
+        print(first_name)
+        print(last_name)
+        print(username)
+        print(password)
+        print(email)
         user_or = User.objects.create_user(username=username, password=password, first_name=first_name, last_name=last_name, email=email)
         title = request.POST['title']
         org_type = request.POST['org_type']
@@ -580,16 +585,16 @@ def dot_updateorganization(request):
                 print(count)
                 if length < count:
                         for x in img:
-                            c=organization_images.objects.all().get(id=x)
-                            print(c)
-                            if c.images:
+                            org_img=organization_images.objects.all().get(id=x)
+                            print(org_img)
+                            if org_img.images:
                                 # pass
-                                c.images.delete()
-                            c.delete()
+                                org_img.images.delete()
+                            org_img.delete()
+                else:
+                    messages.error(request, "You can't delete all images !!!!")
         else:
-            messages.error(request, "You can't delete all images !!!!")
-    else:
-        messages.error(request, "You are not autherized to edit !!!!")
+            messages.error(request, "You are not autherized to edit !!!!")
 
     return redirect('dot_organizationlist')
 
@@ -632,8 +637,22 @@ def dot_edit_facilitytype(request):
     print(faclity_type_id)
     faclty_type = facility_type.objects.all().filter(id=faclity_type_id)
     print(faclty_type)
-
     return render(request,'editfacilitytype.html',{'faclty_type':faclty_type})
+
+
+def dot_update_facilitytype(request):
+    if request.method == 'POST':
+        title = request.POST['title']
+        description = request.POST['description']
+        flty_id = request.POST['flty_id']
+        facility_type.objects.all().filter(id=flty_id).update(title=title, description=description)
+    return redirect('dot_viewfacilitytype')
+
+def dot_delete_facilitytype(request):
+    flty_id = request.GET['a']
+    facility_type.objects.all().filter(id=flty_id).delete()
+    return redirect('dot_viewfacilitytype')
+
 
 @login_required(login_url="/login")
 def dot_addfacility(request):
@@ -657,13 +676,11 @@ def dot_addfacilitydb(request):
         orgtn_id = organization.objects.all().filter(user_id=user_id)
         # print(orgtn_id)
         # print(destn)
-        faclty = destn_facility(destinstions_id=destn, orgatn_id=orgtn_id[0].id, title=title, description=description, types=typ, amount=price, status=status)
+        faclty = destn_facility(destinstions=destn, orgatn=orgtn_id[0].title, title=title, description=description, types=typ, amount=price, status=status, c_user=user_id)
         faclty.save()
         for x in img:
-            f_image=facility_image(destinstion_id=destn, image=x, facility_id=faclty.id, status=status, imagetype='facility')
+            f_image=facility_image(destinstion=destn, image=x, facility_id=faclty.id, status=status, imagetype='facility', c_user=user_id)
             f_image.save()
-
-
     return redirect('dot_viewfacilitylist')
 
 @login_required(login_url="/login")
@@ -675,14 +692,56 @@ def dot_viewfacilitylist(request):
         im = ''
         # print(img[0].imagetype)
         if im:
-            im = img[0].image
-            
-        fclty_list.append({'id':x.id, 'destinstion':x.destinstions.name, 'types':x.types, 'title':x.title, 'description':x.description,
+            im = img[0].image         
+        fclty_list.append({'id':x.id, 'destinstion':x.destinstions, 'types':x.types, 'title':x.title, 'description':x.description,
             'amount':x.amount, 'status':x.status, 'image':img[0].image})
     # print(fclty_list)
     return render(request, 'viewfacilitylist.html',{'destn_facilty':fclty_list})
 
 
+@login_required(login_url="/login")
+def dot_edit_facility(request):
+    f_id = request.GET['a']
+    faclity = destn_facility.objects.all().filter(id=f_id)
+    f_img = facility_image.objects.all().filter(facility_id=f_id)
+    return render(request, 'editfacility.html', {'faclity':faclity, 'f_img':f_img})
+
+@login_required(login_url="/login")
+def dot_updatefacility(request):
+    if request.method == 'POST':
+        user = request.user
+        f_id = request.POST['id']
+        type = request.POST['type']
+        destination = request.POST['destination']
+        title = request.POST['title']
+        description = request.POST['description']
+        amount = request.POST['amount']
+        status = request.POST['status']
+        deletedimg = request.POST['deletedfiles']
+        img = request.FILES.getlist('image')
+        faclty = destn_facility.objects.all().filter(id=f_id)
+        print(faclty[0].c_user)
+        if int(faclty[0].c_user) == user.id or user.is_superuser:
+            destn_facility.objects.all().filter(id=f_id).update(title=title, description=description, types=type, amount=amount, status=status)
+            for x in img:
+                f_image=facility_image(destinstion=destination, image=x, facility_id=f_id, status=status, imagetype='facility')
+                f_image.save()
+            img = [int(item) for item in deletedimg.split(', ') if item.isdigit()]
+            length = len(img)
+            count = facility_image.objects.all().filter(facility=f_id).count() 
+            if length < count:
+                for x in img:
+                    c=facility_image.objects.all().get(id=x)
+                    print(c)
+                    if c.image:
+                        # pass
+                        c.image.delete()
+                    c.delete()
+            else:
+                messages.error(request, "You can't delete all images !!!!")   
+        else:
+            messages.error(request, "You are not autherized to edit !!!!")   
+    return redirect('dot_viewfacilitylist')
 
 #  org = organization.objects.all()
 #     orgstn = []
@@ -700,16 +759,103 @@ def dot_viewfacilitylist(request):
 
 @login_required(login_url="/login")
 def dot_delete_organization(request):
+    user = request.user
     faclty_id = request.GET['a']
     faclty = destn_facility.objects.all().filter(id=faclty_id)
-    facility_image.objects.all().filter(facility=faclty_id).delete()
-    faclty.delete()
+    if int(faclty[0].c_user) == user.id or user.is_superuser:
+        facility_image.objects.all().filter(facility=faclty_id).delete()
+        faclty.delete()
+    else:
+        messages.error(request, "You are not autherized to delete !!!!")
     return redirect('dot_viewfacilitylist')
 
+@login_required(login_url="/login")
+def dot_addstaff(request):
+    gp = Group.objects.all().filter(name='staff')
+    return render(request, 'addstaff.html',{'gp':gp})
 
+@login_required(login_url="/login")
+def dot_savestaff(request):
+    if request.method == 'POST':
+        user_id = request.user.id
+        username = request.POST['username']
+        first_name = request.POST['first_name']
+        last_name = request.POST['last_name']
+        email = request.POST['email']
+        password = request.POST['password']
+        contact_number = request.POST['contact_number']
+        address = request.POST['address']
+        status = request.POST['status']
+        print(user_id)
+        user_staff = User.objects.create_user(username=username, password=password, first_name=first_name, last_name=last_name, email=email)
+        user_staff.groups.add(4)
+        userpro = userprofile(user_id=user_staff.id, name=username, phone=contact_number, address=address, status=status, c_user=user_id)
+        userpro.save()
+    return redirect('dot_stafflist')
+
+@login_required(login_url="/login")
+def dot_stafflist(request):
+    staff = userprofile.objects.all()
+    return render(request, 'stafflist.html',{'staff':staff})
+
+@login_required(login_url="/login")
+def dot_editstaff(request):
+    s_id = request.GET['a']
+    print(s_id)
+    staff = userprofile.objects.all().filter(id=s_id)
+    return render(request, 'editstaff.html',{'staff':staff})
+
+@login_required(login_url="/login")
+def dot_updatestaff(request):
+    if request.method == 'POST':
+        user = request.user
+        staff_id = request.POST['id']
+        username = request.POST['username']
+        first_name = request.POST['first_name']
+        last_name = request.POST['last_name']
+        email = request.POST['email']
+        contact_number = request.POST['contact_number']
+        address = request.POST['address']
+        status = request.POST['status']
+        staff = userprofile.objects.all().filter(id=staff_id)
+        usr = User.objects.get(id=staff[0].user_id)
+        print(staff[0].user_id)
+        if int(staff[0].c_user) == user.id or user.is_superuser:
+            if User.objects.filter(username=username).exclude(id=staff[0].user_id).exists(): 
+                messages.error(request, 'Username already exists')
+                return redirect('dot_stafflist')
+            else:
+                usr.username = username
+                usr.first_name = request.POST['first_name']
+                usr.last_name = request.POST['last_name']
+                usr.email = request.POST['email']
+                usr.save()
+                staff.update(name=username, phone=contact_number, address=address, status=status)
+        else:
+            messages.error(request, "You are not autherized to edit !!!!")
+    return redirect('dot_stafflist')
+
+@login_required(login_url="/login")
+def dot_deletestaff(request):
+    user = request.user
+    staff_id = request.GET['a']
+    staff = userprofile.objects.all().filter(id=staff_id)
+    if int(staff[0].c_user) == user.id or user.is_superuser:
+        User.objects.get(id=staff[0].user_id).delete()
+        staff.delete()
+    else:
+            messages.error(request, "You are not autherized to delete !!!!")
+    return redirect('dot_stafflist')
+
+@login_required(login_url="/login")
+def dot_addcontent(request):
+    return render(request, 'content.html')
+
+@login_required(login_url="/login")
 def dot_orderlist(request):
     return render(request, 'orderlist.html')
 
+@login_required(login_url="/login")
 def dot_bookinglist(request):
     return render(request, 'bookinglist.html')
 

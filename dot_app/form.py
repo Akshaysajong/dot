@@ -47,8 +47,7 @@ class RegisterForm(UserCreationForm):
 #     password2= forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
 #     is_staff= forms.BooleanField(required=False,
 #                                       initial=False,
-#                                       label='')
-    
+#                                       label='')   
 #     class Meta:
 #         model = User
 #         fields = ['first_name', 'last_name', 'username','email', 'password1', 'password2', 'is_staff','groups']
@@ -72,8 +71,7 @@ class EntrollmentForm(UserCreationForm):
     password= forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
     # is_staff= forms.BooleanField(required=False,
     #                                   initial=False,
-    #                                   label='')
-    
+    #                                   label='')   
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'username','email', 'password', 'is_staff','groups']
@@ -87,19 +85,16 @@ class EntrollmentForm(UserCreationForm):
 
 
 class AddHotelsForm(UserCreationForm):
-
     username = forms.CharField(max_length=100,required=True,
-                                widget=forms.TextInput(attrs={'class': 'form-control'}))
+                            widget=forms.TextInput(attrs={'class': 'form-control'}))
     password= forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
-
 
     class Meta:
         model = User
         fields = ['username', 'password', 'groups']
     groups = forms.ModelChoiceField(
         queryset=Group.objects.all().filter(name__contains='hotels'),
-        to_field_name='id',
-       
+        to_field_name='id',      
         required=True,  
         widget=forms.Select(attrs={'class': 'form-control'})
     )
