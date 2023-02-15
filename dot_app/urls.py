@@ -26,6 +26,8 @@ urlpatterns = [
     path('dot/viewusers/', views.dot_viewusers, name='dot_viewusers'),
     path('dot/edit_user/', views.dot_edit_user, name='dot_edit_user'),
     path('dot/addgroup/permissions/', views.dot_add_groups_permissions, name='dot_add_groups_permissions'),
+    path('dot/delete_user/', views.dot_delete_user, name='dot_delete_user'),
+    path('dot/updateuser/', views.dot_updateuser, name='dot_updateuser'),
 
     #hoteladmin add hotels
     path('dot/addhotel/', views.dot_addhotel, name='dot_addhotel'),
@@ -111,6 +113,28 @@ urlpatterns = [
     path('dot/updatestaff/', views.dot_updatestaff, name='dot_updatestaff'),
     path('dot/deletestaff/', views.dot_deletestaff, name='dot_deletestaff'),
     path('dot/addcontent/', views.dot_addcontent, name='dot_addcontent'),
+    path('dot/savecontent/', views.dot_savecontent, name='dot_savecontent'),
+    path('dot/contentlist/', views.dot_contentlist, name='dot_contentlist'),
+    path('dot/deletecontent/', views.dot_deletecontent, name='dot_deletecontent'),
+    path('dot/editcontent/', views.dot_editcontent, name='dot_editcontent'),
+    path('dot/updatecontent/', views.dot_updatecontent, name='dot_updatecontent'),
+    path('dot/delete_contentimage/', views.dot_deletecontentimage, name='dot_deletecontentimage'),
+    path('dot/deleteimgcontent/', views.dot_deleteimgcontent, name='dot_deleteimgcontent'),
+
+    path('dot/addfaq_category/', views.dot_addfaq_category, name='dot_addfaq_category'),
+    path('dot/savefaqcategory/', views.dot_savefaqcategory, name='dot_savefaqcategory'),
+    path('dot/faqcategorylist/', views.dot_faqcategorylist, name='dot_faqcategorylist'),
+    path('dot/editfaqcategory/', views.dot_editfaqcategory, name='dot_editfaqcategory'),
+    path('dot/updatefaqcategory/', views.dot_updatefaqcategory, name='dot_updatefaqcategory'),
+
+    path('dot/deletefaqcategory/', views.dot_deletefaqcategory, name='dot_deletefaqcategory'),
+    path('dot/addfaq/', views.dot_addfaq, name='dot_addfaq'),
+    path('dot/savefaq/', views.dot_savefaq, name='dot_savefaq'),
+    path('dot/viewfaqlist/', views.dot_viewfaqlist, name='dot_viewfaqlist'),
+    path('dot/editfaq/', views.dot_editfaq, name='dot_editfaq'),
+    path('dot/updatefaq/', views.dot_updatefaq, name='dot_updatefaq'),
+    path('dot/deletefaq/', views.dot_deletefaq, name='dot_deletefaq'),
+
 
 ]
 

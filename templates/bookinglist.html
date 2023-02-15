@@ -26,30 +26,29 @@
             
               <thead>
                 <tr> 
+                  <th scope="col">CUSTOMER NAME</th>
                   <th scope="col">TITLE</th>                             
                   <th scope="col">BOOKING TYPE</th>
-                  <th scope="col">LAST NAME</th>
-                  <th scope="col">USER NAME</th>
-                  <th scope="col">BOOKED DATE</th>
                   <th scope="col">FROM</th>
                   <th scope="col">TO</th>
+                  <th scope="col">CREATED DATE</th>
                   <th scope="col">STATUS</th>
                 </tr>
               </thead>
-              {% for x in org %}
+              {% for x in c_booking %}
               <tbody>
                 <tr>
-                    <td >{{x.destinstions}}</td>
-                    <td >{{x.org_type}}</td>   
-                    <td >{{x.destinstion.name}}</td>               
-                    <td >{{x.contact_person}}</td> 
-                    <td >{{x.contact_number}}</td> 
-                    <td >{{x.website}}</td> 
-                    <td >{{x.address}}</td> 
+                    <td >{{x.cust.name}}</td> 
+                    <td >{{x.title}}</td>
+                    <td >{{x.bking_type}}</td>                       
+                    <td >{{x.bk_from}}</td> 
+                    <td >{{x.bk_to}}</td> 
+                    <td >{{x.created}}</td> 
+                    <td >{{x.status}}</td> 
 
         <td>
           <div class="btn-group me-2">
-            <a href="/dot/edit_hotel/?a={{x.id}}"><button class="btn-link border-0 bg-transparent text-body" ><span data-feather="edit-2"></span></button> </a>
+            <a href="/dot/edit_hotel/?a={{x.id}}"><button class="btn-link border-0 bg-transparent text-body" >Approve</button> </a>
           </div> 
         </td>
         <td>

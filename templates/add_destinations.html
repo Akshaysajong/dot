@@ -52,8 +52,13 @@
                 <textarea   class="form-control htmlarea" placeholder="" name="culture" id="culture" style="height: 100px"></textarea><br>
               </div>
               <div class="col-md-4">
-                <label for="destn_type" class="form-label">Type</label>
-                <input type="text" class="form-control" name="destn_type" id="destn_type" required><br>
+                <label for="destinationtype" class="form-label">Destination Type</label>
+                <select id="destinationtype" name="destinationtype" class="form-select">
+                  <option value="0">Choose...</option>
+                  <option value="beach">Beach</option>
+                  <option value="national part">National Park</option>
+
+                </select>
               </div>
               <div class="col-md-4">
                 <label for="lattitude" class="form-label">Lattitude</label>

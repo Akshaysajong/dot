@@ -10,6 +10,7 @@ from .form import RegisterForm,AddHotelsForm
 from .form import RegisterForm,AddHotelsForm, FacilitytypeForm, EntrollmentForm
 from django.http import JsonResponse
 from django.contrib import messages
+import datetime
 
 
 
@@ -55,8 +56,8 @@ def dot_adduser(request):
             username = form.cleaned_data.get('username')
             print(username)
             gr_id = request.POST.getlist('groups')
-            idd= gr_id[0]
-            print(gr_id)
+            # idd= gr_id[0]
+            # print(gr_id)
             for x in  gr_id:
                 print(x)
                 user.groups.add(x)
@@ -81,8 +82,7 @@ def dot_add_groups(request):
 
 @login_required(login_url="/login")
 def dot_viewusers(request):
-        user = request.user
-        
+        user = request.user    
         if user.is_superuser:    
             usr= User.objects.filter(is_superuser = '0')     
             user_groups = request.user.groups.all()
@@ -102,6 +102,33 @@ def dot_edit_user(request):
     usr = User.objects.all().filter(id=ur_id)
     print(usr)
     return render(request, "edituser.html",{'user':usr})
+
+@login_required(login_url="/login")
+def dot_updateuser(request):
+    if request.method == 'POST':
+        ur_id = request.POST['ur_id']
+        username = request.POST['name']
+        uu =  request.POST['is_staff']
+        print(uu)
+        usr = User.objects.get(id=ur_id)
+        if User.objects.filter(username=username).exclude(id=ur_id).exists(): 
+            messages.error(request, 'Username already exists')
+            return redirect('dot_viewusers')
+        else:
+            usr.username = username
+            usr.first_name = request.POST['first_name']
+            usr.last_name = request.POST['last_name']
+            usr.email = request.POST['email']
+            usr.is_staff = request.POST['is_staff']
+            usr.save()
+
+    return redirect('dot_viewusers')
+
+@login_required(login_url="/login")
+def dot_delete_user(request):
+    ur_id = request.GET['a']
+    
+    return redirect('dot_viewusers')
 
         
 @login_required(login_url="/login")
@@ -217,6 +244,7 @@ def delete_hotel(request):
     return JsonResponse(dat, safe=False)
 
 # update hotel
+@login_required(login_url="/login")
 def dot_update_hotel(request):
     if request.method == 'POST':
         # contact_person = request.POST['contact_person']
@@ -290,7 +318,8 @@ def ajax_state(request):
 def dot_destination_area(request):
     cntry = country.objects.all()
     stat = state.objects.all()
-    return render(request, "destinationarea.html",{'country':cntry, 'state':stat})
+    destnarea_type = destarea_type.objects.all()
+    return render(request, "destinationarea.html",{'country':cntry, 'state':stat, 'destarea_type':destnarea_type})
 
 #save destinatin area to database
 @login_required(login_url="/login")
@@ -299,17 +328,22 @@ def dot_add_destination_area(request):
         user = request.user.id
         destn_area = request.POST['destn_area']
         place = request.POST['place']
-        img = request.FILES['image']
+        image = request.FILES['image']
         description = request.POST['description']
         statu = request.POST['status']
         cuntry_id = request.POST['country']
         state_id = request.POST['state']
+        destinarea_type = request.POST.getlist('destinationarea_type')
         coutry = country.objects.all().filter(id = cuntry_id)
         stat = state.objects.all().filter(id = state_id)
         lattitude = request.POST['lattitude']
         longitude = request.POST['longitude']
-        d_area = destination_area(name=destn_area, place=place,description=description, status=statu, country=coutry[0].name, state=stat[0].name, lattitude=lattitude, longitude=longitude, c_user=user, image=img)
+        d_area = destination_area(name=destn_area, place=place,description=description, status=statu, country=coutry[0].name, state=stat[0].name, lattitude=lattitude, longitude=longitude, c_user=user, image=image)
         d_area.save()
+        for x in destinarea_type:
+            des = destinationarea_type(destnarea_type_id=x, destnarea_id=d_area.id)
+            des.save()
+           
        
     return redirect("dot_destination_area")
 
@@ -319,28 +353,35 @@ def dot_edit_destinationarea(request):
     # user = request.user.id
     ed_id = request.GET['a']
     destn = destination_area.objects.all().filter(id=ed_id)
+
     # if int(destn[0].c_user) == user:
     #     pass
     return render(request, "edit_destinationarea.html",{'destn':destn})
 
-
+@login_required(login_url="/login")
 def dot_update_destinationarea(request):
     if request.method == 'POST':
         user = request.user
-        print(user.id)
         da_id = request.POST['da_id']
         destn_area = request.POST['destn_area']
         place = request.POST['place']
         lattitude = request.POST['lattitude']
         longitude = request.POST['longitude']
         status = request.POST['status']
-        dn_ar = destination_area.objects.all().filter(id=da_id)
-        
+        dn_ar = destination_area.objects.all().filter(id=da_id)  
         if int(dn_ar[0].c_user) == user.id or user.is_superuser:
-            destination_area.objects.all().filter(id=da_id).update(name=destn_area, place=place, longitude=longitude, lattitude=lattitude, status=status)
+            # status check pending
+            if request.FILES.get('image', False):
+                image =  request.FILES['image']
+                destination_area.objects.all().filter(id=da_id).update(name=destn_area, place=place, longitude=longitude, lattitude=lattitude, status=status)
+                old_image = destination_area.objects.get(id=da_id)
+                old_image.image.delete(save=False)
+                old_image.image = image
+                old_image.save()
+            else:
+                destination_area.objects.all().filter(id=da_id).update(name=destn_area, place=place, longitude=longitude, lattitude=lattitude, status=status)
         else:
             messages.error(request, "You are not autherized to edit !!!!")
-
     return redirect("dot_view_destinationarea")
 #delete destination area
 @login_required(login_url="/login")
@@ -383,8 +424,8 @@ def dot_add_destination(request):
         culture = request.POST['culture']
         lattitude = request.POST['lattitude']
         longitude = request.POST['longitude']
-        destn_type = request.POST['destn_type']
-        dstn = destinstions(name=destn, d_area_id=destn_area, address=address, description=description, climate=climate, culture=culture, longitude=longitude, lattitude=lattitude, c_user=user ,destn_type=destn_type)
+        destinationtype = request.POST['destinationtype']
+        dstn = destinstions(name=destn, d_area_id=destn_area, address=address, description=description, climate=climate, culture=culture, longitude=longitude, lattitude=lattitude, c_user=user ,destn_type=destinationtype)
         dstn.save()
         for x in img:
             b=destination_img(destinstions_id=dstn.id, image=x)
@@ -401,7 +442,7 @@ def dot_view_destination(request):
         im =''
         if img:
             im = img[0].image
-        destn_list.append({'id':x.id, 'name':x.name,'address':x.address , 'description':x.description,'climate':x.climate,'culture':x.culture, 'image':im, 'd_area':x.d_area.name})
+        destn_list.append({'id':x.id, 'name':x.name,'address':x.address , 'description':x.description,'climate':x.climate,'culture':x.culture, 'image':im, 'd_area':x.d_area.name, 'destn_type':x.destn_type})
     return render(request, "view_destination.html",{'destn_list':destn_list})
 
 @login_required(login_url="/login")
@@ -438,6 +479,7 @@ def dot_update_destination(request):
         longitude = request.POST['longitude']
         pic = request.FILES.getlist('image')
         images = request.POST['deletedfiles']
+        destinationtype = request.POST['destinationtype']
         img = [int(item) for item in images.split(', ') if item.isdigit()]
         length=len(img)  
         count=destination_img.objects.all().filter(destinstions=d_id).count()
@@ -451,7 +493,7 @@ def dot_update_destination(request):
                         c.image.delete()
                     c.delete()           
             # print(count)
-            destinstions.objects.all().filter(id=d_id).update(name=destn,  address=address, description=description, climate=climate, culture=culture, longitude=longitude, lattitude=lattitude)
+            destinstions.objects.all().filter(id=d_id).update(name=destn,  address=address, description=description, climate=climate, culture=culture, longitude=longitude, lattitude=lattitude, destn_type=destinationtype)
             for x in pic:
                 ad_img=destination_img(destinstions_id=d_id, image=x)
                 ad_img.save()
@@ -477,11 +519,6 @@ def dot_addorganization_db(request):
         username = request.POST['username']
         password = request.POST['password']
         email = request.POST['email']
-        print(first_name)
-        print(last_name)
-        print(username)
-        print(password)
-        print(email)
         user_or = User.objects.create_user(username=username, password=password, first_name=first_name, last_name=last_name, email=email)
         title = request.POST['title']
         org_type = request.POST['org_type']
@@ -513,10 +550,7 @@ def dot_organizationlist(request):
     org = organization.objects.all()
     orgstn = []
     for x in org:
-        # print(x.d_area.name)
         img= organization_images.objects.all().filter(organization=x.id)
-        # print('>>>>>>>>>>>>>>')
-        # print(img[0].id)
         im =''
         if img:
             im = img[0].images
@@ -548,15 +582,12 @@ def dot_updateorganization(request):
         title = request.POST['title']
         org_type = request.POST['org_type']
         destn = request.POST['destn']
-        # print(destn)
         contact_person = request.POST['contact_person']
         contact_number = request.POST['contact_number']
         website = request.POST['website']
         email = request.POST['email']
         state = request.POST['state']
         city = request.POST['city']
-        # print(state)
-        # print(city)
         address = request.POST['address']
         proof = request.POST['proof']
         img = request.FILES.getlist('image')
@@ -570,9 +601,9 @@ def dot_updateorganization(request):
                 return redirect('dot_organizationlist')
             else:
                 usr.username = username
-                usr.first_name = first_name
-                usr.last_name = last_name
-                usr.email = email
+                usr.first_name = request.POST['first_name']
+                usr.last_name = request.POST['last_name']
+                usr.email = request.POST['state']
                 usr.save()
                 orgatn.update(title=title, org_type=org_type, destinstion_id=destn, contact_person=contact_person, contact_number=contact_number, website=website,
                 state=state, city=city, address=address, email=email, proof=proof, status=status)
@@ -605,7 +636,7 @@ def delete_organization(request):
     print(org_id)
     orgtn = organization.objects.all().filter(id=org_id)
     organization_images.objects.all().filter(organization_id=org_id)
-    # orgtn.delete()
+    orgtn.delete()
     dat = {'msg':'organization deleted'}
     return JsonResponse(dat, safe=False)
 
@@ -667,15 +698,12 @@ def dot_addfacilitydb(request):
         user_id = request.user.id
         destn = request.POST['destn']
         typ = request.POST['typ']
-        # organization = request.POST['organization']
         title = request.POST['title']
         description = request.POST['description']
         price = request.POST['price']
         img = request.FILES.getlist('image')
         status = request.POST['status']
         orgtn_id = organization.objects.all().filter(user_id=user_id)
-        # print(orgtn_id)
-        # print(destn)
         faclty = destn_facility(destinstions=destn, orgatn=orgtn_id[0].title, title=title, description=description, types=typ, amount=price, status=status, c_user=user_id)
         faclty.save()
         for x in img:
@@ -786,7 +814,6 @@ def dot_savestaff(request):
         contact_number = request.POST['contact_number']
         address = request.POST['address']
         status = request.POST['status']
-        print(user_id)
         user_staff = User.objects.create_user(username=username, password=password, first_name=first_name, last_name=last_name, email=email)
         user_staff.groups.add(4)
         userpro = userprofile(user_id=user_staff.id, name=username, phone=contact_number, address=address, status=status, c_user=user_id)
@@ -811,9 +838,6 @@ def dot_updatestaff(request):
         user = request.user
         staff_id = request.POST['id']
         username = request.POST['username']
-        first_name = request.POST['first_name']
-        last_name = request.POST['last_name']
-        email = request.POST['email']
         contact_number = request.POST['contact_number']
         address = request.POST['address']
         status = request.POST['status']
@@ -852,12 +876,196 @@ def dot_addcontent(request):
     return render(request, 'content.html')
 
 @login_required(login_url="/login")
+def dot_savecontent(request):
+    if request.method == 'POST':
+        img_content = request.POST.getlist('img_content[]')
+        image = request.FILES.getlist('image[]')
+        overlay = request.POST.getlist('overlay[]')
+        weight = request.POST.getlist('weight[]')
+        status = request.POST['status']
+        c_date = datetime.datetime.now()
+        contnt = content(content_type=request.POST['content_type'], title=request.POST['title'], page=request.POST['page'], 
+            path=request.POST['path'], body=request.POST['body'], created=c_date, status=status)
+        contnt.save()
+        i = 0
+        for x in image:
+            c_img = content_images(cid=contnt.id, status=status, created=c_date, content=img_content[i], image=x, overlay=overlay[i], weight=weight[i] )
+            c_img.save()
+            i = i + 1
+    return redirect('dot_contentlist')
+
+@login_required(login_url="/login")
+def dot_contentlist(request):
+    contnt = content.objects.all()
+    content_list = []
+    for x in contnt:  
+        img= content_images.objects.all().filter(cid=x.id)
+              
+        content_list.append({'id':x.id, 'content_type':x.content_type, 'title':x.title, 'page':x.page, 'path':x.path,'body':x.body,'status':x.status, 
+            'image':img[0].image, 'image_content':img[0].content, 'overlay':img[0].overlay, 'weight':img[0].weight, 'created':x.created, 'updated':x.updated})
+    return render(request, 'contentlist.html',{'content_list':content_list})
+
+@login_required(login_url="/login")
+def dot_deletecontent(request):
+    content_id = request.GET['a']
+    cont = content.objects.all().filter(id=content_id)
+    content_images.objects.all().filter(cid=content_id).delete()
+    cont.delete()
+    return redirect('dot_contentlist')
+
+@login_required(login_url="/login")
+def dot_editcontent(request):
+    content_id = request.GET['a']
+    contnt = content.objects.all().filter(id=content_id)
+    content_img = content_images.objects.all().filter(cid=content_id)
+    return render(request, 'editcontent.html', {'content':contnt, 'content_img':content_img})
+
+@login_required(login_url="/login")
+def dot_updatecontent(request):
+    if request.method == 'POST':
+        cont_id = request.POST['cont_id']
+        contimg_id = request.POST.getlist('contimg_id')
+        img_content = request.POST.getlist('img_content')
+        overlay = request.POST.getlist('overlay')
+        weight = request.POST.getlist('weight')
+        newimg_content = request.POST.getlist('img_content[]')
+        newimage = request.FILES.getlist('image[]')
+        newoverlay = request.POST.getlist('overlay[]')
+        newweight = request.POST.getlist('weight[]')
+        status=request.POST['status']
+        images = request.POST['deletedfiles']
+        img = [int(item) for item in images.split(', ') if item.isdigit()]
+        length=len(img)  
+        count=content_images.objects.all().filter(cid=cont_id).count()
+        c_date = datetime.datetime.now()
+        content.objects.all().filter(id=cont_id).update(title=request.POST['title'], path=request.POST['path'], body=request.POST['body'], status=status)
+        print(img_content)
+        i = 0
+        for x in contimg_id: 
+            content_images.objects.all().filter(id=x).update(content=img_content[i], overlay=overlay[i], weight=weight[i])
+            i = i + 1
+        j = 0
+        for x in newimage:
+            c_img = content_images(cid=cont_id, status=status, created=c_date, content=newimg_content[j], image=x, overlay=newoverlay[j], weight=newweight[j] )
+            c_img.save()
+            j = j + 1
+        if length < count:
+            for x in img:
+                c=content_images.objects.all().get(id=x)
+                if c.image:
+                    c.image.delete()
+                c.delete()     
+
+    return redirect('dot_contentlist')
+
+
+def dot_deleteimgcontent(request):
+    pass
+
+
+
+
+@login_required(login_url="/login")
+def dot_deletecontentimage(request):
+    cont_id = request.GET['a']
+    content_images.objects.all().filter(id=cont_id).delete()
+    return redirect('dot_contentlist')
+
+@login_required(login_url="/login")
+def dot_addfaq_category(request):
+    return render(request, 'faqcategory.html')
+
+@login_required(login_url="/login")
+def dot_savefaqcategory(request):
+    if request.method == 'POST':
+        name = request.POST['name']
+        description = request.POST['description']
+        status = request.POST['status']
+        faq_catgry = faq_category(name=name, description=description, status=status)
+        faq_catgry.save()
+    return redirect('dot_faqcategorylist')
+
+@login_required(login_url="/login")
+def dot_faqcategorylist(request):
+    faqcategorylist = faq_category.objects.all()
+    return render(request, 'faqcategorylist.html', {'faqcategorylist':faqcategorylist})
+
+@login_required(login_url="/login")
+def dot_editfaqcategory(request):
+    fq_id = request.GET['a']
+    faqcategory = faq_category.objects.all().filter(id=fq_id)
+    return render(request, 'editfaqcategory.html', {'faqcategory':faqcategory})
+
+@login_required(login_url="/login")
+def dot_updatefaqcategory(request):
+    if request.method == 'POST':
+        fq_id = request.POST['id']
+        name = request.POST['name']
+        description = request.POST['description']
+        status = request.POST['status']
+        faq_category.objects.all().filter(id=fq_id).update(name=name, description=description, status=status)
+    return redirect('dot_faqcategorylist')
+
+@login_required(login_url="/login")
+def dot_deletefaqcategory(request):
+    fq_id = request.GET['a']
+    faq_category.objects.all().filter(id=fq_id).delete()
+    return redirect('dot_faqcategorylist')
+
+@login_required(login_url="/login")
+def dot_addfaq(request):
+    faqcategory = faq_category.objects.all()
+    return render(request, 'faq.html', {'faqcategory':faqcategory})
+
+@login_required(login_url="/login")
+def dot_savefaq(request):
+    if request.method == "POST":
+        faq_id = request.POST['content_type']
+        title = request.POST['title']
+        description = request.POST['description']
+        status = request.POST['status']
+        access_date = datetime.datetime.now()
+        fq = faq(title=title, description=description, category=faq_id,access=access_date, status=status)
+        fq.save()
+    return redirect('dot_viewfaqlist')
+
+@login_required(login_url="/login")
+def dot_viewfaqlist(request):
+    faq_list = faq.objects.all()
+    return render(request, 'faqlist.html', {'faq_list':faq_list})
+
+@login_required(login_url="/login")
+def dot_editfaq(request):
+    faq_id = request.GET['a']
+    fq = faq.objects.all().filter(id=faq_id)
+    fq_category = faq_category.objects.all()
+    return render(request, 'editfaq.html',{'faq':fq, 'fq_category':fq_category})
+
+@login_required(login_url="/login")
+def dot_updatefaq(request):
+    if request.method == 'POST':
+        faq_id = request.POST['id']
+        category_type = request.POST['category_type']
+        title = request.POST['title']
+        description = request.POST['description']
+        status = request.POST['status']
+        faq.objects.all().filter(id=faq_id).update(category=category_type, title=title, description=description, status=status)
+    return redirect('dot_viewfaqlist')
+
+@login_required(login_url="/login")
+def dot_deletefaq(request):
+    faq_id = request.GET['a']
+    faq.objects.all().filter(id=faq_id).delete()
+    return redirect('dot_viewfaqlist')
+
+@login_required(login_url="/login")
 def dot_orderlist(request):
     return render(request, 'orderlist.html')
 
 @login_required(login_url="/login")
 def dot_bookinglist(request):
-    return render(request, 'bookinglist.html')
+    c_booking = booking.objects.all()
+    return render(request, 'bookinglist.html',{'c_booking':c_booking})
 
 
 @login_required(login_url="/login")

@@ -22,15 +22,24 @@
         <form class="form-horizontal" method="POST" action="/dot/update_destinationarea/" enctype="multipart/form-data">{% csrf_token %}
           {% for x in destn %}
           <div class="row">
-            <div class="col-md-6">
-              <label for="country">Country</label>
+            <div class="col-md-4">
+              <label for="country" class="form-label">Country</label>
               <input type="text" class="form-control" name="country" id="country" value="{{x.country}}" readonly required><br>
             </div>
-            <div class="col-md-6">
-              <label for="state">State</label>
+            <div class="col-md-4">
+              <label for="state" class="form-label">State</label>
               <input type="text" class="form-control" name="state" id="state" value="{{x.state}}" readonly required><br>
             </div>
-              <div class="col-md-6">
+            <div class="col-md-4">
+              <label for="destinationarea_type" class="form-label">Destination Area Type</label>
+              <select id="destinationarea_type" name="destinationarea_type" class="form-select " multiple >
+                
+                {% for x in destarea_type %}
+                <option value="{{x.id}}" aria-multiselectable="true">{{x.name}}</option>
+                {% endfor %}
+              </select><br>
+            </div>
+              <div class="col-md-4">
                 <label for="title" class="form-label">Destination Area</label>
                 <input type="text" class="form-control" name="da_id" id="da_id" value="{{x.id}}" hidden required> 
 
@@ -38,36 +47,52 @@
                 
               </div>
               
-              <div class="col-md-6">
-                <label for="place">Place</label>
+              <div class="col-md-4">
+                <label for="place" class="form-label">Place</label>
                 <input type="text" class="form-control" name="place" id="place" value="{{x.place}}" required><br>
               </div>
-              <div class="col-md-6">
-                <label for="lattitude">Lattitude</label>
+              <div class="col-md-4">
+                <label for="lattitude" class="form-label">Lattitude</label>
                 <input type="text" class="form-control" name="lattitude" id="lattitude" value="{{x.lattitude}}" required><br>
               </div>
-              <div class="col-md-6">
-                <label for="longitude">Longitude</label>
+              <div class="col-md-4">
+                <label for="longitude" class="form-label">Longitude</label>
                 <input type="text" class="form-control" name="longitude" id="longitude" value="{{x.longitude}}" required><br>
               </div>
-              <div class="col-md-6">
-                <label for="status">Status </label>
+              <div class="col-md-4">
+                <label for="images" class="form-label">Choose Images</label><br>
+                  <input type="file" class="form-control"  placeholder="" name="image" id="image" >
+              </div> 
+              <div class="col-md-4">
+                <label for="status" class="form-label">Status </label>
                 <input type="checkbox" id="status" name="status" value="1" {% if x.status %}checked{% endif %}/>
-                
               </div>
-              <!-- <div class="col-md-6">
-                <label for="status">Status </label>
-                <input type="checkbox" id="status" name="status" value="True">
-                
-              </div> -->
+
+              <div class="row" style="display:inline-flex"  data-wow-delay="1.3s">
+                <div class="col-md-8 ">
+                  <div class="imageField" style="margin-left:0;margin-top: 4rem;">
+                    <div class="card" style="width: 15rem;">
+                      <img class="card-img-top" src="{{x.image.url}}" alt="Card image cap">
+                    </div><br>
+                    
+                    <!-- <div class="btn-group me-6" >
+                      <button type="button" style="margin-left: 7rem" class="btn-link border-0 bg-transparent text-body " onClick="confdelete(this, '{{x.id}}');"><span data-feather="trash-2" ></span></button>
+                    </div> -->
+                    <!-- <input type="text" class="form-control" id="inpu" name="pla" id="place" value="{{c.id}}"><br><br> -->
+                    <br>
+                  </div>
+                </div>
+              </div>
+             
                  
-            </div>
+          </div>
             
-            <div class="col-12 mt-4">
-              <button type="submit" class="btn btn-primary">Submit</button>
-            </div>
-          </form>
+          <div class="col-12 mt-4">
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
           {% endfor %}
+        </form>
+          
       </div>
       
     

@@ -75,15 +75,6 @@
           <li class="nav-item"> <a class="nav-link" data-bs-toggle="collapse" href="#menu-or" aria-expanded="false" aria-controls="menu-order"> <span data-feather="file"></span> Destinstions </a> 
           <ul class="list-group collapse multi-collapse ms-4 mb-2" id="menu-or"> 
             <li class="list-group-item border-0 p-1"><a href="/dot/destination_area/" class="nav-sublink">Destinstion Area</a></li>
-
-          <li class="nav-item"> <a class="nav-link" data-bs-toggle="collapse" href="#menu-or" aria-expanded="false" aria-controls="menu-order"> <span data-feather="file"></span> Staff </a> 
-            <ul class="list-group collapse multi-collapse ms-4 mb-2" id="menu-or"> 
-              <li class="list-group-item border-0 p-1"><a href="/dot/add_staff/" class="nav-sublink">Add staff</a></li>
-            
-              <li class="list-group-item border-0 p-1"><a href="/dot/view_staff/" class="nav-sublink">View staff</a></li>
-             
-            </ul>
-            </li>
             {% if perms.dot_app.add_destinstions %}
             <li class="list-group-item border-0 p-1"><a href="/dot/destinations/" class="nav-sublink">Destinstions</a></li>
             {% endif %}
@@ -110,9 +101,17 @@
           <li class="nav-item"> <a class="nav-link" data-bs-toggle="collapse" href="#menu-content" aria-expanded="false" aria-controls="menu-order"> <span data-feather="file"></span> Content </a> 
             <ul class="list-group collapse multi-collapse ms-4 mb-2" id="menu-content"> 
               <li class="list-group-item border-0 p-1"><a href="/dot/addcontent/" class="nav-sublink">Add Content</a></li>  
+              <li class="list-group-item border-0 p-1"><a href="/dot/contentlist/" class="nav-sublink">Content List</a></li>  
           </ul>
           </li>
           {% endif %}  
+          <li class="nav-item"> <a class="nav-link" data-bs-toggle="collapse" href="#menu-faq" aria-expanded="false" aria-controls="menu-order"> <span data-feather="file"></span> FAQ </a> 
+            <ul class="list-group collapse multi-collapse ms-4 mb-2" id="menu-faq">
+              <li class="list-group-item border-0 p-1"><a href="/dot/addfaq_category/" class="nav-sublink">Add FAQ Category</a></li>   
+              <li class="list-group-item border-0 p-1"><a href="/dot/addfaq/" class="nav-sublink">Add FAQ</a></li>  
+          </ul>
+          </li>
+
           <li class="nav-item"> <a class="nav-link" data-bs-toggle="collapse" href="#menu-ordlst" aria-expanded="false" aria-controls="menu-order"> <span data-feather="file"></span> Orders </a> 
             <ul class="list-group collapse multi-collapse ms-4 mb-2" id="menu-ordlst"> 
               <li class="list-group-item border-0 p-1"><a href="/dot/orderlist/" class="nav-sublink">Orders List</a></li>  

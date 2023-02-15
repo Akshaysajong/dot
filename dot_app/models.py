@@ -3,6 +3,10 @@ from django.contrib.auth.models import AbstractUser, User
 from django.contrib.auth.hashers import make_password
 from django_filters import FilterSet
 
+
+class destarea_type(models.Model):
+    name = models.CharField(max_length=200, default=None, blank=True)
+
 class destination_area(models.Model):
     name = models.CharField(max_length=200, default=None, blank=True)
     place = models.CharField(max_length=100, default=None, blank=True)
@@ -14,6 +18,10 @@ class destination_area(models.Model):
     longitude = models.DecimalField(max_digits=8, decimal_places=3, default=None, blank=True)
     status = models.BooleanField()
     c_user = models.CharField(max_length=100, default=None, blank=True)
+
+class destinationarea_type(models.Model):
+    destnarea_type = models.ForeignKey(destarea_type, default=None, on_delete=models.CASCADE)
+    destnarea = models.ForeignKey(destination_area, default=None, on_delete=models.CASCADE)
 
 class destination_type(models.Model):
     name = models.CharField(max_length=50, blank=True, default=None)
@@ -146,20 +154,22 @@ class content(models.Model):
     created = models.DateTimeField(blank=True, null=True)
     updated = models.DateTimeField(blank=True, null=True)
     status = models.BooleanField(default=False)
+    created_id = models.CharField(max_length=200,blank=True, null=True)
 
 class content_images(models.Model):
-    cid = models.ForeignKey(content, default=None, on_delete=models.CASCADE) 
+    cid = models.CharField(max_length=200,blank=True, null=True)
     content = models.CharField(max_length=200,blank=True, null=True)
     image = models.ImageField(upload_to = 'images/', blank=True)
     overlay = models.CharField(max_length=200,blank=True, null=True)
     weight = models.IntegerField(blank=True, null=True)
     created = models.DateTimeField(blank=True, null=True)
     status =  models.BooleanField(default=False)
+    created_id = models.CharField(max_length=200,blank=True, null=True)
 
 class faq_category(models.Model):
     name = models.CharField(max_length=200,blank=True, null=True)
     description = models.CharField(max_length=200,blank=True, null=True)
-    popularity = models.CharField(max_length=200,blank=True, null=True)
+    popularity = models.CharField(max_length=200,blank=True, null=True, default='0')
     status =  models.BooleanField(default=False)
 
 class faq(models.Model):
@@ -167,9 +177,9 @@ class faq(models.Model):
     description = models.CharField(max_length=200,blank=True, null=True)
     category = models.CharField(max_length=200,blank=True, null=True)
     access = models.CharField(max_length=200,blank=True, null=True)
-    access_count = models.CharField(max_length=200,blank=True, null=True)
-    likes = models.CharField(max_length=200,blank=True, null=True)
-    dislike = models.CharField(max_length=200,blank=True, null=True)
+    access_count = models.CharField(max_length=200,blank=True, null=True, default='0')
+    likes = models.CharField(max_length=200,blank=True, null=True, default='0')
+    dislike = models.CharField(max_length=200,blank=True, null=True, default='0')
     status = models.BooleanField(default=False)
 
 class customer_type(models.Model):

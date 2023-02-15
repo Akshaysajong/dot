@@ -114,7 +114,7 @@ function delete_destination(id){
 }
 
 function delete_organization(id){
-    alert('Organization deleted')  
+    alert(' Are you sure to delete?')  
     jQuery.ajax({
         type : 'get',
         url : "/delete_organization/",
@@ -166,6 +166,32 @@ function confdelete(obj, id) {
     }
 }
 
+function deleteimgcontent(obj, id){
+    var result = confirm("Are you sure to delete?");
+    if(result){
+        df = document.getElementById('deletedfiles').value;
+        dfc  = df.split(", ");
+        if(dfc.length < document.getElementById('imgcount').value) {
+            document.getElementById('deletedfiles').value = df+', '+id;
+            a=document.getElementById('img_id')
+            console.log(a)
+            obj.parentElement.parentElement.style.display = 'none';
+        }
+        else {
+            alert('Please keep atleaimagest one ');
+        }        
+
+    }
+
+}
+
+// function delvariation(id) {
+//     $('#deleted_variations').val($('#deleted_variations').val() + ', '+id);
+// }
+
+
+
+
 function deletefacility(obj, id) {
     var result = confirm("Are you sure to delete?");
     if(result){
@@ -182,3 +208,38 @@ function deletefacility(obj, id) {
         }        
     }
     }
+
+function addvariation(c, p) {
+    rl = $('.'+c).length + 1;
+    row = '<div class="row mb-3 border-bottom pb-3 ' + c + '" id="'+ c + rl +'"><input type="hidden" name="variationai[]" value="' + (999 + rl) + '">' + $('#'+c+'1').html().replace('imagevariation1000', 'imagevariation'+(999 + rl)) + '</div>';
+    $('#' + p).append(row);
+    $('#' + c + rl +' input').val(''); 
+    $('#' + c + rl +' .imgwrapper').remove(); 
+}
+    
+
+function upload_variationimg(obj, f) {
+    var file = obj.files[0];
+    var imageholder = $(obj).parent().parent();
+    var idnum = $(obj).attr('id').replace('imagevariation', '');
+    var reader  = new FileReader();
+    v = (f==0)?'':'e';
+    f = (f==0)?idnum:f;
+    // it's onload event and you forgot (parameters)
+    reader.onload = function(e)  {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            imageholder.append('<div class="row mb-3 border-bottom pb-3 imgwrapper"><div class="col-md-4"><img src="' + server +'/'+ this.responseText +'" class="img-responsive" onclick="popprodImage(this, \'' + this.responseText + '\')" style="width:100px;"><input type="hidden" class="form-control" name="' + v +'variationimage[' + f +'][]" value="'+ this.responseText +'"></div><div class="col-md-4"><input type="number" class="form-control" name="' + v +'variationimgweight[' + f +'][]" value="1"></div><div class="col-md-4"><a href="#" onclick="deleteVariationImage(this, \''+ this.responseText +'\')" title="Delete"><span class="bi-trash" style="font-size: 30px; color: black;"></span></a></div></div>');
+          }
+        };
+        xhttp.open("POST", server + "/uploadproductimage", true);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.send("photo=" + encodeURIComponent(e.target.result));
+     }
+     // you have to declare the file loading
+     reader.readAsDataURL(file);
+  }
+  
+  
+  

@@ -1,7 +1,6 @@
 {% extends "./base1.html" %}
 {% block main %}
-  <main class="col-md-9 bgmain ms-sm-auto col-lg-10 px-md-4">     
-                                        
+  <main class="col-md-9 bgmain ms-sm-auto col-lg-10 px-md-4">                                        
       <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2">
         <h1 class="h4">Edit User
           <ol class="breadcrumb">
@@ -18,27 +17,30 @@
       <div class="card p-4 rounded-1 border-0 shadow">
         <h5 class="text-uppercase fw-bold mb-4 col-8">&nbsp;</h5>
 
-        <form class="form-horizontal" method="POST" action="/dot/update_hotel/" enctype="multipart/form-data">{% csrf_token %}
-          
+        <form class="form-horizontal" method="POST" action="/dot/updateuser/" enctype="multipart/form-data">{% csrf_token %}  
           <div class="row">
             {% for x in user %}
-            <input type="hidden" class="form-control" name="ho_id" id="ho_id" value="{{x.id}}" required>               
+            <input type="hidden" name="ur_id" id="ur_id" value="{{x.id}}" required>               
               <div class="col-md-6">
                 <label for="title" class="form-label">User Name</label>
                 <input type="text" class="form-control" name="name" id="User" value="{{x.username}}" required>               
               </div>              
               <div class="col-md-6">
-                <label for="first_name">First name</label>
+                <label for="first_name" class="form-label">First name</label>
                 <input type="text" class="form-control" name="first_name" id="first_name" value="{{x.first_name}}" required><br>
               </div>
               <div class="col-md-6">
-                <label for="last_name">Last Name</label>
+                <label for="last_name" class="form-label">Last Name</label>
                 <input type="text" class="form-control" name="last_name" id="last_name" value="{{x.last_name}}" required><br>
               </div>
               <div class="col-md-6">
-                <label for="email">Email</label>
+                <label for="email" class="form-label">Email</label>
                 <input type="text" class="form-control" name="email" id="email" value="{{x.email}}" required><br>
               </div>
+              <div class="col-md-6">
+                <label for="is_staff" class="form-label">Staff </label>
+                <input type="checkbox"  id="is_staff" name="is_staff" value="1" {% if x.is_staff %}checked{% endif %}/><br>
+              </div><br>
               
               <!-- <div class="col-md-6">
                 <label for="hotel_type">hotel_type</label>

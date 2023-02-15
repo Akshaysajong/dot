@@ -12,20 +12,21 @@
             </h1>
             <div class="btn-toolbar mb-2 mb-md-0">
               <div class="btn-group me-2">
-                <a href="/dot/viewcontent"><button type="button" class="btn btn-sm">View Content</button></a>
+                <a href="/dot/contentlist"><button type="button" class="btn btn-sm">Content List</button></a>
               </div>
             </div>
           </div>
           <div class="card p-4 rounded-1 border-0 shadow">
             <h5 class="text-uppercase fw-bold mb-4 col-8">&nbsp;</h5>
+            
             <div class="row" style="margin-left: .5rem;">
 
-              <form class="form-horizontal" method="POST" action="/dot/content//" enctype="multipart/form-data">{% csrf_token %}
+              <form class="form-horizontal" method="POST" action="/dot/savecontent/" enctype="multipart/form-data">{% csrf_token %}
                 <div class="row">
                  
-                    <div class="col-md-4">
-                        <label for=""  class="form-label">Content Type</label><br>
-                                <select name="" id="content" class="form-control">
+                    <div class="col-md-3">
+                        <label for="content_type"  class="form-label">Content Type</label><br>
+                                <select name="content_type" id="content_type" class="form-control">
                                   <option value="0">--Select--</option> 
                                   <option value="heading">Heading</option>
                                   <option value="block">Block</option>
@@ -33,26 +34,30 @@
                                   
                                 </select>  
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                       <label for="title" class="form-label">Title</label>
                       <input type="text" class="form-control" name="title" value="" id="title" required><br>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                       <label for="page" class="form-label">Page</label>
                       <input type="text" class="form-control" name="page" value="" id="page" required><br>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                       <label for="path" class="form-label">Path</label>
                       <input type="text" class="form-control" name="path" value="" id="path" required><br>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                       <label for="body" class="form-label">Body</label>
                       <input type="text" class="form-control" name="body" value="" id="body" required><br>
                     </div>
-                    <div class="col-md-4">
-                      <label for="content" class="form-label">Content</label>
-                      <input type="text" class="form-control" name="content" value="" id="content" required><br>
+                    <!-- <div class="col-md-4">
+                      <label for="img_content" class="form-label">Content</label>
+                      <input type="text" class="form-control" name="img_content" value="" id="img_content" required><br>
                     </div>
+                    <div class="col-md-4">
+                      <label for="images" class="form-label">Choose Images</label><br>
+                      <input type="file" class="form-control"  placeholder="" name="image" id="image" >
+                    </div> 
                     <div class="col-md-4">
                       <label for="overlay" class="form-label">Overlay</label>
                       <input type="text" class="form-control" name="overlay" value="" id="overlay" required><br>
@@ -60,11 +65,109 @@
                     <div class="col-md-4">
                       <label for="weight" class="form-label">Weight</label>
                       <input type="text" class="form-control" name="weight" value="" id="weight" required><br>
-                    </div>
+                    </div> -->
                     <div class="col-md-6">
                         <label for="status">Status </label>
                         <input type="checkbox" id="status" name="status" value="True"> 
+                    </div><br>
+
+                    <!-- <div class="row subheading">
+                      <div class="team-member pDark"> <h4>Add Content Variation<span style="float:right;"><button class="btn btn-sm" type="button" onclick="addvariation('variation_details', 'variationcontainer')"> <i class="glyphicon glyphicon-plus"></i> Add Variation</button></span></h4></div>
+                  </div> -->
+                  <div class="card p-4 rounded-1 border-0 shadow" id="uploadedimages">
+                    <hr>
+                    <h5 class="text-uppercase fw-bold mb-4 col-8">Content Images</h5>
+                    <div class="row">
+                      <div class="col-12" style="text-align: right;">
+                        <button type="button" class="btn btn-sm" onclick="addvariation('contentimagerow', 'uploadedimages')">Add Row</button>
+                      </div>
                     </div>
+                    <div class="row mb-3 border-bottom pb-3">
+                      <div class="col-md-2">
+                        <label for="inputCity" class="form-label">Image</label>
+                      </div>
+                      <div class="col-md-2">
+                        <label for="inputCity" class="form-label">Content</label>
+                      </div>
+
+                      <div class="col-md-2">
+                        <label for="inputCity" class="form-label">Text</label>
+                      </div>
+                      <div class="col-md-2">
+                        <label for="inputCity" class="form-label">Weight</label>
+                      </div>
+                      <div class="col-md-2">
+                        <label for="inputState" class="form-label">Delete</label>
+                      </div>
+                    </div>
+                    <div class="row mb-3 border-bottom pb-3 contentimagerow" id="contentimagerow1">
+                      <div class="col-md-2"><input type="file" class="form-control" name="image[]"></div>
+                      <div class="col-md-2"><input type="text" class="form-control" name="img_content[]"></div>
+                      <div class="col-md-2"><input type="text" class="form-control" name="overlay[]"></div>
+                      <div class="col-md-2"><input type="number" class="form-control" name="weight[]"></div>
+                      <div class="col-md-2"><a href="#" onclick="delparentrow(this, 'contentimagerow')" title="Delete">
+                        <span class="bi-trash" style="font-size: 30px; color: black;"></span></a>
+                      </div>
+                    </div>
+                  </div>
+
+
+                  <!-- <div class="row " style="margin-top:1rem; ">
+                    <hr/>
+                    <div class="row subheading">
+                        <div class="team-member pDark"> <h4>Add Content Image Variation<span style="float:right;"><button class="btn btn-sm" type="button" onclick="addvariation('variation_details', 'variationcontainer')"> <i class="glyphicon glyphicon-plus"></i> Add Variation</button></span></h4></div>
+                    </div>
+                    <div style="text-align:center; ">
+                      <div id="variationcontainer" class="col-sm-12">
+                        <input type="hidden" name="variationai[]" id="variationai1" value="1000">
+                        <div class="row formrows variation_details" id="variation_details1" >
+                          <div class="col-sm-4 team-member pDark">
+                            <label for="img_content" class="form-label">Content</label>
+                            <input type="text" class="form-control variationtitle inputtext" name="img_content[]" id="variationtitle1" required>
+                          </div>
+                          <div class="col-sm-4 team-member pDark">
+                            <label for="total" class="form-label">Overlay</label>
+                            <input type="text" class="form-control variationtitle inputtext" name="variationtitle[]" id="variationtitle1" required>
+                          </div>
+                          <div class="col-sm-2 team-member pDark">
+                            <label for="variationsku" class="form-label">SKU</label>
+                            <input type="text" class="form-control variationsku" name="variationsku[]" id="variationsku1"  required>
+                          </div>
+                          
+            
+                          <div class="col-sm-4 team-member pDark" style="margin-top:2rem;">
+                            <label for="variation_status" class="form-label">Status</label>
+                            <input type="checkbox" class="form-check-input variation_status" name="variation_status[]" id="variation_status1" >
+                          </div>
+                            <div class="card p-4 rounded-1 border-0 shadow variationimages" id="variationimages1">
+                              <hr/>
+                              <div class="col-md-12" style="background: #ddd;">
+                                <strong >Variation Images</strong>
+                                <input type="file" class="border-0 imagevariation" name="imagevariation[]" id="imagevariation1000" aria-describedby="inputGroupProof" aria-label="Upload" onchange="upload_variationimg(this, 0)" >
+                              </div>
+                              <div class="row mb-3 border-bottom pb-3">
+                                <div class="col-md-4">
+                                  <label for="inputCity" class="form-label">Image</label>
+                                </div>
+                                <div class="col-md-4">
+                                  <label for="inputWeight" class="form-label">Weight</label>
+                                </div>
+                                <div class="col-md-4">
+                                  <label for="inputDelete" class="form-label">Delete</label>
+                                </div>
+                              </div>
+                            </div>
+                        </div>
+                      </div>
+                      <input type="hidden" name="deleted_files" id="deleted_files" value="">
+                      <input type="hidden" name="deleted_variation_images" id="deleted_variation_images" value="">
+                    </div>
+                  </div> -->
+          
+          
+        
+
+
                     <div class="col-12 mt-4">
                       <button type="submit" class="btn btn-primary">Submit</button>
                     </div>
