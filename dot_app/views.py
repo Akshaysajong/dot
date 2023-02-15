@@ -299,7 +299,7 @@ def dot_add_destination_area(request):
         user = request.user.id
         destn_area = request.POST['destn_area']
         place = request.POST['place']
-        img = request.FILES.getlist('image')
+        img = request.FILES['image']
         description = request.POST['description']
         statu = request.POST['status']
         cuntry_id = request.POST['country']
@@ -875,7 +875,7 @@ from .models import *
 from rest_framework.response import Response
 from rest_framework import viewsets
 from rest_framework import status 
-from .serializers import customerRegister,bannerSerializer,destinationsSerializer,destination_imgSerializer,placesSerializer,staysSerializer,staysimgSerializer,bestthingsSerializer,cardSerializer,destinationdetailsSerializer,destinationdetails_imgSerializer,destination_humpidetailsSerializer,destination_humpidetails_imgSerializer,destination_humpidescription_Serializer,humpi_surroundingsSerializer,humpi_surroundings_imgSerializer,stay_humpiSearializer,stay_humpi_imgSerializer
+from .serializers import customerRegister,bannerSerializer,headSerializer,destinationsSerializer,destination_imgSerializer,placesSerializer,staysSerializer,staysimgSerializer,bestthingsSerializer,cardSerializer,head_KSerializer,buttondetailsSerializer,destinationdetailsSerializer,destinationdetails_imgSerializer,destination_humpidetailsSerializer,destination_humpidetails_imgSerializer,destination_humpidescription_Serializer,humpi_surroundingsSerializer,humpi_surroundings_imgSerializer,stay_humpiSearializer,stay_humpi_imgSerializer,stay_feedbackSearializer,wanderlust_hampiSerializer,wanderlust_booking_imgSerializer,wanderlust_booking_Serializer,more_staysSerializer,more_staysimgSerializer,iconSerializer,roomicon_Searializer,room_bookingSearializer,categorysearchSerializer,destinationimageSerializer,contentSerializer,content_imgSerializer
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -996,167 +996,640 @@ class LoginView(APIView):
 #     serializer_class=destination_imgSerializer
 
 
-
+# dot_homepageAPI
 class dot_homepageAPI(APIView):
     def get(self, request):
-        ctnt=content.objects.all()
-        dest=destinstions.objects.all()
-        dest_img=destination_img.objects.all()
-        places=destination_area.objects.all()
+        ctnt=content.objects.all().filter(id=1)
+        sub_title1=content.objects.all().filter(id=2)
+        dest_typ=destination_type.objects.all()
+        destn_list = []  
+        for dty in dest_typ:
+            destn = destinstions.objects.all().filter(destn_type=dty.name)[:1]
+            for d in destn:
+                img= destination_img.objects.all().filter(destinstions_id=d.id) 
+                for imggg in img:
+                    print(imggg.image)
+                    destn_list.append({'id':d.id,'destination_type':d.destn_type,'image':imggg.image.name})
+        
+        dest_img=destination_img.objects.all()[:4]
+        sub_title2=content.objects.all().filter(id=3)
+        places=destination_area.objects.all()[:3]
         # places_img=destination_area.objects.all()
-        cards=card.objects.all()
+        # cards=card.objects.all()
+        dot=content_images.objects.all().filter(id=1)
+        sub_title3=content.objects.all().filter(id=4)
         stays=organization.objects.all()
-        stays_img=organization_images.objects.all()
-        best_thgs=best_things.objects.all()
-       
+        org_list=[]
+        for sty in stays:
+            or_img=organization_images.objects.all().filter(organization_id=sty.id)[:1]
+            for  organ in or_img:
+                org_list.append({'id':sty.id,'title':sty.title,'image':organ.images.name})       
 
+        stays_img=organization_images.objects.all()[:3]
+        sub_title4=content.objects.all().filter(id=5)
+        best_thgs=content_images.objects.all().filter(id__in=[2,3])
+        destinations_data=[]  
         content_data=bannerSerializer(ctnt,many=True).data
-        destinations_data=destinationsSerializer(dest, many=True).data
+        sub_title1_data=headSerializer(sub_title1,many=True).data
+        dest_data=destinationsSerializer(destinations_data, many=True).data
         destination_img_data=destination_imgSerializer(dest_img, many=True).data
+        destination_img_data=destination_imgSerializer(dest_img, many=True).data
+        sub_title2_data=headSerializer(sub_title2,many=True).data
         places_data=placesSerializer(places, many=True).data
         # places_img_data=places_imgSerializer(places_img, many=True).data
-        card_data=cardSerializer(cards,many=True).data
+        dotcard_data=cardSerializer(dot,many=True).data
+        sub_title3_data=headSerializer(sub_title3,many=True).data
         stays_data=staysSerializer(stays, many=True).data
         stays_img_data=staysimgSerializer(stays_img,many=True).data
+        sub_title4_data=headSerializer(sub_title4,many=True).data
         best_thgs_data=bestthingsSerializer(best_thgs, many=True).data
-        titleA1 = {'title':'LET US PLAN FOR YOU '}
-        titleA2 = {'title':' What is next?'}
-        titleB1 = {'title':'SEASONAL SUGGESTIONS '}
-        titleB2 = {'title':'Where to next?'}
-        titleC1 = {'title':'PICK THE BEST'}
-        titleC2 = {'title':'Top stays'}
-        titleD1 = {'title':'DOT EXCLUSIVE Discover'}
-        titleD2 = {'title':'travel memories'}
+        # best_thgs2_data=bestthingsSerializer(best_thgs2, many=True).data
+        # titleA1 = {'title':'LET US PLAN FOR YOU '}
+        # titleA2 = {'title':' What is next?'}
+        # titleB1 = {'title':'SEASONAL SUGGESTIONS '}
+        # titleB2 = {'title':'Where to next?'}
+        # titleC1 = {'title':'PICK THE BEST'}
+        # titleC2 = {'title':'Top stays'}
+        # titleD1 = {'title':'DOT EXCLUSIVE Discover'}
+        # titleD2 = {'title':'travel memories'}
 
         
         data = {
             'banner':content_data,
-            'destination title1':[titleA1],
-            'destination title2':[titleA2],   
-            'destinations':destinations_data,           
-            'destination_img':destination_img_data,
-            'place title1':[titleB1],
-            'place title2':[titleB2],
+            'sub_heading1':sub_title1_data,
+            # 'destination_title1':[titleA1],
+            # 'destination_title2':[titleA2],   
+            'destinations':destn_list,          
+            # 'destination_img':destination_img_data,
+            # 'place_title1':[titleB1],
+            # 'place_title2':[titleB2],
+            'sub_heading2':sub_title2_data,
             'places':places_data,
+
             # 'places_img':places_img_data,
-            'DOTcard':card_data,
-            'stays title1':[titleC1],
-            'stays title2':[titleC2],
-            'stays':stays_data,
-            'stays_img':stays_img_data,
-            'things title1':[titleD1],
-            'things title2':[titleD2],
+            'DOTcard':dotcard_data,
+            # 'stays_title1':[titleC1],
+            # 'stays_title2':[titleC2],
+            'sub_heading3':sub_title3_data,
+            'stays':org_list,
+            # 'stays_img':stays_img_data,
+            # 'things_title1':[titleD1],
+            # 'things_title2':[titleD2],
+            'sub_heading4':sub_title4_data,
             'best_thgs':best_thgs_data,
+            # 'best_thgs':best_thgs2_data,
            
         }
         return Response(data)
 
 
 # button
-class dot_destination_detailsAPI(APIView):
+class dot_button_detailsAPI(APIView):
     def get(self, request):
+        icon=icons.objects.all()
+        sub_title5=content.objects.all().filter(id=6)
         destn=destination_area.objects.all().filter(name='karnataka')
-        dest_img=destination_img.objects.all()
-
-        destn_data=destinationdetailsSerializer(destn,many=True).data        
-        destn_img_data=destinationdetails_imgSerializer(dest_img, many=True).data 
-        title1 = {'title':'KARNATAKA'}
+  
+        
+        destn_data=buttondetailsSerializer(destn,many=True).data 
+        icon_data=iconSerializer(icon,many=True).data 
+        sub_title5_data=head_KSerializer(sub_title5,many=True).data       
+        
+        # title1 = {'title':'KARNATAKA'}
 
  
         data = {
-            'destination title':[title1],   
-            'destinations':destn_data,           
-            'destination_img':destn_img_data,
+            'icons':icon_data,
+            # 'destination_title':[title1],   
+            'heading':sub_title5_data,
+            'destinations':destn_data,                   
+             }
+        return Response(data)
+    
+ # nationalpark
+class dot_destination_detailsAPI(APIView):
+    def get(self, request):
+        icon=icons.objects.all()
+        sub_title6=content.objects.all().filter(id=7)
+        destn=destinstions.objects.all().filter(destn_type='national park')
+        dest_list=[]
+        for dest in destn:
+            des_img=destination_img.objects.all().filter(destinstions_id=dest.id)[:1]
+            for  destin in des_img:
+                dest_list.append({'id':dest.id,'title':dest.name,'desc':dest.description,'image':destin.image.name})       
+        dest_img=destination_img.objects.all()
+  
+        sub_title6_data=headSerializer(sub_title6,many=True).data
+        destn_data=destinationdetailsSerializer(destn,many=True).data        
+        destn_img_data=destinationdetails_imgSerializer(dest_img, many=True).data 
+        icon_data=iconSerializer(icon,many=True).data 
+        # title1 = {'title':'NATIONAL PARKS'}
+        # sub_title = {'title':'10 destinations found'}
+
+        data = {
+            'icons':icon_data,
+            # ' title':[title1], 
+            # ' title2':[sub_title], 
+            'sub_heading6':sub_title6_data,
+            'destinations':dest_list,           
+            # 'destination_img':destn_img_data,
+            
              }
         return Response(data)
 
-# humpi
+# hampi
 class dot_destination_humpidetailsAPI(APIView):
     def get(self, request):
         dest_img=destination_img.objects.all().filter(id=7)
+        sub_title7=content.objects.all().filter(id=8)
+        sub_title7a=content.objects.all().filter(id__in=[33, 34, 35])
+        # sub_title7b=content.objects.all().filter(id=27)
+        # sub_title7c=content.objects.all().filter(id=28)
         destn=destinstions.objects.all().filter(name='hampi')
         destn_description=destinstions.objects.all().filter(id=7)
-        humpi_surroundings=destinstions.objects.all().filter(d_area_id=3)
-        humpi_surroundings_img = []
-        for x in humpi_surroundings:    
-            img=destination_img.objects.all().filter(destinstions_id=x.id)
-            im = ''
-            if im:
-                im = img[0].image
-            humpi_surroundings_img.append({'id':x.id, 'image':img[0].image})  
-        stay=organization.objects.all()
-        stays_img=organization_images.objects.all()
+        sub_title7d=content.objects.all().filter(id=29)
+        sub_title8=content.objects.all().filter(id=9)
+        
+        sub_title8a=content.objects.all().filter(id__in=[13, 30, 31, 32])
+        humpi_surroundings=destinstions.objects.all().filter(id__in=[3, 8, 9, 10,11,21,22,23,24,25,26])
 
-        destn_data=destination_humpidetailsSerializer(destn,many=True).data        
+        # sorroun=content.objects.filter(id__in=[13, 30, 31, 32])
+
+        humpi_surroundings_img1 = []
+        for x in humpi_surroundings:   
+            d_img=destination_img.objects.all().filter(destinstions_id=x.id)
+            for destn_img in d_img:
+                humpi_surroundings_img1.append({'id':x.id,'destination':x.name,'description':x.description,'image':destn_img.image.name}) 
+        sub_title8b=content.objects.all().filter(id=14)
+        sub_title9=content.objects.all().filter(id=10) 
+        sub_title10=content.objects.all().filter(id=11) 
+        stay=organization.objects.all()
+        org_list=[]
+        for stys in stay:
+            or_imge=organization_images.objects.all().filter(organization_id=stys.id)[:1]
+            for  organi in or_imge:
+                org_list.append({'id':stys.id,'title':stys.title,'image':organi.images.name})
+        
+        stays_img=organization_images.objects.all()[:4]
+        sub_title11=content.objects.all().filter(id=12) 
+        experience=feedback.objects.all()
+
+        destn_data=destination_humpidetailsSerializer(destn,many=True).data    
+        sub_title7_data=headSerializer(sub_title7,many=True).data    
+        sub_title7a_data=head_KSerializer(sub_title7a,many=True).data 
+        # sub_title7b_data=head_KSerializer(sub_title7b,many=True).data 
+        # sub_title7c_data=head_KSerializer(sub_title7c,many=True).data 
+        # sub_title7c_data=head_KSerializer(sub_title7c,many=True).data 
+        sub_title7d_data=headSerializer(sub_title7d,many=True).data 
         destn_img_data=destination_humpidetails_imgSerializer(dest_img, many=True).data 
         destn_description_data=destination_humpidescription_Serializer(destn_description, many=True).data
-        humpi_surroundings_data=humpi_surroundingsSerializer(humpi_surroundings, many=True).data
-        humpi_surroundings_img_data=humpi_surroundings_imgSerializer(humpi_surroundings_img,many=True).data
+        sub_title8_data=headSerializer(sub_title8,many=True).data  
+        sub_title8a_data=head_KSerializer(sub_title8a,many=True).data  
+        # sorroun_data=head_KSerializer(sorroun,many=True).data
+        # humpi_surroundings_data=humpi_surroundingsSerializer(humpi_surroundings2, many=True).data
+        # humpi_surroundings_img_data=humpi_surroundings_imgSerializer(humpi_surroundings_img1,many=True).data
+        sub_title8b_data=head_KSerializer(sub_title8b,many=True).data  
+        humpi_surroundings2_data=humpi_surroundingsSerializer(humpi_surroundings, many=True).data
+        # humpi_surroundings_img2_data=humpi_surroundings_imgSerializer(humpi_surroundings_img2,many=True).data
+        sub_title9_data=head_KSerializer(sub_title9,many=True).data  
+        sub_title10_data=headSerializer(sub_title10,many=True).data   
         stay_data=stay_humpiSearializer(stay, many=True).data  
         stays_img_data=stay_humpi_imgSerializer(stays_img, many=True).data
-        title1 = {'title':'KARNATAKA'}
-        title2 = {'title':'Hampi'}
-        title3 = {'title':'Discover the sorroundings'}
-        title4 = {'title':'Plan your trip'}
-        title5 = {'title':'Find your stay '}
-        title6 = {'title':'Experiences'}
+        sub_title11_data=head_KSerializer(sub_title11,many=True).data  
+        experience_data=stay_feedbackSearializer(experience, many=True).data
+        # title1 = {'title':'KARNATAKA'}
+        # title2 = {'title':'Hampi'}
+
+        # title3 = {'title':'Discover the sorroundings'}
+        # title4 = {'title':'Plan your trip'}
+        # title5 = {'title':'Find your stay '}
+        # title6 = {'title':'Experiences'}
         
 
         data = {
-            # 'destination title':[title1],
-            # 'destinations':destn_data,           
-            'banner_hampi':destn_img_data,
-            'destination title':[title1],
-            'destination title2':[title2],
-            
-            
+                   
+            'banner':destn_img_data,
+            # 'destination_title':[title1],
+            # 'destination_title2':[title2],
+            'heading1':sub_title7_data,
+            'subheading1':sub_title7a_data,
+            # 'subheading2':sub_title7b_data,
+            # 'subheading3':sub_title7c_data,
             'humpi_description':destn_description_data,
-            'destination title3':[title3],
-            'humpi_surroundings':humpi_surroundings_data,
-            'humpi_surroundings_img':humpi_surroundings_img_data,
-            'destination title4':[title4],
-            'destination title5':[title5],
-            'stay':stay_data,
-            'stays_img':stays_img_data,
-            'destination title6':[title6],
+            'subheading4':sub_title7d_data,
+            # 'destination_title3':[title3],
+            'sub_heading1':sub_title8_data,
+            'sub_heading1a':sub_title8a_data,
+            # 'surrounding_head':sorroun_data,
+            # 'humpi_surroundings':humpi_surroundings_data,
+            # 'humpi_surroundings_img':humpi_surroundings_img1,
+            # 'sub_heading1b':sub_title8b_data,
+            
+            'humpi_surroundings':humpi_surroundings_img1,
+            # 'humpi_surroundings_img':humpi_surroundings_img2_data,
+            'sub_heading2':sub_title9_data,
+            'sub_heading3':sub_title10_data,
+            # 'destination_title4':[title4],
+            # 'destination_title5':[title5],
+            'stay':org_list,
+            # 'stays_img':stays_img_data,
+            # 'destination_title6':[title6],
+            'sub_heading4':sub_title11_data,
+            'experience':experience_data,
 
              }
         return Response(data)
+    
 
 
 
+# wanderlust hampi
+class dot__wanderlust_humpidetailsAPI(APIView):
+    def get(self, request):
+        title=content.objects.all().filter(id=16) 
+        room_img=organization_images.objects.all().filter(organization_id=2)
+        sub_title1=content.objects.all().filter(id=17)
+        sub_title2=content.objects.all().filter(id=18)  
+        sub_title3=content.objects.all().filter(id=19)  
+        sub_title4=content.objects.all().filter(id=20) 
+        experience=feedback.objects.all()
+        icon=icons.objects.all().filter(name='Amenities')
+        sub_title5=content.objects.all().filter(id=21)
+        book=booking.objects.all().filter(id=1)
+
+        title_data=head_KSerializer(title,many=True).data
+        room_img_data=wanderlust_hampiSerializer(room_img,many=True).data 
+        sub_title1_data=headSerializer(sub_title1,many=True).data  
+        sub_title2_data=head_KSerializer(sub_title2,many=True).data 
+        sub_title3_data=head_KSerializer(sub_title3,many=True).data  
+        sub_title4_data=head_KSerializer(sub_title4,many=True).data  
+        experience_data=stay_feedbackSearializer(experience, many=True).data 
+        icon_data=roomicon_Searializer(icon, many=True).data 
+        sub_title5_data=head_KSerializer(sub_title5,many=True).data
+        book_data=room_bookingSearializer(book, many=True).data
+    
+        # title1 = {'title':'WANDERLUST HUMPI'}
+        # title2 = {'title':'About'}
+        # title3 = {'title':'4 guests,3 beds,2 bedrooms'}
+        # title4 = {'title':'Amenities'}
+
+        # title5 = {'title':'4.6(70)Reviews'}
+        # title6 = {'title':'Your dates are available'}
+        
+        data = {
+            # 'room_title1':[title1],
+            'title':title_data,
+            'room_imgs':room_img_data,
+            # 'title2':[title2],
+            'sub_title1':sub_title1_data,
+            'sub_title2':sub_title2_data,
+            # 'title3':[title3],
+           
+            # 'title5':[title5],
+            # 'booking_title6':[title6],
+           
+            # 'title4':[title4],
+            'sub_title3':sub_title3_data,
+            'icon':icon_data,
+            'sub_title4':sub_title4_data,
+            'Reviews':experience_data,
+            'sub_title5':sub_title5_data,
+            'book':book_data,
+        }
+        return Response(data)
+
+# booking wanderlust hampi 
+class dot__wanderlust_bookingAPI(APIView):
+    def get(self, request):
+        title=content.objects.all().filter(id=22) 
+        room=organization.objects.all().filter(id=2)
+        room_img=organization_images.objects.all().filter(organization_id=2)[:1]
+        sub_title1=content.objects.all().filter(id=23)
+        book=booking.objects.all().filter(id=1)
+        sub_title2=content.objects.all().filter(id=24)
+        sub_title3=content.objects.all().filter(id=25)
+        sub_title4=content.objects.all().filter(id=40)
+        sub_content=content.objects.all().filter(id__in=[41, 42, 43])
+        sub_title5=content.objects.all().filter(id=44)
+
+        title_data=head_KSerializer(title,many=True).data
+        room_data=wanderlust_booking_Serializer(room,many=True).data 
+        sub_title1_data=head_KSerializer(sub_title1,many=True).data  
+        room_img_data=wanderlust_booking_imgSerializer(room_img,many=True).data 
+        sub_title2_data=head_KSerializer(sub_title2,many=True).data
+        sub_title3_data=head_KSerializer(sub_title3,many=True).data  
+        sub_title4_data=head_KSerializer(sub_title4,many=True).data 
+        sub_content_data=head_KSerializer(sub_content,many=True).data 
+        sub_title5_data=head_KSerializer(sub_title5,many=True).data 
+        book_data=room_bookingSearializer(book,many=True).data 
+
+
+        # title1 = {'title':'Begin your booking'}
+        # title2 = {'title':'Booking dates'}
+        # title3 = {'title':'Enter a Coupon'}
+        data = {
+            'title':title_data,
+            'room':room_data,
+            'room_imgs':room_img_data,
+            #'title2':[title2],
+            'sub_title1':sub_title1_data,
+            'book':book_data,
+            'sub_title3':sub_title3_data,
+            'sub_title2':sub_title2_data,
+            'sub_title4':sub_title4_data,
+            'sub_content':sub_content_data,
+            'sub_title5':sub_title5_data,
+
+            # ' title':[title2],
+            # ' title':[title3],
+            
+        }
+        return Response(data)
+
+# # discover more stays
+class dot__more_staysAPI(APIView):
+    def get(self, request):
+        title=content.objects.all().filter(id=36)
+        sub_title1=content.objects.all().filter(id__in=[37,38])
+        sub_title2=content.objects.all().filter(id=39) 
+        stayss=organization.objects.all()
+        orgi_list=[]
+        for sstys in stayss:
+            or_imges=organization_images.objects.all().filter(organization_id=sstys.id)[:1]
+            for  organiz in or_imges:
+                orgi_list.append({'id':sstys.id,'title':sstys.title,'image':organiz.images.name})
+
+        stays_img=organization_images.objects.all()[:3]
+
+        
+        title_data=head_KSerializer(title,many=True).data
+        subtitle1_data=head_KSerializer(sub_title1,many=True).data
+        subtitle2_data=head_KSerializer(sub_title2,many=True).data
+        stayss=more_staysSerializer(stayss, many=True).data
+        stays_img=more_staysimgSerializer(stays_img,many=True).data
+
+
+        # title1 = {'title':'Find your stay'}
+        # sub_title = {'title':'25 stays found at Hampi'}
+
+        data = {
+            'title':title_data,
+            'subtitle':subtitle1_data,
+            'sub_title2':subtitle2_data,
+            'stays':orgi_list,
+            # 'stays_img':stays_img,  
+        }
+        return Response(data)
 
 
 
 # search autocomplete API
 
-# from django.db.models import Q
-from django.shortcuts import render
-from rest_framework import generics
-from rest_framework import viewsets,filters
-from .models import *
-from .serializers import destinationsearchSerializer
+
+# from django.shortcuts import render
+# from rest_framework import generics
+# from rest_framework import viewsets
+# from .models import *
+# from .serializers import destinationsearchSerializer
+
 # from django_filters.rest_framework import DjangoFilterBackend
 
 
+# search auto complete
+# class DestinationViewSet(viewsets.ModelViewSet):
+#     queryset = destinstions.objects.all()
+#     serializer_class = destinationsearchSerializer  
+#     def get_queryset(self):
+#         queryset= destinstions.objects.all()     
+#         search_query = self.request.query_params.get('search')
+#         if search_query:
+#             queryset=queryset.filter(id_contains=search_query)
+#             queryset=queryset.filter(name_icontains=search_query)
+#             queryset=queryset.filter(image_icontains=search_query)
+#             queryset=queryset.filter(description_icontains=search_query)
+#         result=[]
+#         for search in queryset: 
+#             search_imges=destination_img.objects.all().filter(destinstions_id=search.id)  
+#             for  desn in search_imges:           
+#                 result.append({'id':search.id,'value':search.name,'label':search.name,'descrip':search.description,'image':desn.image.name})
+#             # destn_imgs =destination_img.objects.all()          
+#         # if search_query:
+#         #     queryset=queryset.filter(name_icontains=search_query)
+#         #     queryset=queryset.filter(image_icontains=search_query)     
+#         # return Response(result)
+#         return queryset
+# from django.db.models import Q
+
+
+# class AutocompleteView(generics.ListAPIView):
+#     # queryset = destinstions.objects.all()
+#     serializer_class = destinationsearchSerializer  
+#     def get_queryset(self):
+#         # queryset= destinstions.objects.all()     
+#         search_query = self.request.GET.get('q',None)
+#         if search_query:
+#             return destinstions.objects.filter(
+#                 Q(name__icontains=search_query) | Q(description__icontains=search_query)
+#                 )
+#             # queryset=queryset.filter(id_contains=search_query)
+#             # queryset=queryset.filter(name_icontains=search_query)
+#             # queryset=queryset.filter(image_icontains=search_query)
+#             # queryset=queryset.filter(description_icontains=search_query)
+#         return destinstions.objects.none()
+        # result=[]
+        # for search in queryset: 
+        #     search_imges=destination_img.objects.all().filter(destinstions_id=search.id)  
+        #     for  desn in search_imges:           
+        #         result.append({'id':search.id,'value':search.name,'label':search.name,'descrip':search.description,'image':desn.image.name})
+            # destn_imgs =destination_img.objects.all()          
+        # if search_query:
+        #     queryset=queryset.filter(name_icontains=search_query)
+        #     queryset=queryset.filter(image_icontains=search_query)     
+        # return Response(result)
+        # return queryset
+    
+from rest_framework import viewsets
+from rest_framework import generics
+from rest_framework.response import Response
+from rest_framework.decorators import action
+from .models import destinstions
+
 
 class DestinationViewSet(viewsets.ModelViewSet):
-    queryset = destinstions.objects.all()
-    serializer_class = destinationsearchSerializer
+    queryset = destination_img.objects.all()
+    serializer_class = destinationimageSerializer
+
+
+    @action(detail=False, methods=['get'])
+    def search_autocomplete(self, request, *args, **kwargs):
+        query = request.GET.get('query',None)
+        queryset =destination_img.objects.all()
+        lst = []
+        for sech in queryset:
+            querys = destinstions.objects.all().filter(name__icontains='hampi')
+            for x in querys:
+                lst.append({'id':x.id,'description':x.description,'image':sech.image.name, 'name':x.name})
+
+        # queryset = self.get_serializer().filter(name__icontains=query)
+        serializer = self.get_serializer(lst, many=True)
+        return Response(serializer.data)
+
+
+
+
+# category search api
+class categorysearchView(generics.ListAPIView):
+    # queryset = icons.objects.all()
+    serializer_class = categorysearchSerializer
 
     def get_queryset(self):
-        queryset= destinstions.objects.all()
-       
-        search_query = self.request.query_params.get('search',None)
-        if search_query:
-            queryset=queryset.filter(name_icontains=search_query)
-
+        queryset= icons.objects.all()[:9]      
+        search_term = self.request.query_params.get('search',None)
+        if search_term:
+            queryset=queryset.filter(id_contains=search_term)
+            queryset=queryset.filter(title_contains=search_term)
+            # results=[]
+            # for  category in queryset:           
+            #     results.append({'id':category.id})
         return queryset
 
 
 
+# search autocomplete
 
 
+# class ItemAutocompleteView(generics.ListAPIView):
+#     queryset = destinstions.objects.all()
+#     serializer_class = destinationsearchSerializer
+    
+
+#     queryset = destinstions.objects.all()
+#     search_result=[]
+#     for searching in queryset: 
+#             search_img=destination_img.objects.all().filter(destinstions_id=searching.id)  
+#             for  desnt in search_img:           
+#                     search_result.append({'id':searching.id,'value':searching.name,'label':searching.name,'image':desnt.image})
+#             filter_backends = (django_filters.rest_framework.DjangoFilterBackend,)
+#             filterset_class = Itemfilter
+
+
+
+# category search
+from rest_framework import generics
+from .models import destinstions
+from .filters import Itemfilter,categoryfilter
+import django_filters 
+class categorysearchView(generics.ListAPIView):
+    queryset = icons.objects.all()
+    serializer_class = categorysearchSerializer
+# def get_queryset(self):
+    queryset = icons.objects.all()
+    # search_category=[]       
+    filter_backends = (django_filters.rest_framework.DjangoFilterBackend,)
+    filterset_class = categoryfilter
+
+
+
+
+# Filtering the search result based on destination
+from .models import destinstions
+from .filters import Itemfilter
+import django_filters 
+
+class filtersearch_resultsView(generics.ListAPIView):
+    queryset = destination_img.objects.all()
+    serializer_class = destinationimageSerializer
+    queryset = destinstions.objects.all()
+    search_result=[]
+    for searching in queryset: 
+            search_img=destination_img.objects.all().filter(destinstions_id=searching.id)  
+            for  desnt in search_img:           
+                    search_result.append({'id':searching.id,'value':searching.name,'label':searching.description,'image':desnt.image.name})
+            filter_backends = (django_filters.rest_framework.DjangoFilterBackend,)
+            filterset_class = Itemfilter
+
+
+
+# organization details
+class organization_detailsAPI(APIView):
+    def get(self, request):
+        
+        stayss=organization.objects.all()
+        orgi_list=[]
+        for sstys in stayss:
+            or_imges=organization_images.objects.all().filter(organization_id=sstys.id)
+            for  organiz in or_imges:
+                orgi_list.append({'id':sstys.id,'title':sstys.title,'image':organiz.images.name})
+
+        stays_img=organization_images.objects.all()[:3]
+
+        
+        
+        stayss=more_staysSerializer(stayss, many=True).data
+        stays_img=more_staysimgSerializer(stays_img,many=True).data
+
+
+        # title1 = {'title':'Find your stay'}
+        # sub_title = {'title':'25 stays found at Hampi'}
+
+        data = {
+           
+            'stays':orgi_list,
+            # 'stays_img':stays_img,  
+        }
+        return Response(data)
+    
+
+
+class contentdetailsAPI(APIView):
+    def get(self, request):
+        cont=content.objects.all()
+        content_list=[]
+        for con in cont:
+            con_imges=content_images.objects.all().filter(cid_id=con.id)
+            for  connt in con_imges:  
+                content_list.append({'id':con.id,'content_type':con.content_type,'title':con.title,'body':con.body,'overlay':connt.overlay,
+                'image':connt.image.name})                                
+        data = {           
+            'content':content_list,   
+        }
+        return Response(data)
+    #  def get(self, request, id):
+    #     contents =content.objects.filter(id=id).first()
+    #     if contents:
+    #         serializer = contentSerializer(content)
+    #         return Response(serializer.data)
+    #     return Response({'message': 'Content not found'}, status=404)
+    #  def get(self, request, cid):
+       
+    #     content_data = content_images.objects.filter(content_id=cid)
+    #     content_data_serializer = content_imgSerializer(content_data, many=True)
+    #     contents = content.objects.get(id=id)
+    #     content_serializer = contentSerializer(contents)
+    #     return Response({
+    #         'contents': content_serializer.data,
+    #         'content_data': content_data_serializer.data
+    #     })
+     
+   
+    
+# from autocomplete_light import shortcuts as autocomplete_light
+# class MyAutocomplete(autocomplete_light.AutocompleteModelBase):
+#     search_fields = ['name__icontains']
+# autocomplete_light.register(destinstions, MyAutocomplete)
+
+
+# from rest_framework import generics
+# class MyAutocomplete(generics.ListAPIView):
+#     serializer_class = AutocompleteSerializer
+
+#     def get_queryset(self):
+#         qs = destinstions.objects.all()
+#         query = self.request.GET.get('q')
+#         if query:
+#             qs = qs.filter(name__icontains=query)
+#         return qs
+    
 
 # homepage api
 # statically adding data without database

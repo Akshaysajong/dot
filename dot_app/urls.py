@@ -7,7 +7,8 @@ from django.conf.urls.static import static
 # from .import DestinationViewSet
 from rest_framework import routers
 router = routers.DefaultRouter()
-router.register('api/destinstions',views.DestinationViewSet, basename="destinations")
+router.register('api/destinations',views.DestinationViewSet, basename="destinations")
+# from .views import AutocompleteView
 
 # from django.conf import settings
 
@@ -48,11 +49,25 @@ urlpatterns = [
     # path('api/destination_images/',views.destination_imageView.as_view({'get': 'list'}),name='destination_images'),
     path('api/greenktchen_homepage_content/',views.homepage_contentgreenkitchen, name='homepage-content'),
     path('api/homepage_contentdot/',views.homepage_contentdot, name='homepage-contentdot'),
+    
     path('api/dot_homepage/',views.dot_homepageAPI.as_view(), name='dot_homepage'),
+    path('api/dot_button_details/',views.dot_button_detailsAPI.as_view(), name='dot_button_details'),
+    # path('api/dot_icon/',views.dot_iconAPI.as_view(), name='dot_icon'),
     path('api/dot_destination_details/',views.dot_destination_detailsAPI.as_view(), name='dot_destination_details'),
     path('api/dot_destination_humpidetails/',views.dot_destination_humpidetailsAPI.as_view(), name='dot_destination_humpidetails'),
+    path('api/dot_wanderlust_humpidetails/',views.dot__wanderlust_humpidetailsAPI.as_view(), name='dot_wanderlust_humpidetails'),
+    path('api/dot_wanderlust_bookingdetails/',views.dot__wanderlust_bookingAPI.as_view(), name='dot_wanderlust_bookingdetails'),
+    path('api/dot__more_stays/',views.dot__more_staysAPI.as_view(), name='dot__more_stays'),
     #  path('api/search_autocomplete/',views.searchAutocompleteAPIView.as_view(), name='search_autocomplete'),
     path('api/search_autocomplete/', include(router.urls)),
+    path('api/categorysearch/',views.categorysearchView.as_view(), name='categorysearch'),
+    
+    # path('api/autocomplete/mymodel/',views.ItemAutocompleteView.as_view(), name='mymodel_autocomplete'),
+    path('api/categorysearch',views.categorysearchView.as_view(), name='categorysearch'),
+    # path('autocomplete/', AutocompleteView.as_view(), name='autocomplete'),
+    path('api/filtersearch_results/',views.filtersearch_resultsView.as_view(), name='filtersearch_results'),
+    path('api/organization_details/',views.organization_detailsAPI.as_view(), name='organization_details'),
+    path('api/contentdetails/',views.contentdetailsAPI.as_view(), name='contentdetails'),
     
 
 

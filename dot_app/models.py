@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, User
 from django.contrib.auth.hashers import make_password
+from django_filters import FilterSet
 
 class destination_area(models.Model):
     name = models.CharField(max_length=200, default=None, blank=True)
@@ -214,6 +215,7 @@ class booking(models.Model):
     cust = models.ForeignKey(customer, default=None, on_delete=models.CASCADE)
     created = models.DateTimeField(blank=True, null=True)
     updated = models.DateTimeField(blank=True, null=True)
+    guests = models.IntegerField(max_length=50,blank=True, null=True)
     status = models.BooleanField(default=False)
 
 class coupon_type(models.Model):
@@ -258,6 +260,13 @@ class best_things(models.Model):
 class card(models.Model):
     title=models.CharField(max_length=50,blank=True, null=True)
     img=models.ImageField(upload_to = 'images/', blank=True)
+
+
+class icons(models.Model):
+    name=models.CharField(max_length=50,blank=True, null=True)
+    title=models.CharField(max_length=50,blank=True, null=True)
+    img=models.ImageField(upload_to = 'images/', blank=True)
+
 
 
 
