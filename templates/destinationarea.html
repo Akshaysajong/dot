@@ -20,7 +20,7 @@
 
         <form class="form-horizontal" method="POST" action="/dot/add_destination_area/" enctype="multipart/form-data">{% csrf_token %}
           <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-4">
               <label for="inputcountry" class="form-label">Country</label>
               <select id="country" name="country" class="form-select" onchange="get_country()">
                 <option value="0">Choose...</option>
@@ -29,7 +29,7 @@
                 {% endfor %}
               </select>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
               <label for="inputState" class="form-label">State</label>
               <select id="state" name="state" class="form-select">
                 <option value="0">Choose...</option>
@@ -38,31 +38,39 @@
                 {% endfor %}
               </select>
             </div>
-              <div class="col-md-6">
-                <label for="title" class="form-label">Destination Area</label>
-                <input type="text" class="form-control" name="destn_area" id="destn_area" required>
+            <div class="col-md-4">
+              <label for="destinationarea_type" class="form-label">Destination Area Type</label>
+              <select id="destinationarea_type" name="destinationarea_type" class="form-select " multiple >
                 
+                {% for x in destarea_type %}
+                <option value="{{x.id}}" aria-multiselectable="true">{{x.name}}</option>
+                {% endfor %}
+              </select><br>
+            </div>
+              <div class="col-md-4">
+                <label for="title" class="form-label">Destination Area</label>
+                <input type="text" class="form-control" name="destn_area" id="destn_area" required><br>
               </div>
               
-              <div class="col-md-6">
+              <div class="col-md-4">
                 <label for="place" class="form-label">Place</label>
                 <input type="text" class="form-control" name="place" id="place" required><br>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-4">
                 <label for="description" class="form-label">description</label>
                 <input type="text" class="form-control" name="description" id="description" required><br>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-4">
                 <label for="lattitude" class="form-label">Lattitude</label>
                 <input type="text" class="form-control" name="lattitude" id="lattitude" required><br>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-4">
                 <label for="longitude" class="form-label">Longitude</label>
                 <input type="" class="form-control" name="longitude" id="longitude" required><br>
               </div>
               <div class="col-md-4">
                 <label for="images" class="form-label">Choose Images</label><br>
-                  <input type="file" class="form-control"  placeholder="" name="image" id="image" >
+                  <input type="file" class="form-control"  placeholder="" name="image" id="image" required>
                 </div> 
               
               <div class="col-md-6">
@@ -84,5 +92,9 @@
     </main>
     </div>
     </div>
+    <script>
+    document.getElementById('output').innerHTML = location.search;
+    $(".chosen-select").chosen();
+  </script>
 
 {% endblock %}

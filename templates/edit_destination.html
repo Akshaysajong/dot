@@ -31,40 +31,48 @@
                 <input type="text" class="form-control" name="destn" id="destn" value="{{x.name}}" required>
               </div>
               <div class="col-md-6">
-                <label for="address">Address</label>
-               
+                <label for="address" class="form-label">Address</label> 
                 <textarea type="text"  class="form-control htmlarea" placeholder="" name="address" id="address" style="height: 100px" required>{{x.address}}</textarea><br>
               </div>
               
               <div class="col-md-6">
-                <label for="description">Description</label>
+                <label for="description" class="form-label">Description</label>
                 <textarea type="text"  class="form-control htmlarea" placeholder="" name="description" id="description" style="height: 100px" required>{{x.description}}</textarea><br>
                 
               </div>
               <div class="col-md-6">
-                <label for="culture">culture</label>
+                <label for="culture" class="form-label">culture</label>
                 <textarea type="text"  class="form-control htmlarea" placeholder="" name="culture" id="culture" style="height: 100px" required>{{x.culture}}</textarea><br>
 
               </div>
               <div class="col-md-6">
-                <label for="climate">climate</label>
+                <label for="climate" class="form-label">climate</label>
                 <textarea type="text"  class="form-control htmlarea" placeholder="" name="climate" id="climate" style="height: 100px" required>{{x.climate}}</textarea><br>
 
               </div>
               <div class="col-md-6">
-                <label for="lattitude">Lattitude</label>
+                <label for="destinationtype" class="form-label">Destination Type</label>
+                <select id="destinationtype" name="destinationtype" class="form-select">
+                  <option value="destn_type">{{x.destn_type}}</option>
+                  <option value="beach">Beach</option>
+                  <option value="national part">National Park</option>
+
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label for="lattitude" class="form-label">Lattitude</label>
                 <input type="text" class="form-control" name="lattitude" id="lattitude" value="{{x.lattitude}}" required><br>
               </div>
               <div class="col-md-6">
-                <label for="longitude">Longitude</label>
+                <label for="longitude" class="form-label">Longitude</label>
                 <input type="text" class="form-control" name="longitude" id="longitude" value="{{x.longitude}}" required><br>
               </div>
               <div class="col-md-6">
-                <label for="images">Choose Images</label><br>
+                <label for="images" class="form-label">Choose Images</label><br>
                   <input type="file" class="form-control"  placeholder="" name="image" id="image" multiple >
                 </div> 
               <div class="col-md-6">
-                <label for="status">Status </label>
+                <label for="status" class="form-label">Status </label>
                 <input type="checkbox" id="status" name="status" value="1" {% if x.status %}checked{% endif %}/>
                 
               </div>
@@ -84,7 +92,7 @@
           </div><br>
           
           <div class="btn-group me-6" >
-            <button type="button" style="margin-left: 7rem" class="btn-link border-0 bg-transparent text-body " onClick="confdelete(this, '{{x.id}}');"><span data-feather="trash-2" ></span></button>
+            <button type="button" style="margin-left: 7rem" class="btn-link border-0 bg-transparent text-body " onClick="confdelete(this, '{{x.id}}');" ><span data-feather="trash-2" ></span></button>
           </div>
           <!-- <input type="text" class="form-control" id="inpu" name="pla" id="place" value="{{c.id}}"><br><br> -->
           <br>

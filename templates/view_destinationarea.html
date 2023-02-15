@@ -43,6 +43,7 @@
                   <th scope="col">Destintion Place </th>
                   <th scope="col">Lattitude</th>
                   <th scope="col">Longitude</th>
+                  <th scope="col">Image</th>
                   <th scope="col">Status</th>
                 </tr>
               </thead>
@@ -58,6 +59,7 @@
                     <td >{{x.place}}</td>
                     <td >{{x.lattitude}}</td>
                     <td >{{x.longitude}}</td>
+                    <td class="pic"> <img  src="{{x.image.url}}" alt="" style="width:50px;height:60px;" ></td>
                     <td >{{x.status}}</td>
                     
                     {% if perms.dot_app.change_destination_area %}  

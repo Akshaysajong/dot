@@ -1,0 +1,201 @@
+{% extends "./base1.html" %}
+{% block main %}
+  <main class="col-md-9 bgmain ms-sm-auto col-lg-10 px-md-4">     
+                                        
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2">
+        <h1 class="h4">Edit Content
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/admin/">Home</a></li>
+            <li class="breadcrumb-item">Edit Content</li>
+          </ol>
+        </h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+          <div class="btn-group me-2">
+            <a href="/dot/contentlist/"><button type="button" class="btn btn-sm">Content List</button></a>
+          </div>
+        </div>
+      </div>
+      <div class="card p-4 rounded-1 border-0 shadow">
+        <h5 class="text-uppercase fw-bold mb-4 col-8">&nbsp;</h5>
+        
+        <form class="form-horizontal" method="POST" action="/dot/updatecontent/" enctype="multipart/form-data">{% csrf_token %}
+          {% for x in content %}
+          <div class="row">
+            <div class="col-md-4">
+              <input type="hidden" class="form-control" name="cont_id" id="cont_id" value="{{x.id}}" readonly required>  
+              <label for="content_type" class="form-label">Content Type</label>
+              <input type="text" class="form-control" name="content_type" id="cocontent_typeuntry" value="{{x.content_type}}" readonly required><br>
+            </div>
+            <div class="col-md-4">
+              <label for="page" class="form-label">Page</label>
+              <input type="text" class="form-control" name="page" id="page" value="{{x.page}}" readonly required>            
+            </div>
+            <div class="col-md-4">
+              <label for="title" class="form-label">Title</label>
+              <input type="text" class="form-control" name="title" id="title" value="{{x.title}}"  required><br>
+            </div>
+            <div class="col-md-4">
+              <label for="path" class="form-label">Path</label>
+              <input type="text" class="form-control" name="path" id="path" value="{{x.path}}" required><br>
+            </div>
+            <div class="col-md-4">
+              <label for="body" class="form-label">Body</label>
+              <input type="text" class="form-control" name="body" id="body" value="{{x.body}}" required><br>
+            </div>
+            <div class="col-md-4">
+              <label for="status" class="form-label">Status </label>
+              <input type="checkbox" id="status" name="status" value="1" {% if x.status %}checked{% endif %}/>   
+            </div>
+            
+
+            
+            <!-- <div class="row">
+              
+              <div class="col-md-3 ">
+                <div class="imageField" style="margin-left:0;">
+                  <div class="card" style="width: 15rem;">
+                    <img class="card-img-top" src="{{x.image.url}}" alt="Card image cap">
+                  </div><br>      
+                  <div class="btn-group me-6" >
+                    <button type="button" style="margin-left: 7rem" class="btn-link border-0 bg-transparent text-body " onClick="deletefacility(this, '{{x.id}}');"><span data-feather="trash-2" ></span></button>
+                  </div>
+                  <br>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <label for="img_content" class="form-label">Image Content</label>
+                <input type="text" class="form-control" name="img_content" id="img_content" value="{{x.content}}" required><br>
+              </div>
+              <div class="col-md-3">
+                <label for="overlay" class="form-label">Overlay</label>
+                <input type="text" class="form-control" name="overlay" value="{{x.overlay}}" id="overlay" required><br>
+              </div>
+              <div class="col-md-3">
+                <label for="weight" class="form-label">Weight</label>
+                <input type="text" class="form-control" name="weight" value="{{x.weight}}" id="weight" required><br>
+              </div>
+              <div class="col-md-4">
+                <label for="status" class="form-label">Status </label>
+                <input type="checkbox" id="status" name="status" value="1" {% if x.status %}checked{% endif %}/>   
+              </div>
+              
+              
+             
+              
+            </div> -->
+          
+         
+          <div class="card p-3 rounded-1 border-0 shadow" >
+            <hr>
+            <!-- <h5 class="text-uppercase fw-bold mb-4 col-12">Add Content Images</h5> -->
+            <!-- <div class="row">
+              <div class="col-12" style="text-align: right;">
+                <button type="button" class="btn btn-sm" onclick="addvariation('contentimagerow', 'uploadedimages')">Add Row</button>
+              </div>
+            </div> -->
+            <div class="row mb-3 border-bottom pb-4">
+              <div class="col-md-2">
+                <label for="inputCity" class="form-label">Image</label>
+              </div>
+              <div class="col-md-3">
+                <label for="inputCity" class="form-label">Content</label>
+              </div>
+
+              <div class="col-md-3">
+                <label for="inputCity" class="form-label">Text</label>
+              </div>
+              <div class="col-md-2">
+                <label for="inputCity" class="form-label">Weight</label>
+              </div>
+              <div class="col-md-2">
+                <label for="inputState" class="form-label">Delete</label>
+              </div>
+            </div>
+            {% for x in content_img %}
+            <div class="row mb-3 border-bottom pb-3 contentimagerow" >
+              <div class="col-md-2 ">
+                <div><input type="hidden" class="form-control" name="contimg_id" value="{{x.id}}"></div>
+                <div class="imageField" style="margin-left:0;">
+                  <div class="card" style="width: 8rem;">
+                    <img class="card-img-top" src="{{x.image.url}}" alt="Card image cap">
+                  </div><br>      
+                  <br>
+                </div>
+              </div>
+              <div class="col-md-3"><input type="text" class="form-control" name="img_content" value="{{x.content}}"></div>
+              <div class="col-md-3"><input type="text" class="form-control" name="overlay" value="{{x.overlay}}" ></div>
+              <div class="col-md-2"><input type="number" class="form-control" name="weight" value="{{x.weight}}" ></div>
+              <div class="col-md-2">
+                <button type="button"class="btn-link border-0 bg-transparent text-body " onClick="deleteimgcontent(this, '{{x.id}}');" >
+                  <span class="bi-trash" style="font-size: 30px; color: black;"></span></button>
+                
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          
+          <input type="hidden" class="form-control" id="imgcount" name="imgcount" value="{{content_img|length}}" >
+          <input type="hidden" class="form-control" id="deletedfiles" name="deletedfiles" value="" >
+
+
+
+          <div class="card p-4 rounded-1 border-0 shadow" id="uploadedimages">
+            <hr>
+            <h5 class="text-uppercase fw-bold mb-4 col-8">Add Content Images</h5>
+            <div class="row">
+              <div class="col-12" style="text-align: right;">
+                <button type="button" class="btn btn-sm" onclick="addvariation('contentimagerow', 'uploadedimages')">Add Row</button>
+              </div>
+            </div>
+            <div class="row mb-3 border-bottom pb-3">
+              <div class="col-md-2">
+                <label for="inputCity" class="form-label">Image</label>
+              </div>
+              <div class="col-md-2">
+                <label for="inputCity" class="form-label">Content</label>
+              </div>
+
+              <div class="col-md-2">
+                <label for="inputCity" class="form-label">Text</label>
+              </div>
+              <div class="col-md-2">
+                <label for="inputCity" class="form-label">Weight</label>
+              </div>
+              <div class="col-md-2">
+                <label for="inputState" class="form-label">Delete</label>
+              </div>
+            </div>
+            <div class="row mb-3 border-bottom pb-3 contentimagerow" id="contentimagerow1">
+              <div class="col-md-2"><input type="file" class="form-control" name="image[]"></div>
+              <div class="col-md-2"><input type="text" class="form-control" name="img_content[]"></div>
+              <div class="col-md-2"><input type="text" class="form-control" name="overlay[]"></div>
+              <div class="col-md-2"><input type="number" class="form-control" name="weight[]"></div>
+              <div class="col-md-2">
+                <button type="button"class="btn-link border-0 bg-transparent text-body " onclick="delvariation(this, 'contentimagerow')" title="Delete" >
+                <span class="bi-trash" style="font-size: 30px; color: black;"></span></button>
+
+                <!-- <button type="button" class="btn btn-sm" onclick="delvariation(this, 'contentimagerow')" title="Delete">
+                  <span class="bi-trash" style="font-size: 30px; color: black;"></span></button> -->
+                
+                <!-- <span class="bi-trash" style="font-size: 30px; color: black;"></span></a> -->
+              </div>
+            </div>
+          </div>
+          
+
+            </div>
+            
+            <div class="col-12 mt-4">
+              <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+          </form>
+          {% endfor %}
+      </div>
+      
+    
+  
+    </main>
+    </div>
+    </div>
+
+{% endblock %}

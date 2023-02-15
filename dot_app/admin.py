@@ -23,4 +23,5 @@ admin.site.register(cust_profile)
 admin.site.register(staff_department)
 admin.site.register(best_things)
 admin.site.register(card)
+admin.site.register(booking)
 
