@@ -70,7 +70,8 @@ urlpatterns = [
     path('api/filtersearch_results/',views.filtersearch_resultsView.as_view(), name='filtersearch_results'),
     path('api/organization_details/',views.organization_detailsAPI.as_view(), name='organization_details'),
     path('api/contentdetails/',views.contentdetailsAPI.as_view(), name='contentdetails'),
-    
+    path('api/subscription/', views.SubscriptionView.as_view(), name='subscription'),
+    # path('ajax_subscription/', views.ajax_subscription, name='ajax_subscription'),
 
 
 

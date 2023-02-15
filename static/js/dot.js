@@ -242,4 +242,23 @@ function upload_variationimg(obj, f) {
   }
   
   
+
   
+  $(document).ready(function() {
+    $('#subscribe-form').submit(function(event) {
+        event.preventDefault();
+        var email = $('#email').val();
+        $.ajax({
+            url: '/subscription/',
+            type: 'POST',
+            data: {email: email},
+            success: function(response) {
+                alert('Thank you for subscribing');
+            },
+            error: function(xhr, status, error) {
+                var message = JSON.parse(xhr.responseText).message;
+                alert(message);
+            }
+        });
+    });
+});

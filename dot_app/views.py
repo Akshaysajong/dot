@@ -1818,8 +1818,31 @@ class contentdetailsAPI(APIView):
     #         'contents': content_serializer.data,
     #         'content_data': content_data_serializer.data
     #     })
-     
-   
+
+    
+ # subscription 
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from .models import Subscription
+from .serializers import SubscriptionSerializer
+
+class SubscriptionView(APIView):
+    def get(self, request):
+        subscriptions = Subscription.objects.all()
+        serializer = SubscriptionSerializer(subscriptions, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        email = request.data.get('email')
+        if Subscription.objects.filter(email=email).exists():
+            return Response({'message': 'Email already subscribed'}, status=status.HTTP_400_BAD_REQUEST)
+        serializer = SubscriptionSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     
 # from autocomplete_light import shortcuts as autocomplete_light
 # class MyAutocomplete(autocomplete_light.AutocompleteModelBase):

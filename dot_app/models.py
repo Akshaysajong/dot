@@ -279,7 +279,13 @@ class icons(models.Model):
 
 
 
+class Subscription(models.Model):
+    email = models.EmailField()
+    subscription_type = models.CharField(max_length=50)
+    subscribed_date = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+         return self.email
 
 
 
