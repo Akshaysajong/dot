@@ -1083,7 +1083,7 @@ from .models import *
 from rest_framework.response import Response
 from rest_framework import viewsets
 from rest_framework import status 
-from .serializers import customerRegister,bannerSerializer,headSerializer,destinationsSerializer,destination_imgSerializer,placesSerializer,staysSerializer,staysimgSerializer,bestthingsSerializer,cardSerializer,head_KSerializer,buttondetailsSerializer,destinationdetailsSerializer,destinationdetails_imgSerializer,destination_humpidetailsSerializer,destination_humpidetails_imgSerializer,destination_humpidescription_Serializer,humpi_surroundingsSerializer,humpi_surroundings_imgSerializer,stay_humpiSearializer,stay_humpi_imgSerializer,stay_feedbackSearializer,wanderlust_hampiSerializer,wanderlust_booking_imgSerializer,wanderlust_booking_Serializer,more_staysSerializer,more_staysimgSerializer,iconSerializer,roomicon_Searializer,room_bookingSearializer,categorysearchSerializer,destinationimageSerializer,contentSerializer,content_imgSerializer
+from .serializers import customerRegister,CustomerProfileSerializer,bannerSerializer,headSerializer,destinationsSerializer,destination_imgSerializer,placesSerializer,staysSerializer,staysimgSerializer,bestthingsSerializer,cardSerializer,head_KSerializer,buttondetailsSerializer,destinationdetailsSerializer,destinationdetails_imgSerializer,destination_humpidetailsSerializer,destination_humpidetails_imgSerializer,destination_humpidescription_Serializer,humpi_surroundingsSerializer,humpi_surroundings_imgSerializer,stay_humpiSearializer,stay_humpi_imgSerializer,stay_feedbackSearializer,wanderlust_hampiSerializer,wanderlust_booking_imgSerializer,wanderlust_booking_Serializer,more_staysSerializer,more_staysimgSerializer,iconSerializer,roomicon_Searializer,room_bookingSearializer,categorysearchSerializer,destinationimageSerializer,contentSerializer,content_imgSerializer
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -1099,7 +1099,7 @@ import random
 # Register customers
 class Register(APIView):
     def post(self,request,format=None):
-        serializer = customerRegister(data=request.data)
+        serializer = CustomerProfileSerializer(data=request.data)
         data={}
         if serializer.is_valid():
             account=serializer.save()
@@ -1110,10 +1110,25 @@ class Register(APIView):
             data['email']=account.email
             data['phone']=account.phone            
             data['cust_type']=account.cust_type
+            # data['address']=account.address
             data['status']=account.status
+            # data['cust-id']= account.cust_id
         else:
             data=serializer.errors
         return Response(data)
+# class Register(APIView):
+#     def post(self, request):
+#         customer_serializer = customerRegister(data=request.data)
+#         profile_serializer = CustomerProfileSerializer(data=request.data)
+
+#         if customer_serializer.is_valid() and profile_serializer.is_valid():
+#             cust = customer_serializer.save()
+#             profile_serializer.save(customer=cust)
+#             return Response({'success': True})
+#         else:
+#             return Response(customer_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+
 
 # class customerViewset(viewsets.ModelViewSet):
    
@@ -1184,24 +1199,38 @@ class LoginView(APIView):
             return Response({
              'message':'User does not exist'
             })          
+        
+        
+# login validation for email and phone number
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from django.contrib.auth import authenticate, login
 
+from .models import customer
+from .serializers import CustomerSerializer
 
-# # destination_area
-# class destination_areaView(viewsets.ModelViewSet):
-#     queryset=destination_area.objects.all()
-#     # queryset={destination_area: 'destination_area'}
-#     # print(queryset)
-#     serializer_class=destination_areaSerializer
+class LoginvalidationView(APIView):
+    def post(self, request):  
+        email = request.data.get('email')
+        phone = request.data.get('phone')
+        try:
+            cust = customer.objects.get(email=email, phone=phone)
+        except customer.DoesNotExist:
+            return Response({'error': 'Invalid email or phone number.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # authenticate customer
+        # user = authenticate(username=email, password=phone)
+        # if user is None:
+        #     return Response({'error': 'Invalid credentials.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # # login customer
+        # login(request, user)
+        
+        # serialize and return customer data
+        serializer = CustomerSerializer(cust)
+        return Response(serializer.data)
 
-# # view destinations
-# class destinstionsView(viewsets.ModelViewSet):
-#     queryset=destinstions.objects.all()
-#     serializer_class=destinstionsSerializer
-
-# # destination_img
-# class destination_imageView(viewsets.ModelViewSet):
-#     queryset=destination_img.objects.all()
-#     serializer_class=destination_imgSerializer
 
 
 # dot_homepageAPI
@@ -1236,7 +1265,8 @@ class dot_homepageAPI(APIView):
         stays_img=organization_images.objects.all()[:3]
         sub_title4=content.objects.all().filter(id=5)
         best_thgs=content_images.objects.all().filter(id__in=[2,3])
-        destinations_data=[]  
+        destinations_data=[] 
+         
         content_data=bannerSerializer(ctnt,many=True).data
         sub_title1_data=headSerializer(sub_title1,many=True).data
         dest_data=destinationsSerializer(destinations_data, many=True).data
@@ -1353,7 +1383,7 @@ class dot_destination_humpidetailsAPI(APIView):
         sub_title7a=content.objects.all().filter(id__in=[33, 34, 35])
         # sub_title7b=content.objects.all().filter(id=27)
         # sub_title7c=content.objects.all().filter(id=28)
-        destn=destinstions.objects.all().filter(name='hampi')
+        destn=destinstions.objects.all().filter(id__in=[8, 9, 10, 11,21,22,23,24,25,26])
         destn_description=destinstions.objects.all().filter(id=7)
         sub_title7d=content.objects.all().filter(id=29)
         sub_title8=content.objects.all().filter(id=9)
@@ -1451,7 +1481,7 @@ class dot_destination_humpidetailsAPI(APIView):
 
 
 
-# wanderlust hampi
+# wanderlust hampi details
 class dot__wanderlust_humpidetailsAPI(APIView):
     def get(self, request):
         title=content.objects.all().filter(id=16) 
@@ -1662,66 +1692,6 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from .models import destinstions
 
-
-class DestinationViewSet(viewsets.ModelViewSet):
-    queryset = destination_img.objects.all()
-    serializer_class = destinationimageSerializer
-
-
-    @action(detail=False, methods=['get'])
-    def search_autocomplete(self, request, *args, **kwargs):
-        query = request.GET.get('query',None)
-        queryset =destination_img.objects.all()
-        lst = []
-        for sech in queryset:
-            querys = destinstions.objects.all().filter(name__icontains='hampi')
-            for x in querys:
-                lst.append({'id':x.id,'description':x.description,'image':sech.image.name, 'name':x.name})
-
-        # queryset = self.get_serializer().filter(name__icontains=query)
-        serializer = self.get_serializer(lst, many=True)
-        return Response(serializer.data)
-
-
-
-
-# category search api
-class categorysearchView(generics.ListAPIView):
-    # queryset = icons.objects.all()
-    serializer_class = categorysearchSerializer
-
-    def get_queryset(self):
-        queryset= icons.objects.all()[:9]      
-        search_term = self.request.query_params.get('search',None)
-        if search_term:
-            queryset=queryset.filter(id_contains=search_term)
-            queryset=queryset.filter(title_contains=search_term)
-            # results=[]
-            # for  category in queryset:           
-            #     results.append({'id':category.id})
-        return queryset
-
-
-
-# search autocomplete
-
-
-# class ItemAutocompleteView(generics.ListAPIView):
-#     queryset = destinstions.objects.all()
-#     serializer_class = destinationsearchSerializer
-    
-
-#     queryset = destinstions.objects.all()
-#     search_result=[]
-#     for searching in queryset: 
-#             search_img=destination_img.objects.all().filter(destinstions_id=searching.id)  
-#             for  desnt in search_img:           
-#                     search_result.append({'id':searching.id,'value':searching.name,'label':searching.name,'image':desnt.image})
-#             filter_backends = (django_filters.rest_framework.DjangoFilterBackend,)
-#             filterset_class = Itemfilter
-
-
-
 # category search
 from rest_framework import generics
 from .models import destinstions
@@ -1737,27 +1707,6 @@ class categorysearchView(generics.ListAPIView):
     filterset_class = categoryfilter
 
 
-
-
-# Filtering the search result based on destination
-from .models import destinstions
-from .filters import Itemfilter
-import django_filters 
-
-class filtersearch_resultsView(generics.ListAPIView):
-    queryset = destination_img.objects.all()
-    serializer_class = destinationimageSerializer
-    queryset = destinstions.objects.all()
-    search_result=[]
-    for searching in queryset: 
-            search_img=destination_img.objects.all().filter(destinstions_id=searching.id)  
-            for  desnt in search_img:           
-                    search_result.append({'id':searching.id,'value':searching.name,'label':searching.description,'image':desnt.image.name})
-            filter_backends = (django_filters.rest_framework.DjangoFilterBackend,)
-            filterset_class = Itemfilter
-
-
-
 # organization details
 class organization_detailsAPI(APIView):
     def get(self, request):
@@ -1770,15 +1719,9 @@ class organization_detailsAPI(APIView):
                 orgi_list.append({'id':sstys.id,'title':sstys.title,'image':organiz.images.name})
 
         stays_img=organization_images.objects.all()[:3]
-
-        
-        
+  
         stayss=more_staysSerializer(stayss, many=True).data
         stays_img=more_staysimgSerializer(stays_img,many=True).data
-
-
-        # title1 = {'title':'Find your stay'}
-        # sub_title = {'title':'25 stays found at Hampi'}
 
         data = {
            
@@ -1788,13 +1731,13 @@ class organization_detailsAPI(APIView):
         return Response(data)
     
 
-
+# content details
 class contentdetailsAPI(APIView):
     def get(self, request):
         cont=content.objects.all()
         content_list=[]
         for con in cont:
-            con_imges=content_images.objects.all().filter(cid_id=con.id)
+            con_imges=content_images.objects.all().filter(id=con.id)
             for  connt in con_imges:  
                 content_list.append({'id':con.id,'content_type':con.content_type,'title':con.title,'body':con.body,'overlay':connt.overlay,
                 'image':connt.image.name})                                
@@ -1802,24 +1745,7 @@ class contentdetailsAPI(APIView):
             'content':content_list,   
         }
         return Response(data)
-    #  def get(self, request, id):
-    #     contents =content.objects.filter(id=id).first()
-    #     if contents:
-    #         serializer = contentSerializer(content)
-    #         return Response(serializer.data)
-    #     return Response({'message': 'Content not found'}, status=404)
-    #  def get(self, request, cid):
-       
-    #     content_data = content_images.objects.filter(content_id=cid)
-    #     content_data_serializer = content_imgSerializer(content_data, many=True)
-    #     contents = content.objects.get(id=id)
-    #     content_serializer = contentSerializer(contents)
-    #     return Response({
-    #         'contents': content_serializer.data,
-    #         'content_data': content_data_serializer.data
-    #     })
-
-    
+  
  # subscription 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -1843,24 +1769,294 @@ class SubscriptionView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+# location
+from rest_framework import generics,filters
+from .models import destinstions
+from .serializers import LocationSerializer
+
+class LocationList(generics.ListAPIView):
+    queryset = destinstions.objects.all()
+    serializer_class = LocationSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name']
+
+    def get_queryset(self):
+        queryset = destinstions.objects.all()
+        location_result=[]
+        for location in queryset: 
+            loc_img=destination_img.objects.all().filter(destinstions_id=location.id)  
+            for  de in loc_img:           
+                    location_result.append({'id':location.id,'name':location.name,'descr':location.description,'image':de.image.name})
+        search = self.request.query_params.get('search', None)
+        if search is not None:
+            queryset = queryset.filter(name__icontains=search)
+        return queryset
+class LocationDetail(generics.RetrieveAPIView):
+    queryset = destinstions.objects.all()
+    serializer_class = LocationSerializer
+
+
+
+# search auto
+class autocompleteList(generics.ListAPIView):
+    queryset = destinstions.objects.all()
+    serializer_class = LocationSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name']
+
+    def get_queryset(self):
+        queryset = destinstions.objects.all()
+        s_result=[]
+        for ser in queryset: 
+            ser_img=destination_img.objects.all().filter(destinstions_id=ser.id)  
+            for  den in ser_img:           
+                    s_result.append({'id':ser.id,'name':ser.name,'descr':ser.description,'image':den.image.name})
+        search = self.request.query_params.get('search', None)
+        if search is not None:
+            queryset = queryset.filter(name__icontains=search)
+        return queryset     
+        # return Response(data)
+class autocompleteDetail(generics.RetrieveAPIView):
+    queryset = destinstions.objects.all()
+    serializer_class = LocationSerializer
     
-# from autocomplete_light import shortcuts as autocomplete_light
-# class MyAutocomplete(autocomplete_light.AutocompleteModelBase):
-#     search_fields = ['name__icontains']
-# autocomplete_light.register(destinstions, MyAutocomplete)
+
+# Filtering the search result based on destination
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import viewsets,filters
+from .models import destinstions
+from .serializers import TripSerializer,bookingSerializer
+from .filters import TripFilter
+
+class filtersearch_resultsView(viewsets.ModelViewSet):
+    queryset = destinstions.objects.all()
+    # trip_result=[]
+    # for trp in queryset: 
+    #         trp_img=destination_img.objects.all().filter(destinstions_id=trp.id)  
+    #         for  t in trp_img:           
+    #                 trip_result.append({'id':trp.id,'value':trp.name,'label':trp.description,'image':t.image.name})
+    serializer_class = TripSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = TripFilter
+
+# my account details
+from .models import customer
+from .serializers import AccountSerializer,CustomerSerializer,edit_customerSerializer
+
+class AccountView(APIView):
+    # cust = customer.objects.all().filter(id=1)
+    # serializer_class = AccountSerializer
+    def get(self, request):
+        title=content.objects.all().filter(id=45)
+        acc = customer.objects.all().filter(id=1)
+              
+        title_data=head_KSerializer(title,many=True).data
+       
+        acc_data=AccountSerializer(acc, many=True).data
+
+        data = {
+            'title':title_data,           
+            'account':acc_data,            
+        }
+        return Response(data)
+
+# Email and phone number validation for edit my account details
+class EditCustomerView(APIView):
+    def put(self, request,id):
+        customers = customer.objects.get(id=id)
+        # profile=[]
+        # for cu in customers: 
+        #     prof=cust_profile.objects.all().filter(cust=cu.id)  
+        #     for  pro in prof:           
+        #             profile.append({'id':cu.id,'name':cu.name,'phone':cu.phone,'email':cu.email,'gender':cu.gender,'address':pro.address})
+        serializer = edit_customerSerializer(customers, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors, status=400)
 
 
-# from rest_framework import generics
-# class MyAutocomplete(generics.ListAPIView):
-#     serializer_class = AutocompleteSerializer
+# travel history
+class travelhistoryAPI(APIView):
+    def get(self, request):
+        title=content.objects.all().filter(id=46)
+        sub_title=content.objects.all().filter(id__in=[47,48])
+        sub_title2=content.objects.all().filter(id=49)
+        book=booking.objects.all()
+        # bookng_list=[]
+        # for secr in book: 
+        #     serc_img=facility_image.objects.all().filter(facility_id=secr.id)  
+        #     for  room_ig in serc_img:           
+        #             bookng_list.append({'bk_from':secr.bk_from,'bk_to':secr.bk_to,'created':secr.created,'image':room_ig.image.name})
+        
+        title_data=head_KSerializer(title, many=True).data
+        subtitle_data=head_KSerializer(sub_title, many=True).data
+        sub_title2_data=head_KSerializer(sub_title2, many=True).data
+        book_data=bookingSerializer(book, many=True).data
+       
 
-#     def get_queryset(self):
-#         qs = destinstions.objects.all()
-#         query = self.request.GET.get('q')
-#         if query:
-#             qs = qs.filter(name__icontains=query)
-#         return qs
+        data = {
+           
+            'title':title_data,
+            'sub_heading':  subtitle_data,
+            'sub_title2':sub_title2_data,
+            'booking_details':book_data,
+        }
+        return Response(data)
     
+
+
+from rest_framework import viewsets
+from .models import facility_Review
+from .serializers import facilityReviewSerializer
+
+class ReviewViewSet(viewsets.ModelViewSet):
+    queryset = facility_Review.objects.all()
+    serializer_class = facilityReviewSerializer
+
+# book hotel
+# from rest_framework.views import APIView
+# from rest_framework.response import Response
+# from rest_framework import status
+
+# class BookHotelView(APIView):
+#     def post(self, request):
+#         # retrieve token from request header
+#         token = request.META.get('HTTP_AUTHORIZATION', '').split()[1]
+        
+#         # verify token here
+#         # ...
+        
+#         # retrieve hotel id and room id from request data
+#         hotel_id = request.data.get('organization_id')
+#         room_id = request.data.get('destn_facility_id')
+        
+#         # fetch hotel and room data from database
+#         hotel = {'id': organization_id, 'name': 'Hotel A', 'address': '123 Main St', 'city': 'New York'}
+#         hotel_images = [{'id': 1, 'hotel_id': hotel_id, 'image_url': 'http://example.com/hotel_image.jpg'}]
+#         room = {'id': room_id, 'hotel_id': hotel_id, 'name': 'Room A'}
+#         room_prices = [{'id': 1, 'room_id': room_id, 'price': 100.00}]
+#         room_images = [{'id': 1, 'room_id': room_id, 'image_url': 'http://example.com/room_image.jpg'}]
+        
+#         # serialize the data
+#         hotel_data = HotelSerializer(hotel).data
+#         hotel_images_data = HotelImageSerializer(hotel_images, many=True).data
+#         room_data = RoomSerializer(room).data
+#         room_prices_data = RoomPriceSerializer(room_prices, many=True).data
+#         room_images_data = RoomImageSerializer(room_images, many=True).data
+        
+#         # return the data in a JSON response
+#         data = {
+#             'hotel': hotel_data,
+#             'hotel_images': hotel_images_data,
+#             'room': room_data,
+#             'room_prices': room_prices_data,
+#             'room_images': room_images_data,
+#         }
+        
+#         return Response(data, status=status.HTTP_200_OK)
+
+# from rest_framework.decorators import api_view
+# from rest_framework.response import Response
+# from rest_framework import status
+# from rest_framework.authentication import TokenAuthentication
+# from rest_framework.decorators import authentication_classes, permission_classes
+# from rest_framework.permissions import IsAuthenticated
+# from .models import organization, organization_images, destn_facility, facility_image, facility_price
+
+# @api_view(['POST'])
+# def book_hotel(request, hotel_id):
+#     token = request.data.get('token')
+#     # check_in = request.data.get('check_in')
+#     # check_out = request.data.get('check_out')
+#     room_id = request.data.get('room_id')
+#     num_of_guests = request.data.get('num_of_guests')
+
+#     # Validate token
+#     # (You can implement your own token validation logic)
+#     if not validate_token(token):
+#         return Response({'message': 'Invalid token'}, status=status.HTTP_401_UNAUTHORIZED)
+
+#     # Get hotel and room details
+#     try:
+#         hotel = organization.objects.get(id=hotel_id)
+#         room = destn_facility.objects.get(id=room_id)
+#     except Hotel.DoesNotExist or Room.DoesNotExist:
+#         return Response({'message': 'Invalid hotel or room id'}, status=status.HTTP_400_BAD_REQUEST)
+
+#     # Create booking
+#     booking = booking.objects.create(
+#         hotel=hotel,
+#         room=room,
+#         check_in=check_in,
+#         check_out=check_out,
+#         num_of_guests=num_of_guests,
+#     )
+
+#     # Calculate total price
+#     room_price = RoomPrice.objects.filter(room=room,).first()
+#     total_price = room_price.price * (check_out - check_in).days
+
+#     # Return response
+#     return Response({
+#         'message': 'Booking created successfully',
+#         'total_price': total_price,
+#         'booking_id': booking.id,
+#     }, status=status.HTTP_201_CREATED)
+    
+# booking hotel using token
+# from django.http import JsonResponse
+# from django.views.decorators.csrf import csrf_exempt
+# from .models import organization, organization_images, destn_facility, facility_image, facility_price
+# from rest_framework.authentication import TokenAuthentication
+# from rest_framework.decorators import authentication_classes, permission_classes
+# from rest_framework.permissions import IsAuthenticated
+
+# @csrf_exempt
+# @authentication_classes([TokenAuthentication])
+# @permission_classes([IsAuthenticated])
+# def book_hotel(request):
+#     if request.method == 'POST':
+#         token = request.POST.get('token')
+#         organization_id = request.POST.get('organization_id')
+#         destn_facility_id = request.POST.get('destn_facility_id')
+        
+#         # Check if the token is valid
+#         if request.user.auth_token.key == token:
+#             try:
+#                 # Retrieve the hotel data
+#                 hotel = organization.objects.get(id=id)
+#                 hotel_images = organization_images.objects.filter(hotel=organization_id)
+                
+#                 # Retrieve the room data
+#                 room = destn_facility.objects.get(id=id)
+#                 room_images = facility_image.objects.filter(room=destn_facility_id)
+#                 room_price = facility_price.objects.filter(room=destn_facility_id)
+                
+#                 # Create the JSON response
+#                 response_data = {
+#                     'organization': {
+#                         'name': hotel.title,
+#                         'address': hotel.address,
+#                         'images': [hotel_images.image_url for hotel_images in organization_images]
+#                     },
+#                     'facility': {
+#                         'types': room.types,
+#                         'amount':room_price.amount,
+#                         'images': [room_images.image_url for room_images in facility_image]
+#                     }
+#                 }
+                
+#                 return JsonResponse(response_data)
+#             except:
+#                 # Return an error response if there is an issue with the database
+#                 return JsonResponse({'error': 'An error occurred while retrieving the data'})
+#         else:
+#             # Return an error response if the token is invalid
+#             return JsonResponse({'error': 'Invalid token'})
+
+
 
 # homepage api
 # statically adding data without database
