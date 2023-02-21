@@ -46,15 +46,29 @@
                     <td >{{x.created}}</td> 
                     <td >{{x.status}}</td> 
 
+        <!-- <td>
+          <div class="btn-group me-2">
+            <a href="/dot/edit_hotel/?a={{x.id}}"><button type="button" class="btn btn-primary">Approve</button> </a>
+          </div> 
+        </td> -->
         <td>
           <div class="btn-group me-2">
-            <a href="/dot/edit_hotel/?a={{x.id}}"><button class="btn-link border-0 bg-transparent text-body" >Approve</button> </a>
-          </div> 
+            {% if x.status == "pending" %} 
+            <a href="/dot/approvebooking/?a={{x.id}}"><button type="button" class="btn btn-primary">Approve</button> </a>
+            {% elif x.status == 'approved' %}
+            <button class="btn btn-primary" type="submit" onclick="orderpacked('{{x.id}}')">Order Packed</button>
+            {% elif x.status == 'packed' %}
+            <button class="btn btn-primary" type="submit" onclick="orderondelivery('{{x.id}}')">On Delivery</button>
+            {% elif x.status == 'ondelivery' %}
+            <button class="btn btn-primary" type="submit" onclick="orderdelivered('{{x.id}}')">Delivered</button>
+            {% endif %}           
+          </div>
         </td>
         <td>
           <div class="btn-group me-2">
+            <a href="/dot/deletebooking/?a={{x.id}}"><button class="btn-link border-0 bg-transparent text-body" ><span data-feather="trash-2" ></span></button> </a>
            
-            <button class="btn-link border-0 bg-transparent text-body" type="submit" onclick="delete_hotel('{{x.id}}')"><span data-feather="trash-2" ></span></button>
+            <!-- <button class="btn-link border-0 bg-transparent text-body" type="submit" onclick="delete_hotel('{{x.id}}')"><span data-feather="trash-2" ></span></button> -->
           </div>
         </td>
                 </tr>

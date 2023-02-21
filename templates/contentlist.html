@@ -34,7 +34,6 @@
                       {% endfor %}
                   </div>
               {% endif %}
-              
               <thead>
                 <tr>
                   <th scope="col">Id</th>
@@ -43,17 +42,12 @@
                   <th scope="col">Page</th>
                   <th scope="col">Path </th>
                   <th scope="col">Body</th>
-                  <th scope="col">Image Content</th>
                   <th scope="col">Image</th>
-                  <th scope="col">Overlay</th>
-                  <th scope="col">Weight</th>
                   <th scope="col">Created Date</th>
                   <th scope="col">Updated Date</th>
                   <th scope="col">Status</th>
                 </tr>
               </thead>
-              
-            
               {% for x in content_list %}
               <tbody>
                 <tr>
@@ -63,14 +57,10 @@
                     <td >{{x.page}}</td>
                     <td >{{x.path}}</td>
                     <td >{{x.body|truncatechars:40}}</td>
-                    <td >{{x.image_content|truncatechars:40}}</td>
                     <td class="pic"> <img  src="{{x.image.url}}" alt="" style="width:50px;height:60px;" ></td>
-                    <td >{{x.overlay|truncatechars:40}}</td>
-                    <td >{{x.weight}}</td>
                     <td >{{x.created}}</td>
                     <td >{{x.updated}}</td>
-                    <td >{{x.status}}</td>    
-                    
+                    <td >{{x.status}}</td>     
                     <td>         
                       <div class="btn-group me-2">
                         <a href="/dot/editcontent/?a={{x.id}}"><button class="btn-link border-0 bg-transparent text-body" ><span data-feather="edit-2"></span></button> </a>

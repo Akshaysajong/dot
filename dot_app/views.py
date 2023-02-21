@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -280,14 +280,7 @@ def dot_update_hotel(request):
         # sts = state.objects.all().filter(id=sts_id)
         # citi = city.objects.all().filter(id=citi_id)
         userprofile.objects.all().filter(id=ho_id).update(name=name,contact_person=contact_person, phone=phone, address=address, country=cotry, state=sts, city=citi)
-        # hotl.save()
-        # if int(dn_ar[0].c_user) == user.id or user.is_superuser:
-        #     destination_area.objects.all().filter(id=da_id).update(name=destn_area, place=place, longitude=longitude, lattitude=lattitude, status=status)
-        # else:
-        #     messages.success(request, f"you are not autherized to edit !!!!!  ")
-
     return redirect('dot_viewhotels')
-
 
 #ajax get country
 @login_required(login_url="/login")
@@ -342,20 +335,14 @@ def dot_add_destination_area(request):
         d_area.save()
         for x in destinarea_type:
             des = destinationarea_type(destnarea_type_id=x, destnarea_id=d_area.id)
-            des.save()
-           
-       
+            des.save()    
     return redirect("dot_destination_area")
 
 #edit destination area
 @login_required(login_url="/login")
 def dot_edit_destinationarea(request):
-    # user = request.user.id
     ed_id = request.GET['a']
     destn = destination_area.objects.all().filter(id=ed_id)
-
-    # if int(destn[0].c_user) == user:
-    #     pass
     return render(request, "edit_destinationarea.html",{'destn':destn})
 
 @login_required(login_url="/login")
@@ -514,12 +501,8 @@ def dot_addorganization(request):
 def dot_addorganization_db(request):
     if request.method == 'POST':
         user = request.user.id
-        first_name = request.POST['first_name']
-        last_name = request.POST['last_name']
-        username = request.POST['username']
-        password = request.POST['password']
-        email = request.POST['email']
-        user_or = User.objects.create_user(username=username, password=password, first_name=first_name, last_name=last_name, email=email)
+        user_or = User.objects.create_user(username=request.POST['username'], password=request.POST['password'], first_name=request.POST['first_name'], 
+        last_name=request.POST['last_name'], email=request.POST['email'])
         title = request.POST['title']
         org_type = request.POST['org_type']
         destn = request.POST['destn']
@@ -532,11 +515,9 @@ def dot_addorganization_db(request):
         proof = request.POST['proof']
         status = request.POST['status']
         img = request.FILES.getlist('image')
-        # stat = state.objects.all().filter(id=sts_id)      
-        # citi = city.objects.all().filter(id=city_id)
         user_or.groups.add(3)
         org = organization(title=title, org_type=org_type, destinstion_id=destn, contact_person=contact_person, contact_number=contact_number, website=website,
-         state_id=sts_id, city_id=city_id, address=address, email=email, proof=proof, status=status, c_user=user, user_id=user_or.id)
+         state_id=sts_id, city_id=city_id, address=address, email=request.POST['email'], proof=proof, status=status, c_user=user, user_id=user_or.id)
         org.save()
         for x in img:
             or_img=organization_images(organization_id=org.id, images=x)
@@ -670,7 +651,7 @@ def dot_edit_facilitytype(request):
     print(faclty_type)
     return render(request,'editfacilitytype.html',{'faclty_type':faclty_type})
 
-
+@login_required(login_url="/login")
 def dot_update_facilitytype(request):
     if request.method == 'POST':
         title = request.POST['title']
@@ -679,6 +660,7 @@ def dot_update_facilitytype(request):
         facility_type.objects.all().filter(id=flty_id).update(title=title, description=description)
     return redirect('dot_viewfacilitytype')
 
+@login_required(login_url="/login")
 def dot_delete_facilitytype(request):
     flty_id = request.GET['a']
     facility_type.objects.all().filter(id=flty_id).delete()
@@ -704,7 +686,7 @@ def dot_addfacilitydb(request):
         img = request.FILES.getlist('image')
         status = request.POST['status']
         orgtn_id = organization.objects.all().filter(user_id=user_id)
-        faclty = destn_facility(destinstions=destn, orgatn=orgtn_id[0].title, title=title, description=description, types=typ, amount=price, status=status, c_user=user_id)
+        faclty = destn_facility(destinstions=destn, orgatn=orgtn_id[0].id, title=title, description=description, types=typ, amount=price, status=status, c_user=user_id)
         faclty.save()
         for x in img:
             f_image=facility_image(destinstion=destn, image=x, facility_id=faclty.id, status=status, imagetype='facility', c_user=user_id)
@@ -752,7 +734,7 @@ def dot_updatefacility(request):
         if int(faclty[0].c_user) == user.id or user.is_superuser:
             destn_facility.objects.all().filter(id=f_id).update(title=title, description=description, types=type, amount=amount, status=status)
             for x in img:
-                f_image=facility_image(destinstion=destination, image=x, facility_id=f_id, status=status, imagetype='facility')
+                f_image=facility_image(destinstion=destination, image=x, facility_id=f_id, status=status, imagetype='facility', c_user=user.id)
                 f_image.save()
             img = [int(item) for item in deletedimg.split(', ') if item.isdigit()]
             length = len(img)
@@ -770,20 +752,6 @@ def dot_updatefacility(request):
         else:
             messages.error(request, "You are not autherized to edit !!!!")   
     return redirect('dot_viewfacilitylist')
-
-#  org = organization.objects.all()
-#     orgstn = []
-#     for x in org:
-#         # print(x.d_area.name)
-#         img= organization_images.objects.all().filter(organization=x.id)
-#         # print('>>>>>>>>>>>>>>')
-#         # print(img[0].id)
-#         im =''
-#         if img:
-#             im = img[0].images
-#         orgstn.append({'id':x.id, 'title':x.title,'org_type':x.org_type , 'detn_name':x.destinstion.name,'contact_person':x.contact_person,'contact_number':x.contact_number, 'website':x.website,
-#          'address':x.address, 'email':x.email, 'state':x.state, 'city':x.city, 'proof':x.proof, 'status':x.status, 'image':im,})
-#     return render(request, "organizationlist.html",{'org':orgstn})
 
 @login_required(login_url="/login")
 def dot_delete_organization(request):
@@ -899,10 +867,9 @@ def dot_contentlist(request):
     contnt = content.objects.all()
     content_list = []
     for x in contnt:  
-        img= content_images.objects.all().filter(cid=x.id)
-              
-        content_list.append({'id':x.id, 'content_type':x.content_type, 'title':x.title, 'page':x.page, 'path':x.path,'body':x.body,'status':x.status, 
-            'image':img[0].image, 'image_content':img[0].content, 'overlay':img[0].overlay, 'weight':img[0].weight, 'created':x.created, 'updated':x.updated})
+        img= content_images.objects.all().filter(cid=x.id)    
+        content_list.append({'id':x.id, 'content_type':x.content_type, 'title':x.title, 'page':x.page, 'path':x.path,'body':x.body,'status':x.status,   'created':x.created, 'updated':x.updated,
+        "image":img[0].image  if img else "" })
     return render(request, 'contentlist.html',{'content_list':content_list})
 
 @login_required(login_url="/login")
@@ -939,7 +906,6 @@ def dot_updatecontent(request):
         count=content_images.objects.all().filter(cid=cont_id).count()
         c_date = datetime.datetime.now()
         content.objects.all().filter(id=cont_id).update(title=request.POST['title'], path=request.POST['path'], body=request.POST['body'], status=status)
-        print(img_content)
         i = 0
         for x in contimg_id: 
             content_images.objects.all().filter(id=x).update(content=img_content[i], overlay=overlay[i], weight=weight[i])
@@ -957,13 +923,6 @@ def dot_updatecontent(request):
                 c.delete()     
 
     return redirect('dot_contentlist')
-
-
-def dot_deleteimgcontent(request):
-    pass
-
-
-
 
 @login_required(login_url="/login")
 def dot_deletecontentimage(request):
@@ -1000,10 +959,13 @@ def dot_editfaqcategory(request):
 def dot_updatefaqcategory(request):
     if request.method == 'POST':
         fq_id = request.POST['id']
-        name = request.POST['name']
-        description = request.POST['description']
-        status = request.POST['status']
-        faq_category.objects.all().filter(id=fq_id).update(name=name, description=description, status=status)
+        stat = request.POST.get('status')
+        faq_categry = faq_category.objects.all().filter(id=fq_id)
+        faq_categry.update(name=request.POST['name'], description=request.POST['description'])
+        if stat == 'True': 
+            faq_categry.update(status=request.POST['status'])
+        else:
+            faq_categry.update(status='False')
     return redirect('dot_faqcategorylist')
 
 @login_required(login_url="/login")
@@ -1067,12 +1029,45 @@ def dot_bookinglist(request):
     c_booking = booking.objects.all()
     return render(request, 'bookinglist.html',{'c_booking':c_booking})
 
+def dot_approvebooking(request):
+    idd = request.GET['a']
+    booking.objects.all().filter(id=idd).update(status='approved')
+    return redirect('dot_bookinglist')
+
+@login_required(login_url="/login")
+def dot_deletebooking(request):
+    idd = request.GET['a']
+    booking.objects.filter(id=idd).delete()
+    return redirect('dot_bookinglist')
+
 
 @login_required(login_url="/login")
 def dot_content(request):
     ctnt=content.objects.all()
     print(ctnt)
     return render(request,'content.html',{'content':ctnt})
+
+
+def dot_profile(request):
+    user_id = request.user.id
+    c_user = User.objects.filter(id=user_id) 
+    return render(request, 'profile.html',{'user':c_user})
+
+import pandas as pd
+import xlsxwriter
+def dot_exportdestination(request):
+    mydata = destinstions.objects.all()
+    img = destination_img.objects.all()
+    print(list(mydata))
+    df = pd.DataFrame(list(mydata.values()))
+    df2 = pd.DataFrame(list(img.values()))
+    joined_df = pd.concat([df, df2])
+    filename = "data.xlsx"
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    # Write the DataFrame to the Excel file and return the response
+    joined_df.to_excel(response, index=False, header=True)
+    return response
 
 
 
@@ -1818,8 +1813,31 @@ class contentdetailsAPI(APIView):
     #         'contents': content_serializer.data,
     #         'content_data': content_data_serializer.data
     #     })
-     
-   
+
+    
+ # subscription 
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from .models import Subscription
+from .serializers import SubscriptionSerializer
+
+class SubscriptionView(APIView):
+    def get(self, request):
+        subscriptions = Subscription.objects.all()
+        serializer = SubscriptionSerializer(subscriptions, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        email = request.data.get('email')
+        if Subscription.objects.filter(email=email).exists():
+            return Response({'message': 'Email already subscribed'}, status=status.HTTP_400_BAD_REQUEST)
+        serializer = SubscriptionSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     
 # from autocomplete_light import shortcuts as autocomplete_light
 # class MyAutocomplete(autocomplete_light.AutocompleteModelBase):

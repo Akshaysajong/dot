@@ -28,5 +28,6 @@ admin.site.register(feedback)
 admin.site.register(icons)
 admin.site.register(booking)
 admin.site.register(destination_type)
+admin.site.register(Subscription)
 
 

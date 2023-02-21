@@ -1,6 +1,6 @@
 from rest_framework import serializers
 # from django.contrib.auth import get_user_model
-from .models import customer,content,destinstions,destination_img,content_images,organization,organization_images,best_things,card,destination_area,feedback,icons,booking,destination_type
+from .models import customer,content,destinstions,destination_img,content_images,organization,organization_images,best_things,card,destination_area,feedback,icons,booking,destination_type,Subscription
 from rest_framework.response import Response
 
 # register customers
@@ -283,4 +283,8 @@ class MyModelSerializer(destinationsearchSerializer):
         fields = ['name'] 
 
 
-
+# subscription
+class SubscriptionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Subscription
+        fields = ('email', 'subscription_type', 'subscribed_date')

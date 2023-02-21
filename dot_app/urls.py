@@ -28,6 +28,7 @@ urlpatterns = [
     path('dot/addgroup/permissions/', views.dot_add_groups_permissions, name='dot_add_groups_permissions'),
     path('dot/delete_user/', views.dot_delete_user, name='dot_delete_user'),
     path('dot/updateuser/', views.dot_updateuser, name='dot_updateuser'),
+    path('dot/profile/', views.dot_profile, name='dotprofile'),
 
     #hoteladmin add hotels
     path('dot/addhotel/', views.dot_addhotel, name='dot_addhotel'),
@@ -70,7 +71,8 @@ urlpatterns = [
     path('api/filtersearch_results/',views.filtersearch_resultsView.as_view(), name='filtersearch_results'),
     path('api/organization_details/',views.organization_detailsAPI.as_view(), name='organization_details'),
     path('api/contentdetails/',views.contentdetailsAPI.as_view(), name='contentdetails'),
-    
+    path('api/subscription/', views.SubscriptionView.as_view(), name='subscription'),
+    # path('ajax_subscription/', views.ajax_subscription, name='ajax_subscription'),
 
 
 
@@ -105,7 +107,8 @@ urlpatterns = [
     path('dot/updatefacility/', views.dot_updatefacility, name='dot_updatefacility'),
     path('dot/orderlist/', views.dot_orderlist, name='dot_orderlist'),
     path('dot/bookinglist/', views.dot_bookinglist, name='dot_bookinglist'),
-   
+    path('dot/deletebooking/', views.dot_deletebooking, name='dot_deletebooking'),
+    path('dot/approvebooking/', views.dot_approvebooking, name='dot_approvebooking'),
     path('dot/addstaff/', views.dot_addstaff, name='dot_addstaff'),
     path('dot/savestaff/', views.dot_savestaff, name='dot_addstaff'),
     path('dot/stafflist/', views.dot_stafflist, name='dot_stafflist'),
@@ -119,8 +122,6 @@ urlpatterns = [
     path('dot/editcontent/', views.dot_editcontent, name='dot_editcontent'),
     path('dot/updatecontent/', views.dot_updatecontent, name='dot_updatecontent'),
     path('dot/delete_contentimage/', views.dot_deletecontentimage, name='dot_deletecontentimage'),
-    path('dot/deleteimgcontent/', views.dot_deleteimgcontent, name='dot_deleteimgcontent'),
-
     path('dot/addfaq_category/', views.dot_addfaq_category, name='dot_addfaq_category'),
     path('dot/savefaqcategory/', views.dot_savefaqcategory, name='dot_savefaqcategory'),
     path('dot/faqcategorylist/', views.dot_faqcategorylist, name='dot_faqcategorylist'),
@@ -134,6 +135,8 @@ urlpatterns = [
     path('dot/editfaq/', views.dot_editfaq, name='dot_editfaq'),
     path('dot/updatefaq/', views.dot_updatefaq, name='dot_updatefaq'),
     path('dot/deletefaq/', views.dot_deletefaq, name='dot_deletefaq'),
+
+    path('dot/exportdestination/', views.dot_exportdestination, name='dot_exportdestination'),
 
 
 ]

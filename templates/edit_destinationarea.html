@@ -10,9 +10,11 @@
           </ol>
         </h1>
         <div class="btn-toolbar mb-2 mb-md-0">
+          {% if perms.dot_app.view_destination_area %}
           <div class="btn-group me-2">
             <a href="/dot/view_destinationarea/"><button type="button" class="btn btn-sm">View Destination Area</button></a>
           </div>
+          {% endif %}
         </div>
       </div>
       <div class="card p-4 rounded-1 border-0 shadow">
@@ -33,7 +35,6 @@
             <div class="col-md-4">
               <label for="destinationarea_type" class="form-label">Destination Area Type</label>
               <select id="destinationarea_type" name="destinationarea_type" class="form-select " multiple >
-                
                 {% for x in destarea_type %}
                 <option value="{{x.id}}" aria-multiselectable="true">{{x.name}}</option>
                 {% endfor %}
@@ -67,14 +68,12 @@
                 <label for="status" class="form-label">Status </label>
                 <input type="checkbox" id="status" name="status" value="1" {% if x.status %}checked{% endif %}/>
               </div>
-
               <div class="row" style="display:inline-flex"  data-wow-delay="1.3s">
                 <div class="col-md-8 ">
                   <div class="imageField" style="margin-left:0;margin-top: 4rem;">
                     <div class="card" style="width: 15rem;">
                       <img class="card-img-top" src="{{x.image.url}}" alt="Card image cap">
                     </div><br>
-                    
                     <!-- <div class="btn-group me-6" >
                       <button type="button" style="margin-left: 7rem" class="btn-link border-0 bg-transparent text-body " onClick="confdelete(this, '{{x.id}}');"><span data-feather="trash-2" ></span></button>
                     </div> -->

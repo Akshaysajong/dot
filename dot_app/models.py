@@ -170,7 +170,7 @@ class faq_category(models.Model):
     name = models.CharField(max_length=200,blank=True, null=True)
     description = models.CharField(max_length=200,blank=True, null=True)
     popularity = models.CharField(max_length=200,blank=True, null=True, default='0')
-    status =  models.BooleanField(default=False)
+    status =  models.BooleanField(default=False,blank=True, null=True,)
 
 class faq(models.Model):
     title = models.CharField(max_length=200,blank=True, null=True)
@@ -226,7 +226,7 @@ class booking(models.Model):
     created = models.DateTimeField(blank=True, null=True)
     updated = models.DateTimeField(blank=True, null=True)
     guests = models.IntegerField(max_length=50,blank=True, null=True)
-    status = models.BooleanField(default=False)
+    status = models.CharField(max_length=50,blank=True, null=True, default='pending')
 
 class coupon_type(models.Model):
     name = models.CharField(max_length=50,blank=True, null=True)
@@ -279,7 +279,13 @@ class icons(models.Model):
 
 
 
+class Subscription(models.Model):
+    email = models.EmailField()
+    subscription_type = models.CharField(max_length=50)
+    subscribed_date = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+         return self.email
 
 
 
