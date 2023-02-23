@@ -5,18 +5,28 @@ from . import views
 from django.conf import settings
 from django.conf.urls.static import static
 # from .import DestinationViewSet
-from rest_framework import routers
-router = routers.DefaultRouter()
-router.register('api/destinations',views.DestinationViewSet, basename="destinations")
-# from .views import AutocompleteView
-
+# from rest_framework import routers
+# router = routers.DefaultRouter()
+# router.register('api/destinations',views.DestinationViewSet, basename="destinations")
+from .views import LocationList, LocationDetail,autocompleteList,autocompleteDetail
+from rest_framework import filters
 # from django.conf import settings
+
+from .views import AccountView
+from django.urls import path, include
+from rest_framework import routers
+from .views import ReviewViewSet
+
+router = routers.DefaultRouter()
+router.register('api/facilityreviews', ReviewViewSet)
+# router = routers.DefaultRouter()
+# router.register('api/accounts',views.AccountViewSet,basename="accounts")
 
 urlpatterns = [
     # path('data/',get_data, name='data'),
     # path('api/',include('dot_app.urls')),
 
-   
+    path('', include(router.urls)),
     path('login/', views.login_user, name='login'),
     path('dot/dashboard/', views.dot_dashboard, name='dot_dashboard'),
     path('logout/', views.logoutuser, name="logout" ),
@@ -29,6 +39,7 @@ urlpatterns = [
     path('dot/delete_user/', views.dot_delete_user, name='dot_delete_user'),
     path('dot/updateuser/', views.dot_updateuser, name='dot_updateuser'),
     path('dot/profile/', views.dot_profile, name='dotprofile'),
+    path('dot/updateprofile/', views.dot_updateprofile, name="dot_updateprofile"),
 
     #hoteladmin add hotels
     path('dot/addhotel/', views.dot_addhotel, name='dot_addhotel'),
@@ -44,36 +55,44 @@ urlpatterns = [
     # path('dot/add_staff/', views.dot_add_staffdb, name='dot_add_staff'),
 
     # api
-    path('api/register/',views.Register.as_view(),name='register'),
-    path('api/login/',views.LoginView.as_view(),name='login'),
-    # path('api/cust_profile/',views.cust_profileRegister.as_view(),name='cust_profileRegister'),
-    # path('api/destination_area/',views.destination_areaView.as_view({'get': 'list'}),name='destination_area'),
-    # path('api/destinstions/',views.destinstionsView.as_view({'get': 'list'}),name='destinstions'),
-    # path('api/destination_images/',views.destination_imageView.as_view({'get': 'list'}),name='destination_images'),
-    path('api/greenktchen_homepage_content/',views.homepage_contentgreenkitchen, name='homepage-content'),
-    path('api/homepage_contentdot/',views.homepage_contentdot, name='homepage-contentdot'),
     
+    # path('api/cust_profile/',views.cust_profileRegister.as_view(),name='cust_profileRegister'),
+    path('api/greenktchen_homepage_content/',views.homepage_contentgreenkitchen, name='homepage-content'),
+    # static
+    path('api/homepage_contentdot/',views.homepage_contentdot, name='homepage-contentdot'),
+
+    path('api/register/',views.Register.as_view(),name='register'),
+    path('api/login/',views.LoginView.as_view(),name='apilogin'),
     path('api/dot_homepage/',views.dot_homepageAPI.as_view(), name='dot_homepage'),
     path('api/dot_button_details/',views.dot_button_detailsAPI.as_view(), name='dot_button_details'),
-    # path('api/dot_icon/',views.dot_iconAPI.as_view(), name='dot_icon'),
     path('api/dot_destination_details/',views.dot_destination_detailsAPI.as_view(), name='dot_destination_details'),
     path('api/dot_destination_humpidetails/',views.dot_destination_humpidetailsAPI.as_view(), name='dot_destination_humpidetails'),
     path('api/dot_wanderlust_humpidetails/',views.dot__wanderlust_humpidetailsAPI.as_view(), name='dot_wanderlust_humpidetails'),
     path('api/dot_wanderlust_bookingdetails/',views.dot__wanderlust_bookingAPI.as_view(), name='dot_wanderlust_bookingdetails'),
     path('api/dot__more_stays/',views.dot__more_staysAPI.as_view(), name='dot__more_stays'),
-    #  path('api/search_autocomplete/',views.searchAutocompleteAPIView.as_view(), name='search_autocomplete'),
-    path('api/search_autocomplete/', include(router.urls)),
-    path('api/categorysearch/',views.categorysearchView.as_view(), name='categorysearch'),
-    
-    # path('api/autocomplete/mymodel/',views.ItemAutocompleteView.as_view(), name='mymodel_autocomplete'),
     path('api/categorysearch',views.categorysearchView.as_view(), name='categorysearch'),
-    # path('autocomplete/', AutocompleteView.as_view(), name='autocomplete'),
-    path('api/filtersearch_results/',views.filtersearch_resultsView.as_view(), name='filtersearch_results'),
-    path('api/organization_details/',views.organization_detailsAPI.as_view(), name='organization_details'),
+    path('api/searchauto/', autocompleteList.as_view(), name='searchauto-list'),
+    path('api/searchauto/<int:pk>/', autocompleteDetail.as_view(), name='searchauto-detail'),
+    path('api/searchauto/search/', autocompleteList.as_view(filter_backends=[filters.SearchFilter]), name='searchauto-search'),
     path('api/contentdetails/',views.contentdetailsAPI.as_view(), name='contentdetails'),
     path('api/subscription/', views.SubscriptionView.as_view(), name='subscription'),
-    # path('ajax_subscription/', views.ajax_subscription, name='ajax_subscription'),
-
+    path('api/myaccount/', views.AccountView.as_view(), name='myaccount-list'),
+    path('api/loginvalidation/',views.LoginvalidationView.as_view(),name='loginvalidation'),   
+    path('api/locations/', LocationList.as_view(), name='location-list'),
+    path('api/locations/<int:pk>/', LocationDetail.as_view(), name='location-detail'),
+    path('api/locations/search/', LocationList.as_view(filter_backends=[filters.SearchFilter]), name='location-search'),
+   
+    path('api/filtersearch_results/',views.filtersearch_resultsView.as_view(({'get': 'list'})), name='filtersearch_results'),
+    path('api/organization_details/',views.organization_detailsAPI.as_view(), name='organization_details'),   
+    path('api/editaccount/', views.EditCustomerView.as_view(), name='editaccount-list'),
+    # path('api/editaccount/<int:pk>/', LocationDetail.as_view(), name='location-detail'),  
+    path('api/travelhistory/',views.travelhistoryAPI.as_view(),name='travelhistory'),
+    # path('customers/(?P<id>\d+)/$',views.EditCustomerView.as_view(),name='editaccount-list'),
+    # path('api/autocomplete/mymodel/',views.ItemAutocompleteView.as_view(), name='mymodel_autocomplete'),
+    # path('api/search_autocomplete/',views.searchAutocompleteAPIView.as_view(), name='search_autocomplete'),
+    # path('api/search_autocomplete/', include(router.urls)),
+    # path('api/categorysearch/',views.categorysearchView.as_view(), name='categorysearch'),
+    # path('autocomplete/', AutocompleteView.as_view(), name='autocomplete'),
 
 
     path('dot/destination_area/', views.dot_destination_area, name='dot_destination_area'),
@@ -108,7 +127,10 @@ urlpatterns = [
     path('dot/orderlist/', views.dot_orderlist, name='dot_orderlist'),
     path('dot/bookinglist/', views.dot_bookinglist, name='dot_bookinglist'),
     path('dot/deletebooking/', views.dot_deletebooking, name='dot_deletebooking'),
-    path('dot/approvebooking/', views.dot_approvebooking, name='dot_approvebooking'),
+ 
+
+    path('dot/approvebooking/', views.dot_approvebooking, name="dot_approvebooking"),
+
     path('dot/addstaff/', views.dot_addstaff, name='dot_addstaff'),
     path('dot/savestaff/', views.dot_savestaff, name='dot_addstaff'),
     path('dot/stafflist/', views.dot_stafflist, name='dot_stafflist'),
@@ -137,6 +159,7 @@ urlpatterns = [
     path('dot/deletefaq/', views.dot_deletefaq, name='dot_deletefaq'),
 
     path('dot/exportdestination/', views.dot_exportdestination, name='dot_exportdestination'),
+    path('dot/memories/', views.dot_memories, name='dot_memories'),
 
 
 ]

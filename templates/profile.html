@@ -28,17 +28,54 @@
                         {{ x.last_name }}</div>
                         <div class="col-md-6 col-sm-6"><h5 class="fw-bold mt-3">Email Address</h5>
                         {{ x.email  }}</div>
-                        <p class="mt-2 mb-4"><a href="#0" data-bs-toggle="modal" data-bs-target="#editpersonalinfo" class="link-dark border-bottom border-primary">edit</a></p>
+                        <p class="mt-2 mb-4"><a href="#editpersonalinfo" data-bs-toggle="modal" data-bs-target="#editpersonalinfo" class="link-dark border-bottom border-primary">edit</a></p>
                         {% endfor %}
                       </div>
                   </div>
                 </div>
               </section>
-            
-            
-            
-          
             </div>
+          </div>
+          <div class="modal fade edit-popup" id="editpersonalinfo" tabindex="-1" aria-labelledby="editpersonalinfo" aria-hidden="">
+            <div class="modal-dialog">
+              <div class="modal-content p-4">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                {% for x in user %}
+                <div class="modal-body">
+                  <h3>Edit your personal information</h3>
+                  <form class="mt-4" method="POST" action="/dot/updateprofile/" enctype="multipart/form-data">{% csrf_token %}
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" name="username" id="username" value="{{ x.username }}" required />
+                        <label for="floatingInput">UserName</label>
+                      </div>
+                    <div class="form-floating mb-3">
+                      <input type="text" class="form-control" name="first_name" id="first_name" value="{{ x.first_name }}" required />
+                      <label for="floatingInput">First Name</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                      <input type="text" class="form-control" name="last_name" id="last_name" value="{{ x.last_name }}" required />
+                      <label for="floatingInput">Last Name</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                      <input type="email" class="form-control" name="email" id="email" value="{{ x.email }}" disabled required />
+                      <label for="floatingInput">Mail Address</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                      <input type="password" class="form-control" name="pwd" id="pwd" />
+                      <label for="floatingInput">Password</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                  </form>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        
+        
+
+
+
 </main>
 {% endblock %}  
 

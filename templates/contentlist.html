@@ -26,13 +26,13 @@
             <h5 class="text-uppercase fw-bold mb-0 p-4 pt-3 pb-3">Content List</h5>
             <table id="example" class="table table-striped table-sm">
               {% if messages %}
-                  <div class="alert alert-danger">
-                      {% for message in messages %}
-                          {% if message.tags == "error" and message.message == "You are not autherized to edit !!!!" %}
-                              {{ message }}
-                          {% endif %}
-                      {% endfor %}
-                  </div>
+                <div class="alert alert-danger">
+                    {% for message in messages %}
+                        {% if message.tags == "error" and message.message == "You are not autherized to delete !!!!" or message.message == "You are not autherized to edit !!!!" %}
+                            {{ message }}
+                        {% endif %}
+                    {% endfor %}
+                </div>
               {% endif %}
               <thead>
                 <tr>
@@ -64,14 +64,15 @@
                     <td>         
                       <div class="btn-group me-2">
                         <a href="/dot/editcontent/?a={{x.id}}"><button class="btn-link border-0 bg-transparent text-body" ><span data-feather="edit-2"></span></button> </a>
+                        <a href="/dot/deletecontent/?a={{x.id}}"><b<button class="btn-link border-0 bg-transparent text-body"><span data-feather="trash-2" ></span></button> </a>
                       </div> 
-                    </td> 
+                   
                     {% if perms.dot_app.change_destination_area %}  
                     {% endif %} 
                    
-                    <td>            
+                      
                       <div class="btn-group me-2">
-                        <a href="/dot/deletecontent/?a={{x.id}}"><b<button class="btn-link border-0 bg-transparent text-body"><span data-feather="trash-2" ></span></button> </a>
+                        
                         <!-- <button class="btn-link border-0 bg-transparent text-body" type="submit" onclick="delete_darea('{{x.id}}')"><span data-feather="trash-2" ></span></button> -->
                       </div>  
                     </td>

@@ -275,3 +275,23 @@ function upload_variationimg(obj, f) {
         });
     });
 });
+
+function myFunction() {
+    // do something when the checkbox is clicked
+    console.log("The checkbox was clicked!");
+  }
+
+function myFunction(obj, id) {
+var result = confirm("Are you sure to delete?");
+if(result){
+    df = document.getElementById('deletedfiles').value;
+    alert(df)
+    dfc  = df.split(", ");
+    
+    document.getElementById('deletedfiles').value = df+', '+id;
+    a=document.getElementById('img_id')
+    console.log(a)
+   
+          
+}
+}

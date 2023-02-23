@@ -154,7 +154,7 @@ class content(models.Model):
     created = models.DateTimeField(blank=True, null=True)
     updated = models.DateTimeField(blank=True, null=True)
     status = models.BooleanField(default=False)
-    created_id = models.CharField(max_length=200,blank=True, null=True)
+    c_user = models.CharField(max_length=200,blank=True, null=True)
 
 class content_images(models.Model):
     cid = models.CharField(max_length=200,blank=True, null=True)
@@ -164,7 +164,7 @@ class content_images(models.Model):
     weight = models.IntegerField(blank=True, null=True)
     created = models.DateTimeField(blank=True, null=True)
     status =  models.BooleanField(default=False)
-    created_id = models.CharField(max_length=200,blank=True, null=True)
+    c_user = models.CharField(max_length=200,blank=True, null=True)
 
 class faq_category(models.Model):
     name = models.CharField(max_length=200,blank=True, null=True)
@@ -194,6 +194,7 @@ class customer(models.Model):
     email = models.EmailField(max_length = 254)
     phone = models.CharField(max_length=50,blank=True, null=True)
     cust_type = models.CharField(max_length=50,blank=True, null=True)
+    gender= models.CharField(max_length=50,blank=True, null=True)
     status = models.BooleanField(default=False)
 
 class cust_profile(models.Model):
@@ -288,4 +289,42 @@ class Subscription(models.Model):
          return self.email
 
 
+
+class facility_Review(models.Model):
+    destn_facility_id = models.CharField(max_length=100,blank=True, null=True, default=0)
+    cust_id= models.ForeignKey(customer, default=None, on_delete=models.CASCADE)
+    rating=models.IntegerField(blank=True, null=True)
+    review=models.CharField(max_length=100,blank=True, null=True)
+    user_id = models.CharField(max_length=100,blank=True, null=True, default=0)
+    created = models.DateTimeField(blank=True, null=True)
+    updated = models.DateTimeField(blank=True, null=True)
+    status = models.CharField(max_length=100,blank=True, null=True)
+
+class destination_Review(models.Model):
+    destinstion_id = models.CharField(max_length=100,blank=True, null=True, default=0)
+    cust_id = models.ForeignKey(customer, default=None, on_delete=models.CASCADE)
+    rating = models.IntegerField(blank=True, null=True)
+    review = models.CharField(max_length=100,blank=True, null=True)
+    user_id = models.CharField(max_length=100,blank=True, null=True, default=0)
+    created = models.DateTimeField(blank=True, null=True)
+    updated = models.DateTimeField(blank=True, null=True)
+    status = models.CharField(max_length=100,blank=True, null=True)
+
+class memories(models.Model):
+    cust_id = models.ForeignKey(customer, default=None, on_delete=models.CASCADE)
+    destinstions = models.CharField(max_length=100,blank=True, null=True, default=0)
+    destn_facility = models.CharField(max_length=100,blank=True, null=True, default=0)
+    experience = models.CharField(max_length=200,blank=True, null=True)
+    memories = models.CharField(max_length=200,blank=True, null=True)
+    created = models.DateTimeField(blank=True, null=True)
+    updated = models.DateTimeField(blank=True, null=True)
+    visited_date=models.DateTimeField(blank=True, null=True)
+    user_id = models.CharField(max_length=100,blank=True, null=True, default=0)
+    status = models.CharField(max_length=200,blank=True, null=True)
+    
+class memories_img(models.Model):
+    memories = models.ForeignKey(memories, on_delete=models.CASCADE)
+    image=models.ImageField(upload_to = 'images/', blank=True)
+
+    
 

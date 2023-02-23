@@ -10,3 +10,10 @@ class categoryfilter(FilterSet):
     class Meta:
         model=icons
         fields = ['id']
+
+from .models import destinstions
+
+class TripFilter(FilterSet):
+    class Meta:
+        model=destinstions
+        fields = ['name']
