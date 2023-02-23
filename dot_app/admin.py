@@ -31,4 +31,6 @@ admin.site.register(destination_type)
 admin.site.register(Subscription)
 admin.site.register(facility_Review)
 admin.site.register(destination_Review)
+admin.site.register(memories)
+admin.site.register(memories_img)
 

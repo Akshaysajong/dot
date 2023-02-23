@@ -11,14 +11,16 @@ from django.conf.urls.static import static
 from .views import LocationList, LocationDetail,autocompleteList,autocompleteDetail
 from rest_framework import filters
 # from django.conf import settings
-
+from .views import facilityReviewListCreateAPIView,destinationReviewListCreateAPIView
 from .views import AccountView
 from django.urls import path, include
-from rest_framework import routers
-from .views import ReviewViewSet
+# from rest_framework import routers
+from .views import facilityReviewAPIView,destinationReviewViewSet,travelmemoriesViewSet
 
-router = routers.DefaultRouter()
-router.register('api/facilityreviews', ReviewViewSet)
+# router = routers.DefaultRouter()
+# router.register('api/facilityreviews_view', facilityReviewAPIView)
+# router = routers.DefaultRouter()
+# router.register('api/destinationreviews', destinationReviewViewSet)
 # router = routers.DefaultRouter()
 # router.register('api/accounts',views.AccountViewSet,basename="accounts")
 
@@ -26,7 +28,7 @@ urlpatterns = [
     # path('data/',get_data, name='data'),
     # path('api/',include('dot_app.urls')),
 
-    path('', include(router.urls)),
+    # path('', include(router.urls)),
     path('login/', views.login_user, name='login'),
     path('dot/dashboard/', views.dot_dashboard, name='dot_dashboard'),
     path('logout/', views.logoutuser, name="logout" ),
@@ -79,19 +81,24 @@ urlpatterns = [
     path('api/locations/', LocationList.as_view(), name='location-list'),
     path('api/locations/<int:pk>/', LocationDetail.as_view(), name='location-detail'),
     path('api/locations/search/', LocationList.as_view(filter_backends=[filters.SearchFilter]), name='location-search'),
-   
     path('api/filtersearch_results/',views.filtersearch_resultsView.as_view(({'get': 'list'})), name='filtersearch_results'),
-    path('api/organization_details/',views.organization_detailsAPI.as_view(), name='organization_details'),   
-    path('api/editaccount/', views.EditCustomerView.as_view(), name='editaccount-list'),
-    # path('api/editaccount/<int:pk>/', LocationDetail.as_view(), name='location-detail'),  
-    path('api/travelhistory/',views.travelhistoryAPI.as_view(),name='travelhistory'),
-    # path('customers/(?P<id>\d+)/$',views.EditCustomerView.as_view(),name='editaccount-list'),
-    # path('api/autocomplete/mymodel/',views.ItemAutocompleteView.as_view(), name='mymodel_autocomplete'),
-    # path('api/search_autocomplete/',views.searchAutocompleteAPIView.as_view(), name='search_autocomplete'),
-    # path('api/search_autocomplete/', include(router.urls)),
-    # path('api/categorysearch/',views.categorysearchView.as_view(), name='categorysearch'),
-    # path('autocomplete/', AutocompleteView.as_view(), name='autocomplete'),
+    path('api/facilityaddreviews/', facilityReviewListCreateAPIView.as_view(), name='review-list-create'),
+    path('api/facilityreview_view/', facilityReviewAPIView.as_view(({'get': 'list'})), name='facilityreview_view'),
+    path('api/destinationaddreviews/', destinationReviewListCreateAPIView.as_view(), name='destinationaddreviews'),
+    path('api/destinationfacilityreview_view/', destinationReviewViewSet.as_view(({'get': 'list'})), name='destinationfacilityreview_view'),
+    path('api/memorydetails/<int:id>/', views.MemoryDetailAPIView.as_view(), name='memory-detail'), 
 
+    path('api/organization_details/',views.organization_detailsAPI.as_view(), name='organization_details'),   
+    # path('api/editaccount/', views.EditCustomerView.as_view(), name='editaccount-list'), 
+    path('api/editaccount/<int:pk>/', views.EditCustomerView.as_view(), name='editaccount-detail'),   
+    path('api/travelhistory/',views.travelhistoryAPI.as_view(),name='travelhistory'),
+    path('api/addmemories/',views.MemoryCreateView.as_view(), name='memory_create'),
+    path('api/travelmemories/', travelmemoriesViewSet.as_view(({'get': 'list'})), name='destinationfacilityreview_view'),
+    
+    # path('memoryimages/', ImageList.as_view(), name='image-list'),
+    # path('memoryimages/<int:pk>/', ImageDetail.as_view(), name='image-detail'),
+    # path('customers/(?P<id>\d+)/$',views.EditCustomerView.as_view(),name='editaccount-list'),
+  
 
     path('dot/destination_area/', views.dot_destination_area, name='dot_destination_area'),
     path('dot/add_destination_area/', views.dot_add_destination_area, name='dot_add_destination_area'),

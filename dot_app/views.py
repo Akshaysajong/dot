@@ -704,7 +704,7 @@ def dot_addfacilitydb(request):
         img = request.FILES.getlist('image')
         status = request.POST['status']
         orgtn_id = organization.objects.all().filter(user_id=user_id)
-        faclty = destn_facility(destinstions=destn, orgatn=orgtn_id[0].title, title=title, description=description, types=typ, amount=price, status=status, c_user=user_id)
+        faclty = destn_facility(destinstions=destn, orgatn=orgtn_id[0].id, title=title, description=description, types=typ, amount=price, status=status, c_user=user_id)
         faclty.save()
         for x in img:
             f_image=facility_image(destinstion=destn, image=x, facility_id=faclty.id, status=status, imagetype='facility', c_user=user_id)
@@ -1097,25 +1097,50 @@ import random
 #     return JsonResponse(data, safe=False)
 
 # Register customers
+# class Register(APIView):
+#     def post(self,request,format=None):
+#         serializer = CustomerProfileSerializer(data=request.data)
+#         data={}
+#         if serializer.is_valid():
+#             account=serializer.save()
+#             data['response']='registered'
+#             data['name']=account.name
+#             data['first_name']=account.first_name
+#             data['last_name']=account.last_name
+#             data['email']=account.email
+#             data['phone']=account.phone            
+#             data['cust_type']=account.cust_type
+#             # data['address']=account.address
+#             data['status']=account.status
+#             # data['cust-id']= account.cust_id
+#         else:
+#             data=serializer.errors
+#         return Response(data)
+
+
 class Register(APIView):
-    def post(self,request,format=None):
-        serializer = CustomerProfileSerializer(data=request.data)
-        data={}
-        if serializer.is_valid():
-            account=serializer.save()
-            data['response']='registered'
-            data['name']=account.name
-            data['first_name']=account.first_name
-            data['last_name']=account.last_name
-            data['email']=account.email
-            data['phone']=account.phone            
-            data['cust_type']=account.cust_type
-            # data['address']=account.address
-            data['status']=account.status
-            # data['cust-id']= account.cust_id
-        else:
-            data=serializer.errors
-        return Response(data)
+    def post(self, request, format=None):    
+        
+        name = request.data.get('name')
+        first_name = request.data.get('first_name')
+        last_name = request.data.get('last_name')
+        email = request.data.get('email')
+        phone = request.data.get('phone')
+        cust_type = request.data.get('cust_type')
+        gender = request.data.get('gender')
+        address=request.data.get('address')
+        print(address)
+       
+        status = request.data.get('status')      
+              
+        cust = customer(name=name, first_name=first_name, last_name=last_name, email=email, phone=phone, cust_type=cust_type,gender=gender, status=status)
+        cust.save() 
+        customer_pro = cust_profile(cust_id=cust.id, address= address)
+        customer_pro.save()
+
+        serializer = CustomerProfileSerializer(customer_pro)   
+        return Response(serializer.data)
+    
 # class Register(APIView):
 #     def post(self, request):
 #         customer_serializer = customerRegister(data=request.data)
@@ -1245,7 +1270,6 @@ class dot_homepageAPI(APIView):
             for d in destn:
                 img= destination_img.objects.all().filter(destinstions_id=d.id) 
                 for imggg in img:
-                    print(imggg.image)
                     destn_list.append({'id':d.id,'destination_type':d.destn_type,'image':imggg.image.name})
         
         dest_img=destination_img.objects.all()[:4]
@@ -1260,7 +1284,8 @@ class dot_homepageAPI(APIView):
         for sty in stays:
             or_img=organization_images.objects.all().filter(organization_id=sty.id)[:1]
             for  organ in or_img:
-                org_list.append({'id':sty.id,'title':sty.title,'image':organ.images.name})       
+                org_list.append({'id':sty.id,'title':sty.title,'image':organ.images.name})
+                           
 
         stays_img=organization_images.objects.all()[:3]
         sub_title4=content.objects.all().filter(id=5)
@@ -1848,33 +1873,51 @@ class AccountView(APIView):
     # serializer_class = AccountSerializer
     def get(self, request):
         title=content.objects.all().filter(id=45)
-        acc = customer.objects.all().filter(id=1)
+        # acc = customer.objects.all().filter(id=1)
+        cust_pro=cust_profile.objects.all().filter(id=1)
               
         title_data=head_KSerializer(title,many=True).data
        
-        acc_data=AccountSerializer(acc, many=True).data
+        # acc_data=AccountSerializer(acc, many=True).data
+        cust_pro_data=CustomerProfileSerializer(cust_pro, many=True).data
 
         data = {
             'title':title_data,           
-            'account':acc_data,            
+            # 'account':acc_data,
+            'profile':  cust_pro_data,          
         }
         return Response(data)
 
 # Email and phone number validation for edit my account details
+# from rest_framework import status
+
+# from .utils import validate_email, validate_phone
 class EditCustomerView(APIView):
-    def put(self, request,id):
-        customers = customer.objects.get(id=id)
-        # profile=[]
-        # for cu in customers: 
-        #     prof=cust_profile.objects.all().filter(cust=cu.id)  
-        #     for  pro in prof:           
-        #             profile.append({'id':cu.id,'name':cu.name,'phone':cu.phone,'email':cu.email,'gender':cu.gender,'address':pro.address})
-        serializer = edit_customerSerializer(customers, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        else:
-            return Response(serializer.errors, status=400)
+    # def put(self, request,pk):
+    #     customers = customer.objects.get(id=pk)
+    #     # profile=[]
+    #     # for cu in customers: 
+    #     #     prof=cust_profile.objects.all().filter(cust=cu.id)  
+    #     #     for  pro in prof:           
+    #     #             profile.append({'id':cu.id,'name':cu.name,'phone':cu.phone,'email':cu.email,'gender':cu.gender,'address':pro.address})
+    #     serializer = edit_customerSerializer(customers, data=request.data, partial=True)
+    #     if serializer.is_valid():
+    #         serializer.save()
+    #         return Response(serializer.data)
+    #     else:
+    #         return Response(serializer.errors, status=400)
+    def put(self, request):
+        email = request.data.get('email')
+        phone = request.data.get('phone')
+        
+        if email and not validate_email(email):
+            return Response({'error': 'Invalid email address'}, status=status.HTTP_400_BAD_REQUEST)
+        if phone and not validate_phone(phone):
+            return Response({'error': 'Invalid phone number'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # update user's account details here
+        
+        return Response({'message': 'Account details updated'}, status=status.HTTP_200_OK)
 
 
 # travel history
@@ -1889,11 +1932,14 @@ class travelhistoryAPI(APIView):
         #     serc_img=facility_image.objects.all().filter(facility_id=secr.id)  
         #     for  room_ig in serc_img:           
         #             bookng_list.append({'bk_from':secr.bk_from,'bk_to':secr.bk_to,'created':secr.created,'image':room_ig.image.name})
+        review=facility_Review.objects.all()
+       
         
         title_data=head_KSerializer(title, many=True).data
         subtitle_data=head_KSerializer(sub_title, many=True).data
         sub_title2_data=head_KSerializer(sub_title2, many=True).data
         book_data=bookingSerializer(book, many=True).data
+        review_data=facilityReviewSerializer(review, many=True).data
        
 
         data = {
@@ -1902,159 +1948,107 @@ class travelhistoryAPI(APIView):
             'sub_heading':  subtitle_data,
             'sub_title2':sub_title2_data,
             'booking_details':book_data,
+            'wanderlust':review_data,
         }
         return Response(data)
     
 
-
+# review view facility
 from rest_framework import viewsets
-from .models import facility_Review
-from .serializers import facilityReviewSerializer
+from .models import facility_Review,destination_Review,memories_img,memories
+from .serializers import facilityReviewSerializer,destinationReviewSerializer,MemorySerializer
 
-class ReviewViewSet(viewsets.ModelViewSet):
+# review view destination
+class destinationReviewViewSet(viewsets.ModelViewSet):
+    queryset = destination_Review.objects.all()
+    serializer_class = destinationReviewSerializer
+
+# view review facility
+from rest_framework import generics
+class facilityReviewAPIView(viewsets.ModelViewSet):
     queryset = facility_Review.objects.all()
     serializer_class = facilityReviewSerializer
 
-# book hotel
-# from rest_framework.views import APIView
-# from rest_framework.response import Response
-# from rest_framework import status
 
-# class BookHotelView(APIView):
-#     def post(self, request):
-#         # retrieve token from request header
-#         token = request.META.get('HTTP_AUTHORIZATION', '').split()[1]
+# add facility review
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from django.contrib.auth import authenticate
+from .serializers import facilityReviewSerializer
+from .models import facility_Review
+
+class facilityReviewListCreateAPIView(APIView):
+    def post(self, request, format=None):
+      
+        destn_facility_id = request.data.get('destn_facility_id')
+        rating = request.data.get('rating')
+        review = request.data.get('review')
+        created = request.data.get('created')
+        updated = request.data.get('updated')
+        cust_id = request.data.get('cust_id')
+        user_id = request.data.get('user_id')
+        status = request.data.get('status')
+       
+        cust = customer_auth.objects.filter(id=True)
+        if not cust:
+            return Response({'error': 'Invalid token'})
         
-#         # verify token here
-#         # ...
         
-#         # retrieve hotel id and room id from request data
-#         hotel_id = request.data.get('organization_id')
-#         room_id = request.data.get('destn_facility_id')
+        reviews = facility_Review(cust_id_id=cust_id, destn_facility_id=destn_facility_id, rating=rating, review=review, created=created, updated=updated, status=status, user_id=user_id)
+        reviews.save()
+         
+        serializer = facilityReviewSerializer(reviews)   
+        return Response(serializer.data)
+
+
+# add destination review
+class destinationReviewListCreateAPIView(APIView):
+    def post(self, request, format=None):     
+        destinstion_id = request.data.get('destinstion_id')
+        rating = request.data.get('rating')
+        review = request.data.get('review')
+        created = request.data.get('created')
+        updated = request.data.get('updated')
+        cust_id = request.data.get('cust_id')
+        user_id = request.data.get('user_id')
+        status = request.data.get('status')
         
-#         # fetch hotel and room data from database
-#         hotel = {'id': organization_id, 'name': 'Hotel A', 'address': '123 Main St', 'city': 'New York'}
-#         hotel_images = [{'id': 1, 'hotel_id': hotel_id, 'image_url': 'http://example.com/hotel_image.jpg'}]
-#         room = {'id': room_id, 'hotel_id': hotel_id, 'name': 'Room A'}
-#         room_prices = [{'id': 1, 'room_id': room_id, 'price': 100.00}]
-#         room_images = [{'id': 1, 'room_id': room_id, 'image_url': 'http://example.com/room_image.jpg'}]
-        
-#         # serialize the data
-#         hotel_data = HotelSerializer(hotel).data
-#         hotel_images_data = HotelImageSerializer(hotel_images, many=True).data
-#         room_data = RoomSerializer(room).data
-#         room_prices_data = RoomPriceSerializer(room_prices, many=True).data
-#         room_images_data = RoomImageSerializer(room_images, many=True).data
-        
-#         # return the data in a JSON response
-#         data = {
-#             'hotel': hotel_data,
-#             'hotel_images': hotel_images_data,
-#             'room': room_data,
-#             'room_prices': room_prices_data,
-#             'room_images': room_images_data,
-#         }
-        
-#         return Response(data, status=status.HTTP_200_OK)
+        cust = customer_auth.objects.filter(id=True)
+        if not cust:
+            return Response({'error': 'Invalid token'})            
+        reviews = destination_Review(cust_id_id=cust_id, destinstion_id=destinstion_id, rating=rating, review=review, created=created, updated=updated, status=status, user_id=user_id)
+        reviews.save()             
+        serializer = destinationReviewSerializer(reviews)    
+        return Response(serializer.data)
 
-# from rest_framework.decorators import api_view
-# from rest_framework.response import Response
-# from rest_framework import status
-# from rest_framework.authentication import TokenAuthentication
-# from rest_framework.decorators import authentication_classes, permission_classes
-# from rest_framework.permissions import IsAuthenticated
-# from .models import organization, organization_images, destn_facility, facility_image, facility_price
+#add memory
+class MemoryCreateView(generics.CreateAPIView):
+    queryset = memories.objects.all()
+    serializer_class = MemorySerializer
 
-# @api_view(['POST'])
-# def book_hotel(request, hotel_id):
-#     token = request.data.get('token')
-#     # check_in = request.data.get('check_in')
-#     # check_out = request.data.get('check_out')
-#     room_id = request.data.get('room_id')
-#     num_of_guests = request.data.get('num_of_guests')
+    def perform_create(self, serializer):
+        images = self.request.POST.getlist('images')
+        memory = serializer.save()
+        for img in images:
+            memories_img.objects.create(image=img, memory=memory)
 
-#     # Validate token
-#     # (You can implement your own token validation logic)
-#     if not validate_token(token):
-#         return Response({'message': 'Invalid token'}, status=status.HTTP_401_UNAUTHORIZED)
+# travel memories(view memories)
+class travelmemoriesViewSet(viewsets.ModelViewSet):
+    queryset = memories.objects.all()
+    serializer_class = MemorySerializer
 
-#     # Get hotel and room details
-#     try:
-#         hotel = organization.objects.get(id=hotel_id)
-#         room = destn_facility.objects.get(id=room_id)
-#     except Hotel.DoesNotExist or Room.DoesNotExist:
-#         return Response({'message': 'Invalid hotel or room id'}, status=status.HTTP_400_BAD_REQUEST)
 
-#     # Create booking
-#     booking = booking.objects.create(
-#         hotel=hotel,
-#         room=room,
-#         check_in=check_in,
-#         check_out=check_out,
-#         num_of_guests=num_of_guests,
-#     )
+# memory details
+from rest_framework import generics
+from .models import memories
+from .serializers import MemorydetailsSerializer
 
-#     # Calculate total price
-#     room_price = RoomPrice.objects.filter(room=room,).first()
-#     total_price = room_price.price * (check_out - check_in).days
+class MemoryDetailAPIView(generics.RetrieveAPIView):
+    queryset = memories.objects.all()
+    serializer_class = MemorydetailsSerializer
+    lookup_field = 'id'
 
-#     # Return response
-#     return Response({
-#         'message': 'Booking created successfully',
-#         'total_price': total_price,
-#         'booking_id': booking.id,
-#     }, status=status.HTTP_201_CREATED)
-    
-# booking hotel using token
-# from django.http import JsonResponse
-# from django.views.decorators.csrf import csrf_exempt
-# from .models import organization, organization_images, destn_facility, facility_image, facility_price
-# from rest_framework.authentication import TokenAuthentication
-# from rest_framework.decorators import authentication_classes, permission_classes
-# from rest_framework.permissions import IsAuthenticated
-
-# @csrf_exempt
-# @authentication_classes([TokenAuthentication])
-# @permission_classes([IsAuthenticated])
-# def book_hotel(request):
-#     if request.method == 'POST':
-#         token = request.POST.get('token')
-#         organization_id = request.POST.get('organization_id')
-#         destn_facility_id = request.POST.get('destn_facility_id')
-        
-#         # Check if the token is valid
-#         if request.user.auth_token.key == token:
-#             try:
-#                 # Retrieve the hotel data
-#                 hotel = organization.objects.get(id=id)
-#                 hotel_images = organization_images.objects.filter(hotel=organization_id)
-                
-#                 # Retrieve the room data
-#                 room = destn_facility.objects.get(id=id)
-#                 room_images = facility_image.objects.filter(room=destn_facility_id)
-#                 room_price = facility_price.objects.filter(room=destn_facility_id)
-                
-#                 # Create the JSON response
-#                 response_data = {
-#                     'organization': {
-#                         'name': hotel.title,
-#                         'address': hotel.address,
-#                         'images': [hotel_images.image_url for hotel_images in organization_images]
-#                     },
-#                     'facility': {
-#                         'types': room.types,
-#                         'amount':room_price.amount,
-#                         'images': [room_images.image_url for room_images in facility_image]
-#                     }
-#                 }
-                
-#                 return JsonResponse(response_data)
-#             except:
-#                 # Return an error response if there is an issue with the database
-#                 return JsonResponse({'error': 'An error occurred while retrieving the data'})
-#         else:
-#             # Return an error response if the token is invalid
-#             return JsonResponse({'error': 'Invalid token'})
 
 
 

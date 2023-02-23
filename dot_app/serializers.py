@@ -10,46 +10,49 @@ class customerRegister(serializers.ModelSerializer):
     # password2=serializers.CharField(style={'input_type':'password'},write_only=True)
     class Meta:
         model=customer
-        fields=('id','name','pwd','email','phone','gender','cust_type','status','first_name','last_name')
+        fields=('id','name','email','phone','gender','cust_type','status','first_name','last_name')
 class CustomerProfileSerializer(serializers.ModelSerializer):
     cust = customerRegister()
     class Meta:
         model = cust_profile
         fields = ['cust','address']
-    def save(self):
-        # pwd=self.validated_data['pwd']
-        # password2=self.validated_data['password2']
-        # name=self.validated_data['name']
-        # print(name)
-        # cst= customer.objects.filter(name=self.validated_data['name']).count()
-        # print(cst)
-        # if password != password2:
-        #     raise serializers.ValidationError({'password':'password does not match'})
-        # if cst>0:
-        #     raise serializers.ValidationError({'name':'User already exist'})
-        # else:
-        reg=customer(
-                name=self.validated_data['name'],
-                email=self.validated_data['email'], 
-                pwd=self.validated_data['pwd'],                   
-                first_name=self.validated_data['first_name'],
-                last_name=self.validated_data['last_name'],
-                phone=self.validated_data['phone'],
-                cust_type=self.validated_data['cust_type'],    
-                # address=self.validated_data['address'],               
-                status=self.validated_data['status'],                                                     
-        )
-        reg.save()
-        profile = cust_profile(
-            cust_id = reg.id, 
-            phone=self.validated_data['phone'],
-            email=self.validated_data['email'], 
-            status=self.validated_data['status'], 
+    # def save(self):
+    #     # pwd=self.validated_data['pwd']
+    #     # password2=self.validated_data['password2']
+    #     name=self.validated_data.get('name')
+    #     print(name)
+    #     cst= customer.objects.filter(name=self.validated_data).count()
+    #     print(cst)
+    #     # if password != password2:
+    #     #     raise serializers.ValidationError({'password':'password does not match'})
+    #     # if cst>0:
+    #     #     raise serializers.ValidationError({'name':'User already exist'})
+    #     # else:
+    #     reg=customer(
+    #             name=self.validated_data['name'],
+    #             email=self.validated_data['email'], 
+    #             pwd=self.validated_data['pwd'],                   
+    #             first_name=self.validated_data['first_name'],
+    #             last_name=self.validated_data['last_name'],
+    #             phone=self.validated_data['phone'],
+    #             cust_type=self.validated_data['cust_type'],    
+    #             # address=self.validated_data['address'],               
+    #             status=self.validated_data['status'],                                                     
+    #     )
+    #     reg.save()
+    #     profile = cust_profile(
+    #         cust_id = reg.id, 
+    #         phone=self.validated_data['phone'],
+    #         email=self.validated_data['email'], 
+    #         address=self.validated_data['address'],
+             
+               
+    #         status=self.validated_data['status'], 
         
-        )
-        profile.save()
+    #     )
+    #     profile.save()
 
-        return (reg)
+    #     return (reg)
     
 
 
@@ -332,10 +335,44 @@ from .models import customer
 class AccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = customer
-        fields = ['id', 'name', 'email', 'phone','gender','address']
+        fields = ['id', 'name', 'email', 'phone','gender']
         extra_kwargs = {'password': {'write_only': True}}
 
 
+# from rest_framework import serializers
+# from rest_framework.validators import UniqueValidator
+# from django.core.validators import validate_email
+# from phonenumbers import parse, is_valid_number
+
+# class EditAccountSerializer(serializers.ModelSerializer):
+#     email = serializers.EmailField(
+#         required=True,
+#         validators=[UniqueValidator(queryset=customer.objects.all())]
+#     )
+#     phone_number = serializers.CharField(
+#         required=True,
+#         max_length=17
+#     )
+
+#     def validate_email(self, value):
+#         try:
+#             validate_email(value)
+#         except:
+#             raise serializers.ValidationError("Invalid email address")
+#         return value
+
+#     def validate_phone_number(self, value):
+#         try:
+#             parsed_number = parse(value, None)
+#             if not is_valid_number(parsed_number):
+#                 raise serializers.ValidationError("Invalid phone number")
+#         except:
+#             raise serializers.ValidationError("Invalid phone number")
+#         return value
+
+#     class Meta:
+#         model = customer
+#         fields = ('email', 'phone')
 
 from rest_framework.exceptions import ValidationError
 import re
@@ -369,17 +406,17 @@ class edit_customerSerializer(serializers.ModelSerializer):
             raise ValidationError('Invalid email format')
         return email
 
-    def validate_phone(phone):
-        if not re.match(r'^\+?\d{10,14}$', phone):
-            raise ValidationError('Invalid phone number format')
-        return phone
+#     def validate_phone(phone):
+#         if not re.match(r'^\+?\d{10,14}$', phone):
+#             raise ValidationError('Invalid phone number format')
+#         return phone
 
 
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 from rest_framework import serializers
 
-from .models import customer
+from .models import customer,memories_img,memories
 
 
 class CustomerSerializer(serializers.ModelSerializer):
@@ -403,13 +440,40 @@ class CustomerSerializer(serializers.ModelSerializer):
 
 
 
-from .models import facility_Review
+from .models import facility_Review,destination_Review
 
 class facilityReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = facility_Review
         fields = '__all__'
+class destinationReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = destination_Review
+        fields = '__all__'
 
+# memory
+class memoryImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = memories_img
+        fields = ('id', 'image')
+
+class MemorySerializer(serializers.ModelSerializer):
+    images = memoryImageSerializer(many=True, read_only=True)
+    class Meta:
+        model = memories      
+        fields = ('id', 'cust_id','destinstion','created','updated','destn_facility', 'experience', 'memories','visited_date', 'images','status')
+
+# memory details
+from .models import memories
+class memorydetailsImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = memories_img
+        fields = ('id', 'image')
+class MemorydetailsSerializer(serializers.ModelSerializer):
+    images = memoryImageSerializer(many=True, read_only=True)
+    class Meta:
+        model = memories
+        fields = '__all__'
 
 
 # book hotel
