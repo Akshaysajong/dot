@@ -21,36 +21,16 @@
         <form class="form-horizontal" method="POST" action="/dot/update_destination/" enctype="multipart/form-data">{% csrf_token %}
           {% for x in destn %}
           <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <label for="destn_area" class="form-label">Destination Area</label>
                 <input type="text" class="form-control" name="destn_area" id="destn_area" value="{{x.d_area.name}}" readonly required><br>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-4">
                 <input type="text" class="form-control" name="d_id" id="d_id" value="{{x.id}}" hidden required>      
                 <label for="title" class="form-label">Destination</label>
                 <input type="text" class="form-control" name="destn" id="destn" value="{{x.name}}" required>
               </div>
-              <div class="col-md-6">
-                <label for="address" class="form-label">Address</label> 
-                <textarea type="text"  class="form-control htmlarea" placeholder="" name="address" id="address" style="height: 100px" required>{{x.address}}</textarea><br>
-              </div>
-              
-              <div class="col-md-6">
-                <label for="description" class="form-label">Description</label>
-                <textarea type="text"  class="form-control htmlarea" placeholder="" name="description" id="description" style="height: 100px" required>{{x.description}}</textarea><br>
-                
-              </div>
-              <div class="col-md-6">
-                <label for="culture" class="form-label">culture</label>
-                <textarea type="text"  class="form-control htmlarea" placeholder="" name="culture" id="culture" style="height: 100px" required>{{x.culture}}</textarea><br>
-
-              </div>
-              <div class="col-md-6">
-                <label for="climate" class="form-label">climate</label>
-                <textarea type="text"  class="form-control htmlarea" placeholder="" name="climate" id="climate" style="height: 100px" required>{{x.climate}}</textarea><br>
-
-              </div>
-              <div class="col-md-6">
+              <div class="col-md-4">
                 <label for="destinationtype" class="form-label">Destination Type</label>
                 <select id="destinationtype" name="destinationtype" class="form-select">
                   <option value="destn_type">{{x.destn_type}}</option>
@@ -59,19 +39,40 @@
 
                 </select>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-4">
+                <label for="address" class="form-label">Address</label> 
+                <textarea type="text"  class="form-control htmlarea" placeholder="" name="address" id="address" style="height: 100px" required>{{x.address}}</textarea><br>
+              </div>
+              
+              <div class="col-md-4">
+                <label for="description" class="form-label">Description</label>
+                <textarea type="text"  class="form-control htmlarea" placeholder="" name="description" id="description" style="height: 100px" required>{{x.description}}</textarea><br>
+                
+              </div>
+              <div class="col-md-4">
+                <label for="culture" class="form-label">culture</label>
+                <textarea type="text"  class="form-control htmlarea" placeholder="" name="culture" id="culture" style="height: 100px" required>{{x.culture}}</textarea><br>
+
+              </div>
+              <div class="col-md-4">
+                <label for="climate" class="form-label">climate</label>
+                <textarea type="text"  class="form-control htmlarea" placeholder="" name="climate" id="climate" style="height: 100px" required>{{x.climate}}</textarea><br>
+
+              </div>
+              
+              <div class="col-md-4">
                 <label for="lattitude" class="form-label">Lattitude</label>
                 <input type="text" class="form-control" name="lattitude" id="lattitude" value="{{x.lattitude}}" required><br>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-4">
                 <label for="longitude" class="form-label">Longitude</label>
                 <input type="text" class="form-control" name="longitude" id="longitude" value="{{x.longitude}}" required><br>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-4">
                 <label for="images" class="form-label">Choose Images</label><br>
                   <input type="file" class="form-control"  placeholder="" name="image" id="image" multiple >
                 </div> 
-              <div class="col-md-6">
+              <div class="col-md-4">
                 <label for="status" class="form-label">Status </label>
                 <input type="checkbox" id="status" name="status" value="1" {% if x.status %}checked{% endif %}/>
                 

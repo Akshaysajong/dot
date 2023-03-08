@@ -64,7 +64,7 @@
                     {% if perms.dot_app.delete_destn_facility %}
                       <td>
                         <div class="btn-group me-2">
-                          <a href="/dot/delete_organization/?a={{x.id}}"><button class="btn-link border-0 bg-transparent text-body" ><span data-feather="trash-2" ></span></button> </a>
+                          <a href="/dot/deletefacility/?a={{x.id}}"><button class="btn-link border-0 bg-transparent text-body" ><span data-feather="trash-2" ></span></button> </a>
                           <!-- <button class="btn-link border-0 bg-transparent text-body" type="submit" onclick="delete_hotel('{{x.id}}')"><span data-feather="trash-2" ></span></button> -->
                         </div>
                       </td>
@@ -72,9 +72,7 @@
                     </tr>
                   </tbody>
               {% endfor %}
-            
             </table>
       </div>   
-     
   </main>
 {% endblock %}  

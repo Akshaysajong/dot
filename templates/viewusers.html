@@ -39,9 +39,10 @@
                   <th scope="col">Email</th>
                   <th scope="col">Staff</th>
                   <th scope="col">Roll</th> 
+                  <th scope="col">Status</th> 
                 </tr>
               </thead>
-              {% for x in user %}
+              {% for x in users %}
               <tbody>
                 <tr>
                     <td >{{x.first_name}}</td>
@@ -50,7 +51,15 @@
                     <td >{{x.email}}</td>
                     <td >{{x.is_staff}}</td>
                     <!-- <td >{{x.is_staff}}</td> -->
-                    <td ></td>
+                    <td >
+                      {% for group in x.groups.all %}
+                        {{ group.name }}{% if not forloop.last %}, {% endif %}
+                        {% empty %}
+                        None
+                      {% endfor %}
+                    </td>
+                    <td >{{x.is_active}}</td>
+
                     <td>  
                       <div class="btn-group me-2">
                         <a href="/dot/edit_user/?a={{x.id}}"><button class="btn-link border-0 bg-transparent text-body" ><span data-feather="edit-2"></span></button> </a>

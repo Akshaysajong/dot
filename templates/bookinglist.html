@@ -9,15 +9,15 @@
             <li class="breadcrumb-item"><a href="/dot/">Home</a></li>
             <li class="breadcrumb-item">Booking List</li>
           </ol></h1>
-        <!-- <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-toolbar mb-2 mb-md-0">
             <div class="btn-toolbar mb-2 mb-md-0">
               {% if perms.dot_app.add_hotel %}
                 <div class="btn-group me-2">
-                  <a href="/dot/addfacility/"><button type="button" class="btn btn-sm">Add Facility</button></a>
+                  <a href="/dot/exportbookinglist/"><button type="button" class="btn btn-sm">Export</button></a>
                 </div>
                 {% endif %}
               </div>
-        </div> -->
+        </div>
       </div>
       
       <div class="table-responsive card rounded-1 border-0 shadow mt-4 mb-4">
@@ -27,14 +27,15 @@
             
               <thead>
                 <tr> 
-                  <th scope="col">CUSTOMER NAME</th>
+                  <th scope="col">CUSTOMER</th>
                   <th scope="col">TITLE</th>                             
                   <th scope="col">BOOKING TYPE</th>
                   <th scope="col">FROM</th>
                   <th scope="col">TO</th>
                   <th scope="col">CREATED DATE</th>
+                  <th scope="col">UPDATED DATE</th>
                   <th scope="col">STATUS</th>
-                  <th><input type="checkbox" name="ck" class="hh" value="1"></th>
+                  <th> <input type="checkbox" name="checkallv" class="checkall" value="1"></th>
                 </tr>
               </thead>
               <tbody>
@@ -46,27 +47,38 @@
                     <td >{{x.bk_from}}</td> 
                     <td >{{x.bk_to}}</td> 
                     <td >{{x.created}}</td> 
+                    <td >{{x.updated}}</td> 
                     <td >{{x.status}}</td> 
                     <td>
-                      <input type="checkbox" name="checkbook " value="{{x.id}}">
-                      <!-- <div class="btn-group me-2">
-                        <input type="checkbox" id="status" name="status" value="{{x.id}}" onclick="myFunction(this, '{{x.id}}')"/>
-                      </div> -->
+                      <input type="checkbox" name="checkbook " class="bulklv checkme" value="{{x.id}}">
                     </td>
                 </tr>
                 {% endfor %}
               </tbody>
             </table>
-            <div class="row">    
+            <!-- <div class="row">    
               <div class="btn-group me-2 d-flex p-2 ">
                 <div class="btn-toolbar mb-2 mb-md-1 justify-content-end ">
-                  <!-- <a href="/dot/edit_destinationarea/?a={{x.id}}"><button class="btn btn-primary" >Approve</button></a> -->
+                  
 
-                  <div class="ps-3"><button type="submit" class=" btn btn-primary" name="approve" value="approve" >approve</button></div>
+                  <div class="ps-3"><button type="submit" class=" btn btn-primary" name="approve" value="approve" >Approve</button></div>
                   <div class="ps-3"><button type="submit" class=" btn btn-primary" >Delete</button></div>
                 </div>
               </div>
+            </div> -->
+            <!-- <a href="/dot/edit_destinationarea/?a={{x.id}}"><button class="btn btn-primary" >Approve</button></a> -->
+            {% if perms.dot_app.change_booking %}
+            <div style="border-top:1px solid #ccc; margin-top: 50px; padding: 5px;">
+              <div class="row float-end">
+                <div class="col-md-12 ">
+                  <button type="submit" class=" btn btn-primary" name="approve" value="approve" >Approve</button>
+                  {% if perms.dot_app.delete_booking %}
+                  <button type="submit" class=" btn btn-primary" >Delete</button>
+                  {% endif %}
+                </div>
+              </div>
             </div>
+            {% endif %}
           </form>
     </div>   
 

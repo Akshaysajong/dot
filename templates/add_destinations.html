@@ -32,9 +32,13 @@
                 <input type="text" class="form-control" name="destn" id="destn" required><br>
               </div>
               <div class="col-md-4">
-                <label for="images" class="form-label">Choose Images</label><br>
-                  <input type="file" class="form-control"  placeholder="" name="image" id="image" multiple >
-                </div> 
+                <label for="destinationtype" class="form-label">Destination Type</label>
+                <select id="destinationtype" name="destinationtype" class="form-select">
+                  <option value="0">Choose...</option>
+                  <option value="beach">Beach</option>
+                  <option value="national part">National Park</option>
+                </select>
+              </div>
               <div class="col-md-4">
                 <label for="address" class="form-label">Address</label>
                 <textarea class="form-control htmlarea" placeholder="" name="address" id="address" style="height: 100px"></textarea><br>
@@ -52,15 +56,6 @@
                 <textarea   class="form-control htmlarea" placeholder="" name="culture" id="culture" style="height: 100px"></textarea><br>
               </div>
               <div class="col-md-4">
-                <label for="destinationtype" class="form-label">Destination Type</label>
-                <select id="destinationtype" name="destinationtype" class="form-select">
-                  <option value="0">Choose...</option>
-                  <option value="beach">Beach</option>
-                  <option value="national part">National Park</option>
-
-                </select>
-              </div>
-              <div class="col-md-4">
                 <label for="lattitude" class="form-label">Lattitude</label>
                 <input type="text" class="form-control" name="lattitude" id="lattitude" required><br>
               </div>
@@ -68,6 +63,10 @@
                 <label for="longitude" class="form-label">Longitude</label>
                 <input type="" class="form-control" name="longitude" id="longitude" required><br>
               </div>
+              <div class="col-md-4">
+                <label for="images" class="form-label">Choose Images</label><br>
+                  <input type="file" class="form-control"  placeholder="" name="image" id="image" multiple >
+              </div> 
               <div class="col-md-4">
                 <label for="status" class="form-label">Status </label>
                 <input type="checkbox" id="status" name="status" value="1">       

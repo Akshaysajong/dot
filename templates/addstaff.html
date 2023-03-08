@@ -41,11 +41,11 @@
                     </div>
                     <div class="col-md-4">
                       <label for="password" class="form-label">Password</label>
-                      <input type="text" class="form-control" name="password" value="" id="password" required><br>
+                      <input type="password" class="form-control" name="password" value="" id="password" required><br>
                     </div>
                     <div class="col-md-4">
                       <label for="password_confirmation" class="form-label">Password confirmation</label>
-                      <input type="text" class="form-control" name="password_confirmation" value="" id="password_confirmation" required><br>
+                      <input type="password" class="form-control" name="password_confirmation" value="" id="password_confirmation" required><br>
                     </div>
                     <div class="col-md-4">
                         <label for="contact_number" class="form-label">Contact Number</label>
@@ -57,7 +57,7 @@
                     </div>
                     <div class="col-md-4">
                         <label for="roll" class="form-label">Roll</label>
-                        <select name="roll" id="roll" class="form-control" onchange="">
+                        <select name="roll" id="roll" class="form-control" >
                             <option value="0">--Select--</option>    
                             {% for x in gp %}
                             <option value="{{x.id}}">{{x.name}}</option><br>

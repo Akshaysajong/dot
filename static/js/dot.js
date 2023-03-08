@@ -295,3 +295,12 @@ if(result){
           
 }
 }
+
+$(document).ready(function() {
+    $('').DataTable();
+    $('').DataTable();
+    $('').DataTable({"order": []});
+    $(".checkall").click(function () {
+       $('input:checkbox.checkme').not(this).prop('checked', this.checked);
+    });
+} );
