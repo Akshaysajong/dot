@@ -119,10 +119,7 @@ class FacilitytypeForm(forms.ModelForm):
                                 widget=forms.TextInput(attrs={'class': 'form-control'}))
     description= forms.CharField(max_length=100,required=True,
                              widget=forms.TextInput(attrs={'class': 'form-control'}))
-    # status= forms.CharField(
-    #                          widget=forms.CheckboxInput(attrs={'class': 'form-control'}))
-
-    status= forms.BooleanField(required=True, widget=forms.CheckboxInput())
+    status= forms.BooleanField(initial=False, required=False, widget=forms.CheckboxInput())
 
     class Meta:
         model = facility_type

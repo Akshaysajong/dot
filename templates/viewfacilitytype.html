@@ -25,7 +25,8 @@
               <thead>
                 <tr>
                   <th scope="col">TITLE</th>
-                  <th scope="col">DESCRIPTION</th>                              
+                  <th scope="col">DESCRIPTION</th> 
+                  <th scope="col">STATUS</th>                              
                 </tr>
               </thead>
               {% for x in faclty_type %}
@@ -33,6 +34,7 @@
                 <tr>
                     <td >{{x.title}}</td>
                     <td >{{x.description}}</td> 
+                    <td >{{x.status}}</td>
                     {% if perms.dot_app.change_facility_type %}                
                       <td>
                         <div class="btn-group me-2">

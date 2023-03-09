@@ -615,21 +615,21 @@ def dot_edite_organization(request):
 def dot_updateorganization(request):
     if request.method == 'POST':
         user = request.user
-        first_name = request.POST['first_name']
-        last_name = request.POST['last_name']
+        # first_name = request.POST['first_name']
+        # last_name = request.POST['last_name'] 
+        # title = request.POST['title']
+        # org_type = request.POST['org_type']
+        # destn = request.POST['destn']
+        # contact_person = request.POST['contact_person']
+        # contact_number = request.POST['contact_number']
+        # website = request.POST['website']
+        # state = request.POST['state']
+        # city = request.POST['city']
+        # address = request.POST['address']
+        # proof = request.POST['proof']
         username = request.POST['username']
         or_id = request.POST['or_id']
-        title = request.POST['title']
-        org_type = request.POST['org_type']
-        destn = request.POST['destn']
-        contact_person = request.POST['contact_person']
-        contact_number = request.POST['contact_number']
-        website = request.POST['website']
-        email = request.POST['email']
-        state = request.POST['state']
-        city = request.POST['city']
-        address = request.POST['address']
-        proof = request.POST['proof']
+        email = request.POST['email']      
         img = request.FILES.getlist('image')
         status = request.POST.get('status', False)
         deletedimg = request.POST['deletedfiles']
@@ -643,10 +643,11 @@ def dot_updateorganization(request):
                 usr.username = username
                 usr.first_name = request.POST['first_name']
                 usr.last_name = request.POST['last_name']
-                usr.email = request.POST['state']
+                usr.email = email
+                usr.is_active = status
                 usr.save()
-                orgatn.update(title=title, org_type=org_type, destinstion_id=destn, contact_person=contact_person, contact_number=contact_number, website=website,
-                state=state, city=city, address=address, email=email, proof=proof, status=status)
+                orgatn.update(title=request.POST['title'], org_type=request.POST['org_type'], destinstion_id=request.POST['destn'], contact_person=request.POST['contact_person'], contact_number=request.POST['contact_number'], website=request.POST['website'],
+                state=request.POST['state'], city=request.POST['city'], address=request.POST['address'], email=email, proof=request.POST['proof'], status=status)
                 for x in img:
                         ad_img=organization_images(organization_id=or_id, images=x)
                         ad_img.save()
@@ -691,7 +692,6 @@ def dot_addfacilitytype(request):
             title = form.cleaned_data['title']
             description = form.cleaned_data['description']
             status = form.cleaned_data['status']
-            print(status)
             faclty_typ = facility_type(title=title, description=description, status=status)
             faclty_typ.save()
             return redirect('dot_viewfacilitytype')
@@ -725,7 +725,8 @@ def dot_update_facilitytype(request):
         title = request.POST['title']
         description = request.POST['description']
         flty_id = request.POST['flty_id']
-        facility_type.objects.all().filter(id=flty_id).update(title=title, description=description)
+        status = request.POST.get('status', False)
+        facility_type.objects.all().filter(id=flty_id).update(title=title, description=description, status=status)
     return redirect('dot_viewfacilitytype')
 
 #delete facility type
@@ -1023,10 +1024,10 @@ def dot_updatecontent(request):
                 j = j + 1
             if length < count:
                 for x in img:
-                    c=content_images.objects.all().get(id=x)
-                    if c.image:
-                        c.image.delete()
-                    c.delete() 
+                    cont_img=content_images.objects.all().get(id=x)
+                    if cont_img.image:
+                        cont_img.image.delete()
+                    cont_img.delete() 
         else:
             messages.error(request, "You are not autherized to edit !!!!")
     return redirect('dot_contentlist')
