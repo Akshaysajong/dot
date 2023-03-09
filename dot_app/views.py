@@ -11,8 +11,8 @@ from .form import RegisterForm,AddHotelsForm, FacilitytypeForm, EntrollmentForm
 from django.http import JsonResponse
 from django.contrib import messages
 import datetime
-
-
+from django.contrib.auth.decorators import user_passes_test
+from django.db.models import Q
 
 def login_user(request):
     form = AuthenticationForm
@@ -43,8 +43,8 @@ def logoutuser(request):
     return redirect('login')
 
 @login_required(login_url="/login")
+@permission_required('dot_app.add_user', raise_exception=True)
 def dot_adduser(request):
-    
     # if request.user.groups.filter(name='marketing').exists():
     #     form = Register
     # else:
@@ -81,6 +81,7 @@ def dot_add_groups(request):
     return redirect('dot_groups')
 
 @login_required(login_url="/login")
+@permission_required('dot_app.view_user', raise_exception=True)
 def dot_viewusers(request):
         user = request.user    
         if user.is_superuser:    
@@ -89,14 +90,22 @@ def dot_viewusers(request):
             # g= user.groups.filter(user=user.id)
             # print(g)
             for x in user_groups:
-                print(x.name)
-            return render(request, "viewusers.html",{'user':usr})
+                print(x.id)
+            groups = Group.objects.all()
+            context = {
+                'users': usr,
+                'groups': groups,
+            }
+            
+            return render(request, "viewusers.html",context)
         else:
-            u= User.objects.filter(is_superuser = '0').exclude(username=user)
+            u = User.objects.filter(is_superuser = '0').exclude(username=user)
+            
             return render(request, "viewusers.html",{'user':u})
 
 
 @login_required(login_url="/login")
+@permission_required('dot_app.change_user', raise_exception=True)
 def dot_edit_user(request):
     ur_id = request.GET['a']
     usr = User.objects.all().filter(id=ur_id)
@@ -104,11 +113,12 @@ def dot_edit_user(request):
     return render(request, "edituser.html",{'user':usr})
 
 @login_required(login_url="/login")
+@permission_required('dot_app.change_user', raise_exception=True)
 def dot_updateuser(request):
     if request.method == 'POST':
         ur_id = request.POST['ur_id']
         username = request.POST['name']
-        uu =  request.POST['is_staff']
+        uu =  request.POST.get('is_staff', False)
         print(uu)
         usr = User.objects.get(id=ur_id)
         if User.objects.filter(username=username).exclude(id=ur_id).exists(): 
@@ -119,18 +129,20 @@ def dot_updateuser(request):
             usr.first_name = request.POST['first_name']
             usr.last_name = request.POST['last_name']
             usr.email = request.POST['email']
-            usr.is_staff = request.POST['is_staff']
+            usr.is_staff = request.POST.get('is_staff', False)
+            usr.is_active = request.POST.get('is_active', False)
             usr.save()
 
     return redirect('dot_viewusers')
 
 @login_required(login_url="/login")
+@permission_required('dot_app.delete_user', raise_exception=True)
 def dot_delete_user(request):
     ur_id = request.GET['a']
     
     return redirect('dot_viewusers')
 
-        
+      
 @login_required(login_url="/login")
 def dot_add_groups_permissions(request):
     g_id = request.GET['a']
@@ -167,7 +179,7 @@ def dot_addhoteldb(request):
         cotry_id = request.POST['country'] 
         sts_id = request.POST['state']
         citi_id = request.POST['city']
-        status = request.POST['status']
+        status = request.POST.get('status', False)
         organtn_id = request.POST['organization']
         gr_id = request.POST.getlist('groups')
         cnty = country.objects.all().filter(id=cotry_id)
@@ -202,12 +214,6 @@ def dot_addhoteldb(request):
 #         stff = userprofile(user_id=user.id,name=name, phone=phone, address=address,department_id=dept[0].department,status=status)
 #         stff.save()
 #     return redirect('dot_add_staff')
-
-# @login_required(login_url="/login")
-# def dot_addhotel(request):
-#     form = AddHotel_staffForm
-#     dept=staff_department.objects.all()
-#     return render(request,'add_hotelstaff.html',{'form':form,'department':dept})
 
 
 
@@ -247,7 +253,6 @@ def delete_hotel(request):
 @login_required(login_url="/login")
 def dot_update_hotel(request):
     if request.method == 'POST':
-        # contact_person = request.POST['contact_person']
         phone= request.POST['phone']
         ho_id = request.POST['ho_id']
         print(ho_id)
@@ -308,14 +313,17 @@ def ajax_state(request):
 
 #add destinstion area template display
 @login_required(login_url="/login")
+@permission_required('dot_app.view_destination_area', raise_exception=True)
 def dot_destination_area(request):
     cntry = country.objects.all()
     stat = state.objects.all()
     destnarea_type = destarea_type.objects.all()
     return render(request, "destinationarea.html",{'country':cntry, 'state':stat, 'destarea_type':destnarea_type})
 
+
 #save destinatin area to database
 @login_required(login_url="/login")
+@permission_required('dot_app.add_destination_area', raise_exception=True)
 def dot_add_destination_area(request):
     if request.method == 'POST':
         user = request.user.id
@@ -323,7 +331,7 @@ def dot_add_destination_area(request):
         place = request.POST['place']
         image = request.FILES['image']
         description = request.POST['description']
-        statu = request.POST['status']
+        statu = request.POST.get('status', False)
         cuntry_id = request.POST['country']
         state_id = request.POST['state']
         destinarea_type = request.POST.getlist('destinationarea_type')
@@ -338,14 +346,24 @@ def dot_add_destination_area(request):
             des.save()    
     return redirect("dot_destination_area")
 
-#edit destination area
+#edit destination area template view
 @login_required(login_url="/login")
+@permission_required('dot_app.change_destination_area', raise_exception=True)
 def dot_edit_destinationarea(request):
     ed_id = request.GET['a']
     destn = destination_area.objects.all().filter(id=ed_id)
-    return render(request, "edit_destinationarea.html",{'destn':destn})
+    destnarea_type = destarea_type.objects.all()
+    d_type = destinationarea_type.objects.filter(destnarea=ed_id)
+    d_type_list = []
+    for x in d_type:
+        # print(x.destnarea_type.name)
+        d_type_list.append(x.destnarea_type.id)
+    print(d_type_list)
+    return render(request, "edit_destinationarea.html",{'destn':destn, 'destarea_type':destnarea_type, 'd_type_list':d_type_list})
 
+#edit destination area save to database
 @login_required(login_url="/login")
+@permission_required('dot_app.change_destination_area', raise_exception=True)
 def dot_update_destinationarea(request):
     if request.method == 'POST':
         user = request.user
@@ -354,24 +372,47 @@ def dot_update_destinationarea(request):
         place = request.POST['place']
         lattitude = request.POST['lattitude']
         longitude = request.POST['longitude']
-        status = request.POST['status']
+        status = request.POST.get('status', False)
+        destinarea_type = request.POST.getlist('destinationarea_type', False)
+        print(destinarea_type)
         dn_ar = destination_area.objects.all().filter(id=da_id)  
         if int(dn_ar[0].c_user) == user.id or user.is_superuser:
-            # status check pending
+            destination_area.objects.all().filter(id=da_id).update(name=destn_area, place=place, longitude=longitude, lattitude=lattitude, status=status)
             if request.FILES.get('image', False):
                 image =  request.FILES['image']
-                destination_area.objects.all().filter(id=da_id).update(name=destn_area, place=place, longitude=longitude, lattitude=lattitude, status=status)
                 old_image = destination_area.objects.get(id=da_id)
                 old_image.image.delete(save=False)
                 old_image.image = image
                 old_image.save()
-            else:
-                destination_area.objects.all().filter(id=da_id).update(name=destn_area, place=place, longitude=longitude, lattitude=lattitude, status=status)
+            
+            for d_type in  destinarea_type:
+                print('44444444444444444')
+                print(d_type)
+                print('555555555555555555555')
+                f = destinationarea_type.objects.exclude(destnarea_type=d_type).filter(destnarea=da_id)
+                p = destinationarea_type.objects.filter(destnarea=da_id, destnarea_type=d_type)
+                if f:
+                    # f.delete()
+                    for x in f:
+                        print(x.destnarea_type.name)
+                    # print('######################################')
+                elif destinationarea_type.objects.filter(destnarea=da_id, destnarea_type=d_type):
+                    print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+                else:
+                    d = destinationarea_type(destnarea_type_id=d_type, destnarea_id=da_id)
+                    # d.save()
+                    print('2222222222222222222222222222222')
+                # print(d)
+                # print("111111111111111111111111111111111")
+                
+
         else:
             messages.error(request, "You are not autherized to edit !!!!")
     return redirect("dot_view_destinationarea")
+
 #delete destination area
 @login_required(login_url="/login")
+@permission_required('dot_app.delete_destination_area', raise_exception=True)
 def delete_darea(request):
     user = request.user
     d_id = request.GET['d_id']
@@ -387,18 +428,21 @@ def delete_darea(request):
 
 #view destination area list
 @login_required(login_url="/login")
+@permission_required('dot_app.view_destination_area', raise_exception=True)
 def dot_view_destinationarea(request):
     destn_area = destination_area.objects.all()
     return render(request, "view_destinationarea.html",{'destn_area':destn_area})
 
-#add destination template
+#add destination template view
 @login_required(login_url="/login")
+@permission_required('dot_app.add_destinstions', raise_exception=True)
 def dot_destinations(request):
     destn_area = destination_area.objects.all()
     return render(request, "add_destinations.html",{'destn_area':destn_area})
 
 #save destination to database 
 @login_required(login_url="/login")
+@permission_required('dot_app.add_destinstions', raise_exception=True)
 def dot_add_destination(request):
     if request.method ==  'POST':
         user = request.user.id
@@ -412,7 +456,8 @@ def dot_add_destination(request):
         lattitude = request.POST['lattitude']
         longitude = request.POST['longitude']
         destinationtype = request.POST['destinationtype']
-        dstn = destinstions(name=destn, d_area_id=destn_area, address=address, description=description, climate=climate, culture=culture, longitude=longitude, lattitude=lattitude, c_user=user ,destn_type=destinationtype)
+        status = request.POST.get('status', False)
+        dstn = destinstions(name=destn, d_area_id=destn_area, address=address, description=description, climate=climate, culture=culture, longitude=longitude, lattitude=lattitude, c_user=user ,destn_type=destinationtype, status=status)
         dstn.save()
         for x in img:
             b=destination_img(destinstions_id=dstn.id, image=x)
@@ -421,6 +466,7 @@ def dot_add_destination(request):
 
 #view destination list
 @login_required(login_url="/login")
+@permission_required('dot_app.view_destinstions', raise_exception=True)
 def dot_view_destination(request):
     destn = destinstions.objects.all()
     destn_list=[]
@@ -429,10 +475,12 @@ def dot_view_destination(request):
         im =''
         if img:
             im = img[0].image
-        destn_list.append({'id':x.id, 'name':x.name,'address':x.address , 'description':x.description,'climate':x.climate,'culture':x.culture, 'image':im, 'd_area':x.d_area.name, 'destn_type':x.destn_type})
+        destn_list.append({'id':x.id, 'name':x.name,'address':x.address , 'description':x.description,'climate':x.climate,'culture':x.culture, 'image':im, 'd_area':x.d_area.name, 'destn_type':x.destn_type, 'status':x.status})
     return render(request, "view_destination.html",{'destn_list':destn_list})
 
+#delete destination 
 @login_required(login_url="/login")
+@permission_required('dot_app.delete_destinstions', raise_exception=True)
 def delete_destination(request):
     user = request.user
     d_id = request.GET['d_id']
@@ -444,14 +492,18 @@ def delete_destination(request):
     dat = ['Destination area deleted']
     return JsonResponse(dat, safe=False)  
 
+#edit destination template view
 @login_required(login_url="/login")
+@permission_required('dot_app.change_destinstions', raise_exception=True)
 def dot_editdestination(request):
     e_id = request.GET['a']
     destn = destinstions.objects.all().filter(id=e_id)
     img = destination_img.objects.all().filter(destinstions=e_id)
     return render(request, 'edit_destination.html', {'destn':destn, 'img':img})
 
+#update destination to database
 @login_required(login_url="/login")
+@permission_required('dot_app.change_destinstions', raise_exception=True)
 def dot_update_destination(request):
     if request.method == 'POST':
         user = request.user
@@ -466,6 +518,7 @@ def dot_update_destination(request):
         longitude = request.POST['longitude']
         pic = request.FILES.getlist('image')
         images = request.POST['deletedfiles']
+        status = request.POST.get('status', False)
         destinationtype = request.POST['destinationtype']
         img = [int(item) for item in images.split(', ') if item.isdigit()]
         length=len(img)  
@@ -480,7 +533,7 @@ def dot_update_destination(request):
                         c.image.delete()
                     c.delete()           
             # print(count)
-            destinstions.objects.all().filter(id=d_id).update(name=destn,  address=address, description=description, climate=climate, culture=culture, longitude=longitude, lattitude=lattitude, destn_type=destinationtype)
+            destinstions.objects.all().filter(id=d_id).update(name=destn,  address=address, description=description, climate=climate, culture=culture, longitude=longitude, lattitude=lattitude, destn_type=destinationtype, status=status)
             for x in pic:
                 ad_img=destination_img(destinstions_id=d_id, image=x)
                 ad_img.save()
@@ -488,7 +541,9 @@ def dot_update_destination(request):
             messages.error(request, "You are not autherized to edit !!!!")
     return redirect('dot_view_destination')
 
+#add organization template view
 @login_required(login_url="/login")
+@permission_required('dot_app.add_organization', raise_exception=True)
 def dot_addorganization(request):
     form = EntrollmentForm 
     destn = destinstions.objects.all()
@@ -496,8 +551,9 @@ def dot_addorganization(request):
     citi = city.objects.all()
     return render(request,'organizations.html',{'destn':destn, 'stat':stat, 'citi':citi, 'form':form})
 
-
+#save organization to database
 @login_required(login_url="/login")
+@permission_required('dot_app.add_organization', raise_exception=True)
 def dot_addorganization_db(request):
     if request.method == 'POST':
         user = request.user.id
@@ -513,7 +569,7 @@ def dot_addorganization_db(request):
         city_id = request.POST['city']
         address = request.POST['address']
         proof = request.POST['proof']
-        status = request.POST['status']
+        status = request.POST.get('status', False)
         img = request.FILES.getlist('image')
         user_or.groups.add(3)
         org = organization(title=title, org_type=org_type, destinstion_id=destn, contact_person=contact_person, contact_number=contact_number, website=website,
@@ -525,8 +581,9 @@ def dot_addorganization_db(request):
         
         return redirect('dot_organizationlist')
 
-
+#view organization list
 @login_required(login_url="/login")
+@permission_required('dot_app.view_organization', raise_exception=True)
 def dot_organizationlist(request):
     org = organization.objects.all()
     orgstn = []
@@ -539,8 +596,9 @@ def dot_organizationlist(request):
          'address':x.address, 'email':x.email, 'state':x.state, 'city':x.city, 'proof':x.proof, 'status':x.status, 'image':im,})
     return render(request, "organizationlist.html",{'org':orgstn})
 
-
+#edit organization template view
 @login_required(login_url="/login")
+@permission_required('dot_app.change_organization', raise_exception=True)
 def dot_edite_organization(request):
     org_id = request.GET['a']  
     orgn = organization.objects.all().filter(id=org_id)
@@ -551,8 +609,9 @@ def dot_edite_organization(request):
     orgn_user = User.objects.all().filter(id=orgn[0].user_id)
     return render(request, 'editOrganization.html', {'orgn':orgn, 'destn':destn, 'stat':stat, 'citi':citi, 'img':img, 'orgn_user':orgn_user})
 
-
+#update organization in database
 @login_required(login_url="/login")
+@permission_required('dot_app.change_organization', raise_exception=True)
 def dot_updateorganization(request):
     if request.method == 'POST':
         user = request.user
@@ -572,7 +631,7 @@ def dot_updateorganization(request):
         address = request.POST['address']
         proof = request.POST['proof']
         img = request.FILES.getlist('image')
-        status = request.POST['status']
+        status = request.POST.get('status', False)
         deletedimg = request.POST['deletedfiles']
         orgatn = organization.objects.filter(id=or_id)
         usr = User.objects.get(id=orgatn[0].user_id)
@@ -610,8 +669,9 @@ def dot_updateorganization(request):
 
     return redirect('dot_organizationlist')
 
-
+#delete organization
 @login_required(login_url="/login")
+@permission_required('dot_app.delete_organization', raise_exception=True)
 def delete_organization(request):
     org_id = request.GET['org_id']
     print(org_id)
@@ -621,7 +681,9 @@ def delete_organization(request):
     dat = {'msg':'organization deleted'}
     return JsonResponse(dat, safe=False)
 
+#facility type template view
 @login_required(login_url="/login")
+@permission_required('dot_app.add_facility_type', raise_exception=True)
 def dot_addfacilitytype(request):  
     if request.method == 'POST':
         form = FacilitytypeForm(request.POST)
@@ -638,12 +700,16 @@ def dot_addfacilitytype(request):
         form = FacilitytypeForm
     return render(request,'facilitytype.html',{'form':form})
 
+#view facility type template
 @login_required(login_url="/login")
+@permission_required('dot_app.view_facility_type', raise_exception=True)
 def dot_viewfacilitytype(request):
     faclty_type = facility_type.objects.all()
     return render(request,'viewfacilitytype.html',{'faclty_type':faclty_type})
 
+#edit facility type template view
 @login_required(login_url="/login")
+@permission_required('dot_app.change_facility_type', raise_exception=True)
 def dot_edit_facilitytype(request):
     faclity_type_id = request.GET['a']
     print(faclity_type_id)
@@ -651,7 +717,9 @@ def dot_edit_facilitytype(request):
     print(faclty_type)
     return render(request,'editfacilitytype.html',{'faclty_type':faclty_type})
 
+#update facility type in database
 @login_required(login_url="/login")
+@permission_required('dot_app.change_facility_type', raise_exception=True)
 def dot_update_facilitytype(request):
     if request.method == 'POST':
         title = request.POST['title']
@@ -660,21 +728,27 @@ def dot_update_facilitytype(request):
         facility_type.objects.all().filter(id=flty_id).update(title=title, description=description)
     return redirect('dot_viewfacilitytype')
 
+#delete facility type
 @login_required(login_url="/login")
+@permission_required('dot_app.delete_facility_type', raise_exception=True)
 def dot_delete_facilitytype(request):
     flty_id = request.GET['a']
     facility_type.objects.all().filter(id=flty_id).delete()
     return redirect('dot_viewfacilitytype')
 
 
+#destination facility template view
 @login_required(login_url="/login")
+@permission_required('dot_app.add_destn_facility', raise_exception=True)
 def dot_addfacility(request):
     faclty_type = facility_type.objects.all()
     destn = destinstions.objects.all()
     orgtn = organization.objects.all()
     return render(request,'facility.html',{'faclty_type':faclty_type, 'destn':destn, 'orgtn':orgtn})
 
+#save destination facility to database
 @login_required(login_url="/login")
+@permission_required('dot_app.add_destn_facility', raise_exception=True)
 def dot_addfacilitydb(request):
     if request.method == 'POST':
         user_id = request.user.id
@@ -684,7 +758,7 @@ def dot_addfacilitydb(request):
         description = request.POST['description']
         price = request.POST['price']
         img = request.FILES.getlist('image')
-        status = request.POST['status']
+        status = request.POST.get('status', False)
         orgtn_id = organization.objects.all().filter(user_id=user_id)
         faclty = destn_facility(destinstions=destn, orgatn=orgtn_id[0].id, title=title, description=description, types=typ, amount=price, status=status, c_user=user_id)
         faclty.save()
@@ -693,7 +767,9 @@ def dot_addfacilitydb(request):
             f_image.save()
     return redirect('dot_viewfacilitylist')
 
+#view destination facility list
 @login_required(login_url="/login")
+@permission_required('dot_app.view_destn_facility', raise_exception=True)
 def dot_viewfacilitylist(request):
     destn_facilty = destn_facility.objects.all()
     fclty_list = []
@@ -708,15 +784,18 @@ def dot_viewfacilitylist(request):
     # print(fclty_list)
     return render(request, 'viewfacilitylist.html',{'destn_facilty':fclty_list})
 
-
+#edit destination facility template view
 @login_required(login_url="/login")
+@permission_required('dot_app.change_destn_facility', raise_exception=True)
 def dot_edit_facility(request):
     f_id = request.GET['a']
     faclity = destn_facility.objects.all().filter(id=f_id)
     f_img = facility_image.objects.all().filter(facility_id=f_id)
     return render(request, 'editfacility.html', {'faclity':faclity, 'f_img':f_img})
 
+#update destination facility in database
 @login_required(login_url="/login")
+@permission_required('dot_app.change_destn_facility', raise_exception=True)
 def dot_updatefacility(request):
     if request.method == 'POST':
         user = request.user
@@ -726,7 +805,7 @@ def dot_updatefacility(request):
         title = request.POST['title']
         description = request.POST['description']
         amount = request.POST['amount']
-        status = request.POST['status']
+        status = request.POST.get('status', False)
         deletedimg = request.POST['deletedfiles']
         img = request.FILES.getlist('image')
         faclty = destn_facility.objects.all().filter(id=f_id)
@@ -753,8 +832,10 @@ def dot_updatefacility(request):
             messages.error(request, "You are not autherized to edit !!!!")   
     return redirect('dot_viewfacilitylist')
 
+#delete destination facility
 @login_required(login_url="/login")
-def dot_delete_organization(request):
+@permission_required('dot_app.delete_destn_facility', raise_exception=True)
+def dot_deletefacility(request):
     user = request.user
     faclty_id = request.GET['a']
     faclty = destn_facility.objects.all().filter(id=faclty_id)
@@ -765,42 +846,44 @@ def dot_delete_organization(request):
         messages.error(request, "You are not autherized to delete !!!!")
     return redirect('dot_viewfacilitylist')
 
+#add organization staff template view
 @login_required(login_url="/login")
+@permission_required('dot_app.add_userprofile','dot_app.add_user' ,raise_exception=True)
 def dot_addstaff(request):
     gp = Group.objects.all().filter(name='staff')
     return render(request, 'addstaff.html',{'gp':gp})
 
+#save staff to database
 @login_required(login_url="/login")
+@permission_required('dot_app.add_userprofile','dot_app.add_user' ,raise_exception=True)
 def dot_savestaff(request):
     if request.method == 'POST':
         user_id = request.user.id
         username = request.POST['username']
-        first_name = request.POST['first_name']
-        last_name = request.POST['last_name']
-        email = request.POST['email']
-        password = request.POST['password']
-        contact_number = request.POST['contact_number']
-        address = request.POST['address']
-        status = request.POST['status']
-        user_staff = User.objects.create_user(username=username, password=password, first_name=first_name, last_name=last_name, email=email)
-        user_staff.groups.add(4)
-        userpro = userprofile(user_id=user_staff.id, name=username, phone=contact_number, address=address, status=status, c_user=user_id)
+        user_staff = User.objects.create_user(username=username, password=request.POST['password'], first_name=request.POST['first_name'], last_name=request.POST['last_name'], email=request.POST['email'])
+        user_staff.groups.add(request.POST['roll'])
+        userpro = userprofile(user_id=user_staff.id, name=username, phone=request.POST['contact_number'], address=request.POST['address'], status=request.POST.get('status', False), c_user=user_id)
         userpro.save()
     return redirect('dot_stafflist')
 
+#view staff details
 @login_required(login_url="/login")
+@permission_required('dot_app.view_userprofile','dot_app.view_user' ,raise_exception=True)
 def dot_stafflist(request):
-    staff = userprofile.objects.all()
+    staff = userprofile.objects.all().filter(c_user=request.user.id)
     return render(request, 'stafflist.html',{'staff':staff})
 
+#edit staff template view
 @login_required(login_url="/login")
+@permission_required('dot_app.change_userprofile','dot_app.change_user' ,raise_exception=True)
 def dot_editstaff(request):
     s_id = request.GET['a']
-    print(s_id)
     staff = userprofile.objects.all().filter(id=s_id)
     return render(request, 'editstaff.html',{'staff':staff})
 
+#update staff in database
 @login_required(login_url="/login")
+@permission_required('dot_app.change_userprofile','dot_app.change_user' ,raise_exception=True)
 def dot_updatestaff(request):
     if request.method == 'POST':
         user = request.user
@@ -808,7 +891,7 @@ def dot_updatestaff(request):
         username = request.POST['username']
         contact_number = request.POST['contact_number']
         address = request.POST['address']
-        status = request.POST['status']
+        status = request.POST.get('status', False)
         staff = userprofile.objects.all().filter(id=staff_id)
         usr = User.objects.get(id=staff[0].user_id)
         print(staff[0].user_id)
@@ -821,13 +904,16 @@ def dot_updatestaff(request):
                 usr.first_name = request.POST['first_name']
                 usr.last_name = request.POST['last_name']
                 usr.email = request.POST['email']
+                usr.is_active = status
                 usr.save()
                 staff.update(name=username, phone=contact_number, address=address, status=status)
         else:
             messages.error(request, "You are not autherized to edit !!!!")
     return redirect('dot_stafflist')
 
+#delete staff
 @login_required(login_url="/login")
+@permission_required('dot_app.delete_userprofile','dot_app.delete_user' ,raise_exception=True)
 def dot_deletestaff(request):
     user = request.user
     staff_id = request.GET['a']
@@ -839,11 +925,15 @@ def dot_deletestaff(request):
             messages.error(request, "You are not autherized to delete !!!!")
     return redirect('dot_stafflist')
 
+#add content template view
 @login_required(login_url="/login")
+@permission_required('dot_app.add_content' ,raise_exception=True)
 def dot_addcontent(request):
     return render(request, 'content.html')
 
+#save content to database
 @login_required(login_url="/login")
+@permission_required('dot_app.add_content',raise_exception=True)
 def dot_savecontent(request):
     if request.method == 'POST':
         user = request.user
@@ -851,7 +941,7 @@ def dot_savecontent(request):
         image = request.FILES.getlist('image[]')
         overlay = request.POST.getlist('overlay[]')
         weight = request.POST.getlist('weight[]')
-        status = request.POST['status']
+        status = request.POST.get('status', False)
         c_date = datetime.datetime.now()
         contnt = content(content_type=request.POST['content_type'], title=request.POST['title'], page=request.POST['page'], 
             path=request.POST['path'], body=request.POST['body'], created=c_date, status=status, c_user=user.id)
@@ -863,7 +953,9 @@ def dot_savecontent(request):
             i = i + 1
     return redirect('dot_contentlist')
 
+#view content list
 @login_required(login_url="/login")
+@permission_required('dot_app.view_content',raise_exception=True)
 def dot_contentlist(request):
     contnt = content.objects.all()
     content_list = []
@@ -873,7 +965,9 @@ def dot_contentlist(request):
         "image":img[0].image  if img else "" })
     return render(request, 'contentlist.html',{'content_list':content_list})
 
+#delete content
 @login_required(login_url="/login")
+@permission_required('dot_app.delete_content',raise_exception=True)
 def dot_deletecontent(request):
     user = request.user
     content_id = request.GET['a']
@@ -883,17 +977,20 @@ def dot_deletecontent(request):
         cont.delete()
     else:
         messages.error(request, "You are not autherized to delete !!!!")
-    
     return redirect('dot_contentlist')
 
+#edit content view template
 @login_required(login_url="/login")
+@permission_required('dot_app.change_content',raise_exception=True)
 def dot_editcontent(request): 
     content_id = request.GET['a']
     contnt = content.objects.all().filter(id=content_id)
     content_img = content_images.objects.all().filter(cid=content_id)
     return render(request, 'editcontent.html', {'content':contnt, 'content_img':content_img})
 
+#update content in database
 @login_required(login_url="/login")
+@permission_required('dot_app.change_content',raise_exception=True)
 def dot_updatecontent(request):
     if request.method == 'POST':
         user = request.user
@@ -906,7 +1003,7 @@ def dot_updatecontent(request):
         newimage = request.FILES.getlist('image[]')
         newoverlay = request.POST.getlist('overlay[]')
         newweight = request.POST.getlist('weight[]')
-        status=request.POST['status']
+        status = request.POST.get('status', False)
         images = request.POST['deletedfiles']
         img = [int(item) for item in images.split(', ') if item.isdigit()]
         length=len(img)  
@@ -932,46 +1029,54 @@ def dot_updatecontent(request):
                     c.delete() 
         else:
             messages.error(request, "You are not autherized to edit !!!!")
-            
-
     return redirect('dot_contentlist')
 
-@login_required(login_url="/login")
-def dot_deletecontentimage(request):
-    cont_id = request.GET['a']
-    content_images.objects.all().filter(id=cont_id).delete()
-    return redirect('dot_contentlist')
+# @login_required(login_url="/login")
+# def dot_deletecontentimage(request):
+#     cont_id = request.GET['a']
+#     content_images.objects.all().filter(id=cont_id).delete()
+#     return redirect('dot_contentlist')
 
+#add faqcategory  template view
 @login_required(login_url="/login")
+@permission_required('dot_app.add_faq_category',raise_exception=True)
 def dot_addfaq_category(request):
     return render(request, 'faqcategory.html')
 
+#save faqcategory to database
 @login_required(login_url="/login")
+@permission_required('dot_app.add_faq_category',raise_exception=True)
 def dot_savefaqcategory(request):
     if request.method == 'POST':
         name = request.POST['name']
         description = request.POST['description']
-        status = request.POST['status']
+        status = request.POST.get('status', False)
         faq_catgry = faq_category(name=name, description=description, status=status)
         faq_catgry.save()
     return redirect('dot_faqcategorylist')
 
+#view faqcategory list
 @login_required(login_url="/login")
+@permission_required('dot_app.view_faq_category',raise_exception=True)
 def dot_faqcategorylist(request):
     faqcategorylist = faq_category.objects.all()
     return render(request, 'faqcategorylist.html', {'faqcategorylist':faqcategorylist})
 
+#edit faqcategory template view
 @login_required(login_url="/login")
+@permission_required('dot_app.change_faq_category',raise_exception=True)
 def dot_editfaqcategory(request):
     fq_id = request.GET['a']
     faqcategory = faq_category.objects.all().filter(id=fq_id)
     return render(request, 'editfaqcategory.html', {'faqcategory':faqcategory})
 
+#update faqcategory 
 @login_required(login_url="/login")
+@permission_required('dot_app.change_faq_category',raise_exception=True)
 def dot_updatefaqcategory(request):
     if request.method == 'POST':
         fq_id = request.POST['id']
-        stat = request.POST.get('status')
+        stat = request.POST.get('status', False)
         faq_categry = faq_category.objects.all().filter(id=fq_id)
         faq_categry.update(name=request.POST['name'], description=request.POST['description'])
         if stat == 'True': 
@@ -980,92 +1085,102 @@ def dot_updatefaqcategory(request):
             faq_categry.update(status='False')
     return redirect('dot_faqcategorylist')
 
+#delete faqcategory 
 @login_required(login_url="/login")
+@permission_required('dot_app.delete_faq_category',raise_exception=True)
 def dot_deletefaqcategory(request):
     fq_id = request.GET['a']
     faq_category.objects.all().filter(id=fq_id).delete()
     return redirect('dot_faqcategorylist')
 
+#add faq template view
 @login_required(login_url="/login")
+@permission_required('dot_app.add_faq',raise_exception=True)
 def dot_addfaq(request):
     faqcategory = faq_category.objects.all()
     return render(request, 'faq.html', {'faqcategory':faqcategory})
 
+#save faq
 @login_required(login_url="/login")
+@permission_required('dot_app.add_faq',raise_exception=True)
 def dot_savefaq(request):
     if request.method == "POST":
         faq_id = request.POST['content_type']
         title = request.POST['title']
         description = request.POST['description']
-        status = request.POST['status']
+        status = request.POST.get('status', False)
         access_date = datetime.datetime.now()
         fq = faq(title=title, description=description, category=faq_id,access=access_date, status=status)
         fq.save()
     return redirect('dot_viewfaqlist')
 
+#view faq list
 @login_required(login_url="/login")
+@permission_required('dot_app.view_faq',raise_exception=True)
 def dot_viewfaqlist(request):
     faq_list = faq.objects.all()
     return render(request, 'faqlist.html', {'faq_list':faq_list})
 
+#edit faq template view
 @login_required(login_url="/login")
+@permission_required('dot_app.change_faq',raise_exception=True)
 def dot_editfaq(request):
     faq_id = request.GET['a']
     fq = faq.objects.all().filter(id=faq_id)
     fq_category = faq_category.objects.all()
     return render(request, 'editfaq.html',{'faq':fq, 'fq_category':fq_category})
 
+#update faq 
 @login_required(login_url="/login")
+@permission_required('dot_app.change_faq',raise_exception=True)
 def dot_updatefaq(request):
     if request.method == 'POST':
         faq_id = request.POST['id']
-        category_type = request.POST['category_type']
-        title = request.POST['title']
-        description = request.POST['description']
-        status = request.POST['status']
-        faq.objects.all().filter(id=faq_id).update(category=category_type, title=title, description=description, status=status)
+        status = request.POST.get('status', False)
+        faq.objects.all().filter(id=faq_id).update(category=request.POST['category_type'], title=request.POST['title'], description=request.POST['description'], status=status)
     return redirect('dot_viewfaqlist')
 
+#delete faq
 @login_required(login_url="/login")
+@permission_required('dot_app.delete_faq',raise_exception=True)
 def dot_deletefaq(request):
     faq_id = request.GET['a']
     faq.objects.all().filter(id=faq_id).delete()
     return redirect('dot_viewfaqlist')
 
+
 @login_required(login_url="/login")
 def dot_orderlist(request):
     return render(request, 'orderlist.html')
 
+#view booking list
 @login_required(login_url="/login")
+@permission_required('dot_app.view_booking',raise_exception=True)
 def dot_bookinglist(request):
     c_booking = booking.objects.all()
     return render(request, 'bookinglist.html',{'c_booking':c_booking})
 
+#approve booking
 @login_required(login_url="/login")
+@permission_required('dot_app.change_booking',raise_exception=True)
 def dot_approvebooking(request):
     if request.method == "POST":
         booking_status = request.POST.getlist('checkbook')
-        print(booking_status)
         if  request.POST.get('approve') == "approve":
             for x in booking_status:
-                booking.objects.filter(id=x).update(status="approve")
+                booking.objects.filter(id=x).update(status="approved")
         else:
             for x in booking_status:
                 booking.objects.filter(id=x).delete()
-
     return redirect('dot_bookinglist')
 
-# def dot_approvebooking(request):
-#     idd = request.GET['a']
-#     booking.objects.all().filter(id=idd).update(status='approve')
-#     return redirect('dot_bookinglist')
-
+#delete booking
 @login_required(login_url="/login")
+@permission_required('dot_app.delete_booking',raise_exception=True)
 def dot_deletebooking(request):
     idd = request.GET['a']
     booking.objects.filter(id=idd).delete()
     return redirect('dot_bookinglist')
-
 
 @login_required(login_url="/login")
 def dot_content(request):
@@ -1073,35 +1188,57 @@ def dot_content(request):
     print(ctnt)
     return render(request,'content.html',{'content':ctnt})
 
-
+#user profile view
+@login_required(login_url="/login")
+@permission_required('dot_app.view_user',raise_exception=True)
 def dot_profile(request):
     user_id = request.user.id
     c_user = User.objects.filter(id=user_id) 
     return render(request, 'profile.html',{'user':c_user})
 
+#update user profile
+@login_required(login_url="/login")
+@permission_required('dot_app.change_user',raise_exception=True)
 def dot_updateprofile(request):
     if request.method == 'POST':
-        username = request.POST['username']
-        pwd = request.POST['pwd']
-        print(username)
-        print(pwd)
+        user = request.user
+        usr = User.objects.get(id=user.id)
+        usr.username = request.POST['username']
+        usr.first_name = request.POST['first_name']
+        usr.last_name = request.POST['last_name']
+        usr.email = request.POST['email']
+        if request.POST.get('pwd',False):
+            usr.set_password(request.POST['pwd'])
+        usr.save()
     return redirect('dotprofile')
 
 # import pandas as pd
 # import xlsxwriter
-def dot_exportdestination(request):
-    # mydata = destinstions.objects.all()
-    # img = destination_img.objects.all()
-    # print(list(mydata))
-    # df = pd.DataFrame(list(mydata.values()))
-    # df2 = pd.DataFrame(list(img.values()))
-    # joined_df = pd.concat([df, df2])
-    # filename = "data.xlsx"
-    # response = HttpResponse(content_type='application/ms-excel')
-    # response['Content-Disposition'] = f'attachment; filename="{filename}"'
-    # # Write the DataFrame to the Excel file and return the response
-    # joined_df.to_excel(response, index=False, header=True)
-    return response
+# def dot_exportdestination(request):
+#     mydata = destinstions.objects.all()
+#     img = destination_img.objects.all()
+#     print(list(mydata))
+#     df = pd.DataFrame(list(mydata.values()))
+#     df2 = pd.DataFrame(list(img.values()))
+#     joined_df = pd.concat([df, df2])
+#     filename = "data.xlsx"
+#     response = HttpResponse(content_type='application/ms-excel')
+#     response['Content-Disposition'] = f'attachment; filename="{filename}"'
+#     # Write the DataFrame to the Excel file and return the response
+#     joined_df.to_excel(response, index=False, header=True)
+#     return response
+
+# @login_required(login_url="/login")
+# def dot_exportbookinglist(request):
+#     book = booking.objects.all()
+#     df = pd.DataFrame(book.values())
+#     df['created'] = df['created'].dt.strftime('%Y-%m-%d %H:%M:%S')
+#     df['updated'] = df['updated'].dt.strftime('%Y-%m-%d %H:%M:%S')
+#     response = HttpResponse(content_type='application/vnd.ms-excel')
+#     response['Content-Disposition'] = 'attachment; filename="booking_data.xlsx"'
+#     # Export data to Excel file
+#     df.to_excel(response, index=False)
+#     return response
 
 def dot_memories(request):
     return render(request, 'memories.html',)

@@ -119,7 +119,7 @@ urlpatterns = [
     path('dot/addorganization_db/', views.dot_addorganization_db, name='dot_addorganization_db'),
     path('dot/organizationlist/', views.dot_organizationlist, name='dot_organizationlist'),
     path('dot/edite_organization/', views.dot_edite_organization, name='dot_edite_organization'),
-    path('dot/delete_organization/', views.dot_delete_organization, name='dot_delete_organization'),
+   
     path('dot/updateorganization/', views.dot_updateorganization, name='dot_updateorganization'),
     path('delete_organization/', views.delete_organization, name='delete_organization'),
     path('dot/addfacilitytype/', views.dot_addfacilitytype, name='dot_addfacilitytype'),
@@ -132,6 +132,7 @@ urlpatterns = [
     path('dot/viewfacilitylist/', views.dot_viewfacilitylist, name='dot_viewfacilitylist'),
     path('dot/edit_facility/', views.dot_edit_facility, name='dot_edit_facility'),
     path('dot/updatefacility/', views.dot_updatefacility, name='dot_updatefacility'),
+    path('dot/deletefacility/', views.dot_deletefacility, name='dot_deletefacility'),
     path('dot/orderlist/', views.dot_orderlist, name='dot_orderlist'),
     path('dot/bookinglist/', views.dot_bookinglist, name='dot_bookinglist'),
     path('dot/deletebooking/', views.dot_deletebooking, name='dot_deletebooking'),
@@ -151,13 +152,12 @@ urlpatterns = [
     path('dot/deletecontent/', views.dot_deletecontent, name='dot_deletecontent'),
     path('dot/editcontent/', views.dot_editcontent, name='dot_editcontent'),
     path('dot/updatecontent/', views.dot_updatecontent, name='dot_updatecontent'),
-    path('dot/delete_contentimage/', views.dot_deletecontentimage, name='dot_deletecontentimage'),
+    # path('dot/delete_contentimage/', views.dot_deletecontentimage, name='dot_deletecontentimage'),
     path('dot/addfaq_category/', views.dot_addfaq_category, name='dot_addfaq_category'),
     path('dot/savefaqcategory/', views.dot_savefaqcategory, name='dot_savefaqcategory'),
     path('dot/faqcategorylist/', views.dot_faqcategorylist, name='dot_faqcategorylist'),
     path('dot/editfaqcategory/', views.dot_editfaqcategory, name='dot_editfaqcategory'),
     path('dot/updatefaqcategory/', views.dot_updatefaqcategory, name='dot_updatefaqcategory'),
-
     path('dot/deletefaqcategory/', views.dot_deletefaqcategory, name='dot_deletefaqcategory'),
     path('dot/addfaq/', views.dot_addfaq, name='dot_addfaq'),
     path('dot/savefaq/', views.dot_savefaq, name='dot_savefaq'),
@@ -166,8 +166,12 @@ urlpatterns = [
     path('dot/updatefaq/', views.dot_updatefaq, name='dot_updatefaq'),
     path('dot/deletefaq/', views.dot_deletefaq, name='dot_deletefaq'),
 
-    path('dot/exportdestination/', views.dot_exportdestination, name='dot_exportdestination'),
+    # path('dot/exportdestination/', views.dot_exportdestination, name='dot_exportdestination'),
     path('dot/memories/', views.dot_memories, name='dot_memories'),
+    # path('dot/customerlist/', views.dot_customerlist, name='dot_customerlist'),
+    # path('dot/deletecustomer/', views.dot_deletecustomer, name='dot_deletecustomer'),
+    # path('dot/exportbookinglist/', views.dot_exportbookinglist, name='dot_exportbookinglist'),
+
 
 
 ]

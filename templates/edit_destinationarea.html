@@ -35,8 +35,8 @@
             <div class="col-md-4">
               <label for="destinationarea_type" class="form-label">Destination Area Type</label>
               <select id="destinationarea_type" name="destinationarea_type" class="form-select " multiple >
-                {% for x in destarea_type %}
-                <option value="{{x.id}}" aria-multiselectable="true">{{x.name}}</option>
+                {% for d in destarea_type %}
+                <option value="{{d.id}}" aria-multiselectable="true" {% if d.id in d_type_list %}selected{% endif %}>{{d.name}}</option>
                 {% endfor %}
               </select><br>
             </div>

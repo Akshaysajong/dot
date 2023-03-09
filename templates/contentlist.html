@@ -61,30 +61,26 @@
                     <td >{{x.created}}</td>
                     <td >{{x.updated}}</td>
                     <td >{{x.status}}</td>     
-                    <td>         
+                    <td>    
+                      {% if perms.dot_app.change_content %}       
                       <div class="btn-group me-2">
                         <a href="/dot/editcontent/?a={{x.id}}"><button class="btn-link border-0 bg-transparent text-body" ><span data-feather="edit-2"></span></button> </a>
-                        <a href="/dot/deletecontent/?a={{x.id}}"><b<button class="btn-link border-0 bg-transparent text-body"><span data-feather="trash-2" ></span></button> </a>
-                      </div> 
-                   
-                    {% if perms.dot_app.change_destination_area %}  
-                    {% endif %} 
-                   
-                      
-                      <div class="btn-group me-2">
                         
-                        <!-- <button class="btn-link border-0 bg-transparent text-body" type="submit" onclick="delete_darea('{{x.id}}')"><span data-feather="trash-2" ></span></button> -->
-                      </div>  
+                      </div> 
+                      {% endif %} 
                     </td>
-                    {% if perms.dot_app.delete_destination_area %}  
-                    {% endif %}
-                          
-                          
+                      <td>
+                        {% if perms.dot_app.delete_content %}  
+                        <div class="btn-group me-2">
+                          <a href="/dot/deletecontent/?a={{x.id}}"><button class="btn-link border-0 bg-transparent text-body"><span data-feather="trash-2" ></span></button> </a>
+                          <!-- <button class="btn-link border-0 bg-transparent text-body" type="submit" onclick="delete_darea('{{x.id}}')"><span data-feather="trash-2" ></span></button> -->
+                        </div>
+                        {% endif %}
+                    </td>           
                 </tr>
               </tbody>
               {% endfor %}
             </table>
-            <!-- <div class="p-4 border-top"><button type="submit" class="btn btn-primary d-inline-block">Primary Button</button> <button type="submit" class="btn btn-outline-primary border-2 d-inline-block">Secondary button</button></div> -->
       </div>   
      
   </main>

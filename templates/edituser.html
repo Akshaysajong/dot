@@ -21,25 +21,29 @@
           <div class="row">
             {% for x in user %}
             <input type="hidden" name="ur_id" id="ur_id" value="{{x.id}}" required>               
-              <div class="col-md-6">
+              <div class="col-md-4">
                 <label for="title" class="form-label">User Name</label>
                 <input type="text" class="form-control" name="name" id="User" value="{{x.username}}" required>               
               </div>              
-              <div class="col-md-6">
+              <div class="col-md-4">
                 <label for="first_name" class="form-label">First name</label>
                 <input type="text" class="form-control" name="first_name" id="first_name" value="{{x.first_name}}" required><br>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-4">
                 <label for="last_name" class="form-label">Last Name</label>
                 <input type="text" class="form-control" name="last_name" id="last_name" value="{{x.last_name}}" required><br>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-4">
                 <label for="email" class="form-label">Email</label>
                 <input type="text" class="form-control" name="email" id="email" value="{{x.email}}" required><br>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-4">
                 <label for="is_staff" class="form-label">Staff </label>
                 <input type="checkbox"  id="is_staff" name="is_staff" value="1" {% if x.is_staff %}checked{% endif %}/><br>
+              </div>
+              <div class="col-md-4">
+                <label for="is_staff" class="form-label">Status </label>
+                <input type="checkbox"  id="is_active" name="is_active" value="1" {% if x.is_active %}checked{% endif %}/><br>
               </div><br>
               
               <!-- <div class="col-md-6">
