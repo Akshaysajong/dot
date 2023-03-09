@@ -154,7 +154,7 @@ class content(models.Model):
     created = models.DateTimeField(blank=True, null=True)
     updated = models.DateTimeField(blank=True, null=True)
     status = models.BooleanField(default=False)
-    created_id = models.CharField(max_length=200,blank=True, null=True)
+    c_user = models.CharField(max_length=200,blank=True, null=True)
 
 class content_images(models.Model):
     cid = models.CharField(max_length=200,blank=True, null=True)
@@ -164,13 +164,13 @@ class content_images(models.Model):
     weight = models.IntegerField(blank=True, null=True)
     created = models.DateTimeField(blank=True, null=True)
     status =  models.BooleanField(default=False)
-    created_id = models.CharField(max_length=200,blank=True, null=True)
+    c_user = models.CharField(max_length=200,blank=True, null=True)
 
 class faq_category(models.Model):
     name = models.CharField(max_length=200,blank=True, null=True)
     description = models.CharField(max_length=200,blank=True, null=True)
     popularity = models.CharField(max_length=200,blank=True, null=True, default='0')
-    status =  models.BooleanField(default=False)
+    status =  models.BooleanField(default=False,blank=True, null=True,)
 
 class faq(models.Model):
     title = models.CharField(max_length=200,blank=True, null=True)
@@ -226,8 +226,8 @@ class booking(models.Model):
     cust = models.ForeignKey(customer, default=None, on_delete=models.CASCADE)
     created = models.DateTimeField(blank=True, null=True)
     updated = models.DateTimeField(blank=True, null=True)
-    guests = models.IntegerField(blank=True, null=True)
-    status = models.BooleanField(default=False)
+    guests = models.IntegerField(max_length=50,blank=True, null=True)
+    status = models.CharField(max_length=50,blank=True, null=True, default='pending')
 
 class coupon_type(models.Model):
     name = models.CharField(max_length=50,blank=True, null=True)
@@ -282,7 +282,7 @@ class icons(models.Model):
 
 class Subscription(models.Model):
     email = models.EmailField()
-    subscription_type = models.CharField(max_length=50)
+    # subscription_type = models.CharField(max_length=50)
     subscribed_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -309,22 +309,25 @@ class destination_Review(models.Model):
     updated = models.DateTimeField(blank=True, null=True)
     status = models.CharField(max_length=100,blank=True, null=True)
 
+
+
 class memories(models.Model):  
     cust_id = models.ForeignKey(customer, default=None, on_delete=models.CASCADE)
     destinstion = models.CharField(max_length=100,blank=True, null=True, default=0)
     destn_facility = models.CharField(max_length=100,blank=True, null=True, default=0)
+    organzn = models.CharField(max_length=100,blank=True, null=True, default=0)
     experience = models.CharField(max_length=200,blank=True, null=True)
     memories = models.CharField(max_length=200,blank=True, null=True)
     created = models.DateTimeField(blank=True, null=True)
     updated = models.DateTimeField(blank=True, null=True)
     visited_date=models.CharField(max_length=100,blank=True, null=True, default=0)
     user_id = models.CharField(max_length=100,blank=True, null=True, default=0)
+    # image = models.ForeignKey('memories_img', on_delete=models.CASCADE)
     # images = models.ManyToManyField('image', blank=True)
     status = models.CharField(max_length=200,blank=True, null=True)
-    
+
 class memories_img(models.Model):
     memories = models.ForeignKey(memories, on_delete=models.CASCADE)
     image=models.ImageField(upload_to = 'images/', blank=True)
 
     
-

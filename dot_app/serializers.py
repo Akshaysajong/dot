@@ -1,6 +1,6 @@
 from rest_framework import serializers
 # from django.contrib.auth import get_user_model
-from .models import customer,cust_profile,content,destinstions,destination_img,content_images,organization,organization_images,best_things,card,destination_area,feedback,icons,booking,destination_type,Subscription
+from .models import customer,cust_profile,content,facility_image,destinstions,destination_img,content_images,organization,organization_images,best_things,card,destination_area,feedback,icons,booking,destination_type,Subscription
 from rest_framework.response import Response
 
 # register customers
@@ -252,8 +252,8 @@ class stay_feedbackSearializer(serializers.ModelSerializer):
 class wanderlust_hampiSerializer(serializers.HyperlinkedModelSerializer):
     id = serializers.ReadOnlyField()
     class Meta:
-        model=organization_images
-        fields = ['id','images']
+        model=facility_image
+        fields = ['id','image']
 
 
 # discover more stays
@@ -308,7 +308,7 @@ class MyModelSerializer(destinationsearchSerializer):
 class SubscriptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subscription
-        fields = ('email', 'subscription_type', 'subscribed_date')
+        fields = ('email', 'subscribed_date')
 
 class LocationSerializer(serializers.ModelSerializer):
     class Meta:
@@ -327,7 +327,7 @@ class TripSerializer(serializers.ModelSerializer):
 class bookingSerializer(serializers.ModelSerializer):
     class Meta:
         model = booking
-        fields =  ['bk_from','bk_to','created']
+        fields =  ['created','bk_from','bk_to']
 
 
 from .models import customer
@@ -375,36 +375,116 @@ class AccountSerializer(serializers.ModelSerializer):
 #         fields = ('email', 'phone')
 
 from rest_framework.exceptions import ValidationError
-import re
+# import re
 
+# from django.core.validators import EmailValidator, RegexValidator
+
+from django.core.validators import validate_email
+from rest_framework import serializers
 
 class edit_customerSerializer(serializers.ModelSerializer):
+
+    # email = serializers.CharField(validators=[validate_email])
+    # phone = serializers.CharField(max_length=10, min_length=10)
+
     class Meta:
         model = customer
-        fields =  ['name', 'email', 'phone','gender']
-    def update(self, instance, validated_data):
+        fields = ['id', 'name', 'email', 'phone','gender']
+    def validate_email(self, value):
+        try:
+            validate_email(value)
+        except ValidationError:
+            raise serializers.ValidationError(' enter a valid email address')
+        return value
+
+    def validate_phone(self, value):
+        if not value.isdigit():
+            raise serializers.ValidationError('Phone number should contain only digits')
+        if len(value) != 10:            
+            raise serializers.ValidationError('Phone number should be 10 digits long')
+        return value
+
+
+
+    # class Meta:
+    #     model = customer
+    #     fields =  ['name', 'email', 'phone','gender']
+
+
+# class edit_customerSerializer(serializers.ModelSerializer):
+    # email = serializers.EmailField(validators=[EmailValidator()])
+    # phone = serializers.CharField(validators=[RegexValidator(r'^\+?[1-9]\d{1,14}$')])
+
+    # class Meta:
+    #     model = customer
+    #     fields = ['name','first_name', 'last_name', 'email', 'phone','gender']
+
+        
+    # def update(self, instance, validated_data):
        
-        email = validated_data.get('email', instance.email)
-        if not email or not validate_email(email):
-            raise ValidationError({'email': 'Invalid email'})
+        # email = validated_data.get('email', instance.email)
+        # if not email or not validate_email(email):
+        #     raise ValidationError({'email': 'Invalid email'})
 
 
-        phone = validated_data.get('phone', instance.phone)
-        if not phone or not validate_phone(phone):
-            raise ValidationError({'phone': 'Invalid phone number'})
+        # phone = validated_data.get('phone', instance.phone)
+        # if not phone or not validate_phone(phone):
+        #     raise ValidationError({'phone': 'Invalid phone number'})
+        
+
+    # def validate(self, attrs):
+    #     email = attrs.get('email')
+    #     phone = attrs.get('phone')
+        
+    #     if email and customer.objects.exclude(name=self.instance.name).filter(email=email).exists():
+    #         raise serializers.ValidationError('Email already in use.')
+        
+    #     if phone and customer.objects.exclude(name=self.instance.name).filter(phone=phone).exists():
+    #         raise serializers.ValidationError('Phone number already in use.')
+        
+    #     return attrs
+
+# from django.core.validators import validate_email
+# from django.core.exceptions import ValidationError
+# import phonenumbers
+# def validate_email_address(email):
+#     try:
+#         validate_email(email)
+#         return True
+#     except ValidationError:
+#         return False
+
+
+# def validate_phone_number(phone_number, country_code):
+#     try:
+#         parsed_phone_number = phonenumbers.parse(phone_number, country_code)
+#         return phonenumbers.is_valid_number(parsed_phone_number)
+#     except phonenumbers.phonenumberutil.NumberParseException:
+#         return False
+
+#     # def update(self, instance, validated_data):
+       
+    #     email = validated_data.get('email', instance.email)
+    #     if not email or not validate_email(email):
+    #         raise ValidationError({'email': 'Invalid email'})
+
+
+    #     phone = validated_data.get('phone', instance.phone)
+    #     if not phone or not validate_phone(phone):
+    #         raise ValidationError({'phone': 'Invalid phone number'})
 
        
-        instance.name = validated_data.get('name', instance.name)
-        instance.email = email
-        instance.phone = phone
-        # instance.address = validated_data.get('address', instance.address)
-        instance.save()
-        return instance
+    #     instance.name = validated_data.get('name', instance.name)
+    #     instance.email = email
+    #     instance.phone = phone
+    #     # instance.address = validated_data.get('address', instance.address)
+    #     instance.save()
+    #     return instance
 
-    def validate_email(email):
-        if not re.match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', email):
-            raise ValidationError('Invalid email format')
-        return email
+    # def validate_email(email):
+    #     if not re.match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', email):
+    #         raise ValidationError('Invalid email format')
+    #     return email
 
 #     def validate_phone(phone):
 #         if not re.match(r'^\+?\d{10,14}$', phone):
@@ -434,7 +514,7 @@ class CustomerSerializer(serializers.ModelSerializer):
     def validate_phone(self, value):
         if not value.isdigit():
             raise serializers.ValidationError('Phone number should contain only digits')
-        if len(value) != 10:
+        if len(value) != 10:            
             raise serializers.ValidationError('Phone number should be 10 digits long')
         return value
 
@@ -445,37 +525,62 @@ from .models import facility_Review,destination_Review
 class facilityReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = facility_Review
-        fields = '__all__'
+        fields =  '__all__'
+
 class destinationReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = destination_Review
         fields = '__all__'
 
-# memory
+# add memory
 class memoryImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = memories_img
         fields = ('id', 'image')
 
 class MemorySerializer(serializers.ModelSerializer):
+    images = memoryImageSerializer()
+    class Meta:
+        model = memories      
+        fields = ('id', 'cust_id','destinstion','created','updated','destn_facility', 'experience', 'memories','visited_date', 'images','status')
+    def create(self, validated_data):
+        image_data = validated_data.pop('images')
+        image = memories_img.objects.create(**image_data)
+        memory = memories.objects.create(image=image, **validated_data)
+        return memory
+# travel memory
+class travelMemoryimgSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = memories_img
+        fields = ('memories_id', 'image')
+
+class travelMemorySerializer(serializers.ModelSerializer):
+    image = travelMemoryimgSerializer(many=True, read_only=True)
+    class Meta:
+        model = memories      
+        fields = ('id', 'cust_id','destinstion','created','updated','organzn', 'experience', 'memories','visited_date', 'image','status')
+# memory details
+from .models import memories,destn_facility
+class memorydetailsImageSerializer(serializers.ModelSerializer):
+     class Meta:
+        model = memories_img
+        fields = ['image']
+class MemorydetailsSerializer(serializers.ModelSerializer):
     images = memoryImageSerializer(many=True, read_only=True)
     class Meta:
         model = memories      
         fields = ('id', 'cust_id','destinstion','created','updated','destn_facility', 'experience', 'memories','visited_date', 'images','status')
 
-# memory details
-from .models import memories
-class memorydetailsImageSerializer(serializers.ModelSerializer):
+class wanderlust_reviewSerializer(serializers.ModelSerializer):
     class Meta:
-        model = memories_img
-        fields = ('id', 'image')
-class MemorydetailsSerializer(serializers.ModelSerializer):
-    images = memoryImageSerializer(many=True, read_only=True)
-    class Meta:
-        model = memories
-        fields = '__all__'
+        model = facility_Review
+        fields = ('id','cust_id','created','review')
 
 
+class facilitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = destn_facility
+        fields = ('orgatn','description','amount')
 # book hotel
 from rest_framework import serializers
 

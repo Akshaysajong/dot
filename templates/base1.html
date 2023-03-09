@@ -73,10 +73,16 @@
 
           {% if perms.dot_app.view_destination_area %}
           <li class="nav-item"> <a class="nav-link" data-bs-toggle="collapse" href="#menu-or" aria-expanded="false" aria-controls="menu-order"> <span data-feather="file"></span> Destinstions </a> 
-          <ul class="list-group collapse multi-collapse ms-4 mb-2" id="menu-or"> 
-            <li class="list-group-item border-0 p-1"><a href="/dot/destination_area/" class="nav-sublink">Destinstion Area</a></li>
+          <ul class="list-group collapse multi-collapse ms-4 mb-2" id="menu-or">
+            <li class="list-group-item border-0 p-1"><a href="/dot/view_destinationarea/" class="nav-sublink">Destination Area List</a></li> 
+            {% if perms.dot_app.add_destination_area %}
+            <li class="list-group-item border-0 p-1"><a href="/dot/destination_area/" class="nav-sublink">Add Destination Area</a></li>
+            {% endif %}
+            {% if perms.dot_app.view_destinstions %}
+            <li class="list-group-item border-0 p-1"><a href="/dot/view_destination/" class="nav-sublink">Destination List</a></li>
+            {% endif %}
             {% if perms.dot_app.add_destinstions %}
-            <li class="list-group-item border-0 p-1"><a href="/dot/destinations/" class="nav-sublink">Destinstions</a></li>
+            <li class="list-group-item border-0 p-1"><a href="/dot/destinations/" class="nav-sublink">Addd Destinations</a></li>
             {% endif %}
           </ul>
           </li>
@@ -97,21 +103,32 @@
           </ul>
           </li>
           {% endif %}
-          {% if perms.dot_app.add_content %}
+          {% if perms.dot_app.view_content %}
           <li class="nav-item"> <a class="nav-link" data-bs-toggle="collapse" href="#menu-content" aria-expanded="false" aria-controls="menu-order"> <span data-feather="file"></span> Content </a> 
             <ul class="list-group collapse multi-collapse ms-4 mb-2" id="menu-content"> 
+              <li class="list-group-item border-0 p-1"><a href="/dot/contentlist/" class="nav-sublink">Content List</a></li> 
+              {% if perms.dot_app.add_content %}
               <li class="list-group-item border-0 p-1"><a href="/dot/addcontent/" class="nav-sublink">Add Content</a></li>  
-              <li class="list-group-item border-0 p-1"><a href="/dot/contentlist/" class="nav-sublink">Content List</a></li>  
+              {% endif %} 
           </ul>
           </li>
           {% endif %}  
+          {% if perms.dot_app.view_faq_category %}
           <li class="nav-item"> <a class="nav-link" data-bs-toggle="collapse" href="#menu-faq" aria-expanded="false" aria-controls="menu-order"> <span data-feather="file"></span> FAQ </a> 
             <ul class="list-group collapse multi-collapse ms-4 mb-2" id="menu-faq">
-              <li class="list-group-item border-0 p-1"><a href="/dot/addfaq_category/" class="nav-sublink">Add FAQ Category</a></li>   
-              <li class="list-group-item border-0 p-1"><a href="/dot/addfaq/" class="nav-sublink">Add FAQ</a></li>  
+              <li class="list-group-item border-0 p-1"><a href="/dot/faqcategorylist/" class="nav-sublink">FAQ Category List</a></li> 
+              {% if perms.dot_app.add_faq_category %}
+              <li class="list-group-item border-0 p-1"><a href="/dot/addfaq_category/" class="nav-sublink">Add FAQ Category</a></li>
+              {% endif %}  
+              {% if perms.dot_app.add_faq_category %}
+              <li class="list-group-item border-0 p-1"><a href="/dot/viewfaqlist/" class="nav-sublink">FAQ List</a></li> 
+              {% endif %}    
+              {% if perms.dot_app.add_faq %}  
+              <li class="list-group-item border-0 p-1"><a href="/dot/addfaq/" class="nav-sublink">Add FAQ</a></li>
+              {% endif %}    
           </ul>
           </li>
-
+          {% endif %} 
           <li class="nav-item"> <a class="nav-link" data-bs-toggle="collapse" href="#menu-ordlst" aria-expanded="false" aria-controls="menu-order"> <span data-feather="file"></span> Orders </a> 
             <ul class="list-group collapse multi-collapse ms-4 mb-2" id="menu-ordlst"> 
               <li class="list-group-item border-0 p-1"><a href="/dot/orderlist/" class="nav-sublink">Orders List</a></li>  
@@ -124,6 +141,11 @@
           </ul>
           </li>
           {% endif %}
+          <li class="nav-item"> <a class="nav-link" data-bs-toggle="collapse" href="#menu-memories" aria-expanded="false" aria-controls="menu-order"> <span data-feather="file"></span> Memories </a> 
+            <ul class="list-group collapse multi-collapse ms-4 mb-2" id="menu-memories"> 
+              <li class="list-group-item border-0 p-1"><a href="/dot/memories/" class="nav-sublink">Memories</a></li>
+          </ul>
+          </li>
           <!-- {% if perms.dot_app.add_hotels %} -->
           <li class="nav-item"> <a class="nav-link"> <span data-feather="users"></span> Customers </a> </li>
           <li class="nav-item"> <a class="nav-link" href="/dot/groups/"> <span data-feather="users"></span>Groups </a> </li>
@@ -181,7 +203,7 @@
   <ul class="dropdown-menu rounded-1 shadow border-0" aria-labelledby="topaction">
     <i class="bi bi-caret-up-fill position-absolute fs-5 text-white"></i>
     <li><a class="dropdown-item pt-1" href="#">Action</a></li>
-    <li><a class="dropdown-item pt-1" href="/profile">Profile</a></li>
+    <li><a class="dropdown-item pt-1" href="/dot/profile/">Profile</a></li>
     <li><a class="dropdown-item pt-1" href="{% url 'logout' %}">Logout</a></li>
   </ul>
 </li>

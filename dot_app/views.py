@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -280,14 +280,7 @@ def dot_update_hotel(request):
         # sts = state.objects.all().filter(id=sts_id)
         # citi = city.objects.all().filter(id=citi_id)
         userprofile.objects.all().filter(id=ho_id).update(name=name,contact_person=contact_person, phone=phone, address=address, country=cotry, state=sts, city=citi)
-        # hotl.save()
-        # if int(dn_ar[0].c_user) == user.id or user.is_superuser:
-        #     destination_area.objects.all().filter(id=da_id).update(name=destn_area, place=place, longitude=longitude, lattitude=lattitude, status=status)
-        # else:
-        #     messages.success(request, f"you are not autherized to edit !!!!!  ")
-
     return redirect('dot_viewhotels')
-
 
 #ajax get country
 @login_required(login_url="/login")
@@ -342,20 +335,14 @@ def dot_add_destination_area(request):
         d_area.save()
         for x in destinarea_type:
             des = destinationarea_type(destnarea_type_id=x, destnarea_id=d_area.id)
-            des.save()
-           
-       
+            des.save()    
     return redirect("dot_destination_area")
 
 #edit destination area
 @login_required(login_url="/login")
 def dot_edit_destinationarea(request):
-    # user = request.user.id
     ed_id = request.GET['a']
     destn = destination_area.objects.all().filter(id=ed_id)
-
-    # if int(destn[0].c_user) == user:
-    #     pass
     return render(request, "edit_destinationarea.html",{'destn':destn})
 
 @login_required(login_url="/login")
@@ -514,12 +501,8 @@ def dot_addorganization(request):
 def dot_addorganization_db(request):
     if request.method == 'POST':
         user = request.user.id
-        first_name = request.POST['first_name']
-        last_name = request.POST['last_name']
-        username = request.POST['username']
-        password = request.POST['password']
-        email = request.POST['email']
-        user_or = User.objects.create_user(username=username, password=password, first_name=first_name, last_name=last_name, email=email)
+        user_or = User.objects.create_user(username=request.POST['username'], password=request.POST['password'], first_name=request.POST['first_name'], 
+        last_name=request.POST['last_name'], email=request.POST['email'])
         title = request.POST['title']
         org_type = request.POST['org_type']
         destn = request.POST['destn']
@@ -532,11 +515,9 @@ def dot_addorganization_db(request):
         proof = request.POST['proof']
         status = request.POST['status']
         img = request.FILES.getlist('image')
-        # stat = state.objects.all().filter(id=sts_id)      
-        # citi = city.objects.all().filter(id=city_id)
         user_or.groups.add(3)
         org = organization(title=title, org_type=org_type, destinstion_id=destn, contact_person=contact_person, contact_number=contact_number, website=website,
-         state_id=sts_id, city_id=city_id, address=address, email=email, proof=proof, status=status, c_user=user, user_id=user_or.id)
+         state_id=sts_id, city_id=city_id, address=address, email=request.POST['email'], proof=proof, status=status, c_user=user, user_id=user_or.id)
         org.save()
         for x in img:
             or_img=organization_images(organization_id=org.id, images=x)
@@ -670,7 +651,7 @@ def dot_edit_facilitytype(request):
     print(faclty_type)
     return render(request,'editfacilitytype.html',{'faclty_type':faclty_type})
 
-
+@login_required(login_url="/login")
 def dot_update_facilitytype(request):
     if request.method == 'POST':
         title = request.POST['title']
@@ -679,6 +660,7 @@ def dot_update_facilitytype(request):
         facility_type.objects.all().filter(id=flty_id).update(title=title, description=description)
     return redirect('dot_viewfacilitytype')
 
+@login_required(login_url="/login")
 def dot_delete_facilitytype(request):
     flty_id = request.GET['a']
     facility_type.objects.all().filter(id=flty_id).delete()
@@ -752,7 +734,7 @@ def dot_updatefacility(request):
         if int(faclty[0].c_user) == user.id or user.is_superuser:
             destn_facility.objects.all().filter(id=f_id).update(title=title, description=description, types=type, amount=amount, status=status)
             for x in img:
-                f_image=facility_image(destinstion=destination, image=x, facility_id=f_id, status=status, imagetype='facility')
+                f_image=facility_image(destinstion=destination, image=x, facility_id=f_id, status=status, imagetype='facility', c_user=user.id)
                 f_image.save()
             img = [int(item) for item in deletedimg.split(', ') if item.isdigit()]
             length = len(img)
@@ -770,20 +752,6 @@ def dot_updatefacility(request):
         else:
             messages.error(request, "You are not autherized to edit !!!!")   
     return redirect('dot_viewfacilitylist')
-
-#  org = organization.objects.all()
-#     orgstn = []
-#     for x in org:
-#         # print(x.d_area.name)
-#         img= organization_images.objects.all().filter(organization=x.id)
-#         # print('>>>>>>>>>>>>>>')
-#         # print(img[0].id)
-#         im =''
-#         if img:
-#             im = img[0].images
-#         orgstn.append({'id':x.id, 'title':x.title,'org_type':x.org_type , 'detn_name':x.destinstion.name,'contact_person':x.contact_person,'contact_number':x.contact_number, 'website':x.website,
-#          'address':x.address, 'email':x.email, 'state':x.state, 'city':x.city, 'proof':x.proof, 'status':x.status, 'image':im,})
-#     return render(request, "organizationlist.html",{'org':orgstn})
 
 @login_required(login_url="/login")
 def dot_delete_organization(request):
@@ -878,6 +846,7 @@ def dot_addcontent(request):
 @login_required(login_url="/login")
 def dot_savecontent(request):
     if request.method == 'POST':
+        user = request.user
         img_content = request.POST.getlist('img_content[]')
         image = request.FILES.getlist('image[]')
         overlay = request.POST.getlist('overlay[]')
@@ -885,11 +854,11 @@ def dot_savecontent(request):
         status = request.POST['status']
         c_date = datetime.datetime.now()
         contnt = content(content_type=request.POST['content_type'], title=request.POST['title'], page=request.POST['page'], 
-            path=request.POST['path'], body=request.POST['body'], created=c_date, status=status)
+            path=request.POST['path'], body=request.POST['body'], created=c_date, status=status, c_user=user.id)
         contnt.save()
         i = 0
         for x in image:
-            c_img = content_images(cid=contnt.id, status=status, created=c_date, content=img_content[i], image=x, overlay=overlay[i], weight=weight[i] )
+            c_img = content_images(cid=contnt.id, status=status, created=c_date, content=img_content[i], image=x, overlay=overlay[i], weight=weight[i], c_user=user.id )
             c_img.save()
             i = i + 1
     return redirect('dot_contentlist')
@@ -899,22 +868,26 @@ def dot_contentlist(request):
     contnt = content.objects.all()
     content_list = []
     for x in contnt:  
-        img= content_images.objects.all().filter(cid=x.id)
-              
-        content_list.append({'id':x.id, 'content_type':x.content_type, 'title':x.title, 'page':x.page, 'path':x.path,'body':x.body,'status':x.status, 
-            'image':img[0].image, 'image_content':img[0].content, 'overlay':img[0].overlay, 'weight':img[0].weight, 'created':x.created, 'updated':x.updated})
+        img= content_images.objects.all().filter(cid=x.id)    
+        content_list.append({'id':x.id, 'content_type':x.content_type, 'title':x.title, 'page':x.page, 'path':x.path,'body':x.body,'status':x.status,   'created':x.created, 'updated':x.updated,
+        "image":img[0].image  if img else "" })
     return render(request, 'contentlist.html',{'content_list':content_list})
 
 @login_required(login_url="/login")
 def dot_deletecontent(request):
+    user = request.user
     content_id = request.GET['a']
     cont = content.objects.all().filter(id=content_id)
-    content_images.objects.all().filter(cid=content_id).delete()
-    cont.delete()
+    if int(cont[0].c_user) == user.id or user.is_superuser:
+        content_images.objects.all().filter(cid=content_id).delete()
+        cont.delete()
+    else:
+        messages.error(request, "You are not autherized to delete !!!!")
+    
     return redirect('dot_contentlist')
 
 @login_required(login_url="/login")
-def dot_editcontent(request):
+def dot_editcontent(request): 
     content_id = request.GET['a']
     contnt = content.objects.all().filter(id=content_id)
     content_img = content_images.objects.all().filter(cid=content_id)
@@ -923,6 +896,7 @@ def dot_editcontent(request):
 @login_required(login_url="/login")
 def dot_updatecontent(request):
     if request.method == 'POST':
+        user = request.user
         cont_id = request.POST['cont_id']
         contimg_id = request.POST.getlist('contimg_id')
         img_content = request.POST.getlist('img_content')
@@ -938,32 +912,29 @@ def dot_updatecontent(request):
         length=len(img)  
         count=content_images.objects.all().filter(cid=cont_id).count()
         c_date = datetime.datetime.now()
-        content.objects.all().filter(id=cont_id).update(title=request.POST['title'], path=request.POST['path'], body=request.POST['body'], status=status)
-        print(img_content)
-        i = 0
-        for x in contimg_id: 
-            content_images.objects.all().filter(id=x).update(content=img_content[i], overlay=overlay[i], weight=weight[i])
-            i = i + 1
-        j = 0
-        for x in newimage:
-            c_img = content_images(cid=cont_id, status=status, created=c_date, content=newimg_content[j], image=x, overlay=newoverlay[j], weight=newweight[j] )
-            c_img.save()
-            j = j + 1
-        if length < count:
-            for x in img:
-                c=content_images.objects.all().get(id=x)
-                if c.image:
-                    c.image.delete()
-                c.delete()     
+        cont = content.objects.all().filter(id=cont_id)
+        if int(cont[0].c_user) == user.id or user.is_superuser:
+            cont.update(title=request.POST['title'], path=request.POST['path'], body=request.POST['body'], status=status)
+            i = 0
+            for x in contimg_id: 
+                content_images.objects.all().filter(id=x).update(content=img_content[i], overlay=overlay[i], weight=weight[i])
+                i = i + 1
+            j = 0
+            for x in newimage:
+                c_img = content_images(cid=cont_id, status=status, created=c_date, content=newimg_content[j], image=x, overlay=newoverlay[j], weight=newweight[j] )
+                c_img.save()
+                j = j + 1
+            if length < count:
+                for x in img:
+                    c=content_images.objects.all().get(id=x)
+                    if c.image:
+                        c.image.delete()
+                    c.delete() 
+        else:
+            messages.error(request, "You are not autherized to edit !!!!")
+            
 
     return redirect('dot_contentlist')
-
-
-def dot_deleteimgcontent(request):
-    pass
-
-
-
 
 @login_required(login_url="/login")
 def dot_deletecontentimage(request):
@@ -1000,10 +971,13 @@ def dot_editfaqcategory(request):
 def dot_updatefaqcategory(request):
     if request.method == 'POST':
         fq_id = request.POST['id']
-        name = request.POST['name']
-        description = request.POST['description']
-        status = request.POST['status']
-        faq_category.objects.all().filter(id=fq_id).update(name=name, description=description, status=status)
+        stat = request.POST.get('status')
+        faq_categry = faq_category.objects.all().filter(id=fq_id)
+        faq_categry.update(name=request.POST['name'], description=request.POST['description'])
+        if stat == 'True': 
+            faq_categry.update(status=request.POST['status'])
+        else:
+            faq_categry.update(status='False')
     return redirect('dot_faqcategorylist')
 
 @login_required(login_url="/login")
@@ -1067,12 +1041,70 @@ def dot_bookinglist(request):
     c_booking = booking.objects.all()
     return render(request, 'bookinglist.html',{'c_booking':c_booking})
 
+@login_required(login_url="/login")
+def dot_approvebooking(request):
+    if request.method == "POST":
+        booking_status = request.POST.getlist('checkbook')
+        print(booking_status)
+        if  request.POST.get('approve') == "approve":
+            for x in booking_status:
+                booking.objects.filter(id=x).update(status="approve")
+        else:
+            for x in booking_status:
+                booking.objects.filter(id=x).delete()
+
+    return redirect('dot_bookinglist')
+
+# def dot_approvebooking(request):
+#     idd = request.GET['a']
+#     booking.objects.all().filter(id=idd).update(status='approve')
+#     return redirect('dot_bookinglist')
+
+@login_required(login_url="/login")
+def dot_deletebooking(request):
+    idd = request.GET['a']
+    booking.objects.filter(id=idd).delete()
+    return redirect('dot_bookinglist')
+
 
 @login_required(login_url="/login")
 def dot_content(request):
     ctnt=content.objects.all()
     print(ctnt)
     return render(request,'content.html',{'content':ctnt})
+
+
+def dot_profile(request):
+    user_id = request.user.id
+    c_user = User.objects.filter(id=user_id) 
+    return render(request, 'profile.html',{'user':c_user})
+
+def dot_updateprofile(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        pwd = request.POST['pwd']
+        print(username)
+        print(pwd)
+    return redirect('dotprofile')
+
+# import pandas as pd
+# import xlsxwriter
+def dot_exportdestination(request):
+    # mydata = destinstions.objects.all()
+    # img = destination_img.objects.all()
+    # print(list(mydata))
+    # df = pd.DataFrame(list(mydata.values()))
+    # df2 = pd.DataFrame(list(img.values()))
+    # joined_df = pd.concat([df, df2])
+    # filename = "data.xlsx"
+    # response = HttpResponse(content_type='application/ms-excel')
+    # response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    # # Write the DataFrame to the Excel file and return the response
+    # joined_df.to_excel(response, index=False, header=True)
+    return response
+
+def dot_memories(request):
+    return render(request, 'memories.html',)
 
 
 
@@ -1083,7 +1115,7 @@ from .models import *
 from rest_framework.response import Response
 from rest_framework import viewsets
 from rest_framework import status 
-from .serializers import customerRegister,CustomerProfileSerializer,bannerSerializer,headSerializer,destinationsSerializer,destination_imgSerializer,placesSerializer,staysSerializer,staysimgSerializer,bestthingsSerializer,cardSerializer,head_KSerializer,buttondetailsSerializer,destinationdetailsSerializer,destinationdetails_imgSerializer,destination_humpidetailsSerializer,destination_humpidetails_imgSerializer,destination_humpidescription_Serializer,humpi_surroundingsSerializer,humpi_surroundings_imgSerializer,stay_humpiSearializer,stay_humpi_imgSerializer,stay_feedbackSearializer,wanderlust_hampiSerializer,wanderlust_booking_imgSerializer,wanderlust_booking_Serializer,more_staysSerializer,more_staysimgSerializer,iconSerializer,roomicon_Searializer,room_bookingSearializer,categorysearchSerializer,destinationimageSerializer,contentSerializer,content_imgSerializer
+from .serializers import customerRegister,CustomerProfileSerializer,wanderlust_reviewSerializer,bannerSerializer,headSerializer,destinationsSerializer,destination_imgSerializer,placesSerializer,staysSerializer,staysimgSerializer,bestthingsSerializer,cardSerializer,head_KSerializer,buttondetailsSerializer,destinationdetailsSerializer,destinationdetails_imgSerializer,destination_humpidetailsSerializer,destination_humpidetails_imgSerializer,destination_humpidescription_Serializer,humpi_surroundingsSerializer,humpi_surroundings_imgSerializer,stay_humpiSearializer,stay_humpi_imgSerializer,stay_feedbackSearializer,wanderlust_hampiSerializer,wanderlust_booking_imgSerializer,wanderlust_booking_Serializer,more_staysSerializer,more_staysimgSerializer,iconSerializer,roomicon_Searializer,room_bookingSearializer,categorysearchSerializer,destinationimageSerializer,contentSerializer,content_imgSerializer
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -1275,8 +1307,6 @@ class dot_homepageAPI(APIView):
         dest_img=destination_img.objects.all()[:4]
         sub_title2=content.objects.all().filter(id=3)
         places=destination_area.objects.all()[:3]
-        # places_img=destination_area.objects.all()
-        # cards=card.objects.all()
         dot=content_images.objects.all().filter(id=1)
         sub_title3=content.objects.all().filter(id=4)
         stays=organization.objects.all()
@@ -1510,7 +1540,8 @@ class dot_destination_humpidetailsAPI(APIView):
 class dot__wanderlust_humpidetailsAPI(APIView):
     def get(self, request):
         title=content.objects.all().filter(id=16) 
-        room_img=organization_images.objects.all().filter(organization_id=2)
+        sub_titile=content.objects.all().filter(id__in=[50,51,52])
+        room_img=facility_image.objects.all().filter(id__in=[3,4,5])
         sub_title1=content.objects.all().filter(id=17)
         sub_title2=content.objects.all().filter(id=18)  
         sub_title3=content.objects.all().filter(id=19)  
@@ -1518,9 +1549,11 @@ class dot__wanderlust_humpidetailsAPI(APIView):
         experience=feedback.objects.all()
         icon=icons.objects.all().filter(name='Amenities')
         sub_title5=content.objects.all().filter(id=21)
+        review=facility_Review.objects.all().filter(id__in=[1,2])
         book=booking.objects.all().filter(id=1)
 
         title_data=head_KSerializer(title,many=True).data
+        sub_title_data=head_KSerializer(sub_titile,many=True).data
         room_img_data=wanderlust_hampiSerializer(room_img,many=True).data 
         sub_title1_data=headSerializer(sub_title1,many=True).data  
         sub_title2_data=head_KSerializer(sub_title2,many=True).data 
@@ -1529,6 +1562,7 @@ class dot__wanderlust_humpidetailsAPI(APIView):
         experience_data=stay_feedbackSearializer(experience, many=True).data 
         icon_data=roomicon_Searializer(icon, many=True).data 
         sub_title5_data=head_KSerializer(sub_title5,many=True).data
+        review_data=wanderlust_reviewSerializer(review,many=True).data
         book_data=room_bookingSearializer(book, many=True).data
     
         # title1 = {'title':'WANDERLUST HUMPI'}
@@ -1542,6 +1576,7 @@ class dot__wanderlust_humpidetailsAPI(APIView):
         data = {
             # 'room_title1':[title1],
             'title':title_data,
+            'sub_title':sub_title_data,
             'room_imgs':room_img_data,
             # 'title2':[title2],
             'sub_title1':sub_title1_data,
@@ -1557,6 +1592,7 @@ class dot__wanderlust_humpidetailsAPI(APIView):
             'sub_title4':sub_title4_data,
             'Reviews':experience_data,
             'sub_title5':sub_title5_data,
+            'review':review_data,
             'book':book_data,
         }
         return Response(data)
@@ -1866,7 +1902,7 @@ class filtersearch_resultsView(viewsets.ModelViewSet):
 
 # my account details
 from .models import customer
-from .serializers import AccountSerializer,CustomerSerializer,edit_customerSerializer
+from .serializers import AccountSerializer,CustomerSerializer,facilitySerializer
 
 class AccountView(APIView):
     # cust = customer.objects.all().filter(id=1)
@@ -1889,10 +1925,19 @@ class AccountView(APIView):
         return Response(data)
 
 # Email and phone number validation for edit my account details
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from .serializers import CustomerSerializer,edit_customerSerializer
+
+class edit_CustomerUpdateView(generics.RetrieveUpdateAPIView):    
+    queryset = customer.objects.all()
+    serializer_class = edit_customerSerializer
+
 # from rest_framework import status
 
 # from .utils import validate_email, validate_phone
-class EditCustomerView(APIView):
+# class EditCustomerView(APIView):
     # def put(self, request,pk):
     #     customers = customer.objects.get(id=pk)
     #     # profile=[]
@@ -1900,25 +1945,76 @@ class EditCustomerView(APIView):
     #     #     prof=cust_profile.objects.all().filter(cust=cu.id)  
     #     #     for  pro in prof:           
     #     #             profile.append({'id':cu.id,'name':cu.name,'phone':cu.phone,'email':cu.email,'gender':cu.gender,'address':pro.address})
-    #     serializer = edit_customerSerializer(customers, data=request.data, partial=True)
+        # serializer = edit_customerSerializer(customers, data=request.data, partial=True)
     #     if serializer.is_valid():
     #         serializer.save()
     #         return Response(serializer.data)
     #     else:
     #         return Response(serializer.errors, status=400)
-    def put(self, request):
-        email = request.data.get('email')
-        phone = request.data.get('phone')
+    # def put(self, request):
+    #     email = request.data.get('email')
+    #     phone = request.data.get('phone')
         
-        if email and not validate_email(email):
-            return Response({'error': 'Invalid email address'}, status=status.HTTP_400_BAD_REQUEST)
-        if phone and not validate_phone(phone):
-            return Response({'error': 'Invalid phone number'}, status=status.HTTP_400_BAD_REQUEST)
+    #     if email and not validate_email(email):
+    #         return Response({'error': 'Invalid email address'}, status=status.HTTP_400_BAD_REQUEST)
+    #     if phone and not validate_phone(phone):
+    #         return Response({'error': 'Invalid phone number'}, status=status.HTTP_400_BAD_REQUEST)
         
-        # update user's account details here
+    #     # update user's account details here
         
-        return Response({'message': 'Account details updated'}, status=status.HTTP_200_OK)
+    #     return Response({'message': 'Account details updated'}, status=status.HTTP_200_OK)
 
+# from rest_framework.generics import RetrieveUpdateAPIView
+# from rest_framework.permissions import IsAuthenticated
+# from .models import customer
+# from .serializers import edit_customerSerializer
+
+# class  EditCustomerView(RetrieveUpdateAPIView):
+#     permission_classes = [IsAuthenticated]
+#     serializer_class = edit_customerSerializer
+
+#     def get_object(self):
+#         return self.request.user.username
+
+#     def perform_update(self, serializer):
+#         serializer.save()
+# from rest_framework import status
+# from rest_framework.response import Response
+# from rest_framework.views import APIView
+
+# class CustomerEditView(APIView):
+#     def post(self, request):
+#         email = request.data.get('email')
+#         phone_number = request.data.get('phone_number')
+#         country_code = request.data.get('country_code')
+        
+#         if not validate_email_address(email):
+#             return Response({'error': 'Invalid email address.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+#         if not validate_phone_number(phone_number, country_code):
+#             return Response({'error': 'Invalid phone number.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+#         # Update customer account here
+        
+#         return Response({'message': 'Account updated successfully.'}, status=status.HTTP_200_OK)
+
+# from django.core.validators import validate_email
+# from django.core.exceptions import ValidationError
+# import phonenumbers
+# class  EditCustomerView(RetrieveUpdateAPIView):
+#     try:
+#         validate_email(email)
+#     except ValidationError as e:
+        
+#     # Invalid email
+
+
+# try:
+    # phone_number = phonenumbers.parse(number, None)
+    # if not phonenumbers.is_valid_number(phone_number):
+#         # Invalid phone number
+# except phonenumbers.NumberParseException:
+    # Invalid phone number
 
 # travel history
 class travelhistoryAPI(APIView):
@@ -1932,14 +2028,23 @@ class travelhistoryAPI(APIView):
         #     serc_img=facility_image.objects.all().filter(facility_id=secr.id)  
         #     for  room_ig in serc_img:           
         #             bookng_list.append({'bk_from':secr.bk_from,'bk_to':secr.bk_to,'created':secr.created,'image':room_ig.image.name})
-        review=facility_Review.objects.all()
+        facility=destn_facility.objects.all() 
+        rating_list=[]
+        for rate in facility: 
+            print(rate.id)
+            rating=facility_Review.objects.all().filter(destn_facility_id=rate.id)  
+            for  rews in rating:   
+                    print(rews.id)        
+                    rating_list.append({'orgatn':rate.orgatn,'description':rate.description,'amount':rate.amount,'rating':rews.rating})    
+        # review=facility_Review.objects.all().filter(destn_facility_id=1)
        
         
         title_data=head_KSerializer(title, many=True).data
         subtitle_data=head_KSerializer(sub_title, many=True).data
         sub_title2_data=head_KSerializer(sub_title2, many=True).data
         book_data=bookingSerializer(book, many=True).data
-        review_data=facilityReviewSerializer(review, many=True).data
+        # facility_data=facilitySerializer(facility, many=True).data
+        # review_data=facilityReviewSerializer(reviews, many=True).data
        
 
         data = {
@@ -1948,7 +2053,8 @@ class travelhistoryAPI(APIView):
             'sub_heading':  subtitle_data,
             'sub_title2':sub_title2_data,
             'booking_details':book_data,
-            'wanderlust':review_data,
+            'facility':rating_list,
+            # 'wanderlust':review_data,
         }
         return Response(data)
     
@@ -1975,7 +2081,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import authenticate
-from .serializers import facilityReviewSerializer
+from .serializers import facilityReviewSerializer,travelMemorySerializer
 from .models import facility_Review
 
 class facilityReviewListCreateAPIView(APIView):
@@ -2026,6 +2132,7 @@ class destinationReviewListCreateAPIView(APIView):
 class MemoryCreateView(generics.CreateAPIView):
     queryset = memories.objects.all()
     serializer_class = MemorySerializer
+    
 
     def perform_create(self, serializer):
         images = self.request.POST.getlist('images')
@@ -2036,7 +2143,7 @@ class MemoryCreateView(generics.CreateAPIView):
 # travel memories(view memories)
 class travelmemoriesViewSet(viewsets.ModelViewSet):
     queryset = memories.objects.all()
-    serializer_class = MemorySerializer
+    serializer_class = travelMemorySerializer
 
 
 # memory details

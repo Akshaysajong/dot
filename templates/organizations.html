@@ -22,10 +22,6 @@
               <form class="form-horizontal" method="POST" action="/dot/addorganization_db/" enctype="multipart/form-data">{% csrf_token %}
                 <div class="row">
                     <div class="col-md-4">
-                      <label for="title" class="form-label">Title</label>
-                      <input type="text" class="form-control" name="title" value="" id="title" required><br>
-                    </div>
-                    <div class="col-md-4">
                       <label for="organization_type" class="form-label">Organization Type</label>
                       <select name="org_type" id="org_type" class="form-control" onchange="">
                         <option value="0">--Select--</option>    
@@ -41,6 +37,10 @@
                                   <option value="{{x.id}}">{{x.name}}</option>
                                   {% endfor %}
                                 </select>  
+                    </div>
+                    <div class="col-md-4">
+                      <label for="title" class="form-label">Title</label>
+                      <input type="text" class="form-control" name="title" value="" id="title" required><br>
                     </div>
                     <div class="col-md-4">
                       <label for="first_name" class="form-label">First Name</label>

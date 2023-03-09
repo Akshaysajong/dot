@@ -35,12 +35,12 @@
                                 </select>  
                     </div>
                     <div class="col-md-3">
-                      <label for="title" class="form-label">Title</label>
-                      <input type="text" class="form-control" name="title" value="" id="title" required><br>
-                    </div>
-                    <div class="col-md-3">
                       <label for="page" class="form-label">Page</label>
                       <input type="text" class="form-control" name="page" value="" id="page" required><br>
+                    </div>
+                    <div class="col-md-3">
+                      <label for="title" class="form-label">Title</label>
+                      <input type="text" class="form-control" name="title" value="" id="title" onchange="createpath(this);" required><br>
                     </div>
                     <div class="col-md-3">
                       <label for="path" class="form-label">Path</label>
@@ -105,7 +105,7 @@
                       <div class="col-md-2"><input type="text" class="form-control" name="img_content[]"></div>
                       <div class="col-md-2"><input type="text" class="form-control" name="overlay[]"></div>
                       <div class="col-md-2"><input type="number" class="form-control" name="weight[]"></div>
-                      <div class="col-md-2"><a href="#" onclick="delparentrow(this, 'contentimagerow')" title="Delete">
+                      <div class="col-md-2"><a  onclick="delparentrow(this, 'contentimagerow')" title="Delete">
                         <span class="bi-trash" style="font-size: 30px; color: black;"></span></a>
                       </div>
                     </div>

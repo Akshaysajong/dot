@@ -209,6 +209,12 @@ function deletefacility(obj, id) {
     }
     }
 
+
+function createpath(obj) {
+    $('#path').val(obj.value.toLowerCase().replace(/ /g,'_').replace(/\//g,''));
+    }
+      
+
 function addvariation(c, p) {
     rl = $('.'+c).length + 1;
     row = '<div class="row mb-3 border-bottom pb-3 ' + c + '" id="'+ c + rl +'"><input type="hidden" name="variationai[]" value="' + (999 + rl) + '">' + $('#'+c+'1').html().replace('imagevariation1000', 'imagevariation'+(999 + rl)) + '</div>';
@@ -216,6 +222,13 @@ function addvariation(c, p) {
     $('#' + c + rl +' input').val(''); 
     $('#' + c + rl +' .imgwrapper').remove(); 
 }
+
+function delparentrow(o, c) {
+    if($(o).parent().parent().attr('id') != c+'1') {
+      $(o).parent().parent().remove();
+    }
+  }
+  
     
 
 function upload_variationimg(obj, f) {
@@ -262,3 +275,23 @@ function upload_variationimg(obj, f) {
         });
     });
 });
+
+function myFunction() {
+    // do something when the checkbox is clicked
+    console.log("The checkbox was clicked!");
+  }
+
+function myFunction(obj, id) {
+var result = confirm("Are you sure to delete?");
+if(result){
+    df = document.getElementById('deletedfiles').value;
+    alert(df)
+    dfc  = df.split(", ");
+    
+    document.getElementById('deletedfiles').value = df+', '+id;
+    a=document.getElementById('img_id')
+    console.log(a)
+   
+          
+}
+}

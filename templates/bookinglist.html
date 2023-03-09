@@ -22,6 +22,7 @@
       
       <div class="table-responsive card rounded-1 border-0 shadow mt-4 mb-4">
             <h5 class="text-uppercase fw-bold mb-0 p-4 pt-3 pb-3">Booking List</h5>
+            <form method="post" action="/dot/approvebooking/" enctype="multipart/form-data" >{% csrf_token %}
             <table id="example" class="table table-striped table-sm">
             
               <thead>
@@ -33,10 +34,11 @@
                   <th scope="col">TO</th>
                   <th scope="col">CREATED DATE</th>
                   <th scope="col">STATUS</th>
+                  <th><input type="checkbox" name="ck" class="hh" value="1"></th>
                 </tr>
               </thead>
-              {% for x in c_booking %}
               <tbody>
+                {% for x in c_booking %}
                 <tr>
                     <td >{{x.cust.name}}</td> 
                     <td >{{x.title}}</td>
@@ -45,24 +47,28 @@
                     <td >{{x.bk_to}}</td> 
                     <td >{{x.created}}</td> 
                     <td >{{x.status}}</td> 
-
-        <td>
-          <div class="btn-group me-2">
-            <a href="/dot/edit_hotel/?a={{x.id}}"><button class="btn-link border-0 bg-transparent text-body" >Approve</button> </a>
-          </div> 
-        </td>
-        <td>
-          <div class="btn-group me-2">
-           
-            <button class="btn-link border-0 bg-transparent text-body" type="submit" onclick="delete_hotel('{{x.id}}')"><span data-feather="trash-2" ></span></button>
-          </div>
-        </td>
+                    <td>
+                      <input type="checkbox" name="checkbook " value="{{x.id}}">
+                      <!-- <div class="btn-group me-2">
+                        <input type="checkbox" id="status" name="status" value="{{x.id}}" onclick="myFunction(this, '{{x.id}}')"/>
+                      </div> -->
+                    </td>
                 </tr>
+                {% endfor %}
               </tbody>
-              {% endfor %}
-            
             </table>
-      </div>   
-     
+            <div class="row">    
+              <div class="btn-group me-2 d-flex p-2 ">
+                <div class="btn-toolbar mb-2 mb-md-1 justify-content-end ">
+                  <!-- <a href="/dot/edit_destinationarea/?a={{x.id}}"><button class="btn btn-primary" >Approve</button></a> -->
+
+                  <div class="ps-3"><button type="submit" class=" btn btn-primary" name="approve" value="approve" >approve</button></div>
+                  <div class="ps-3"><button type="submit" class=" btn btn-primary" >Delete</button></div>
+                </div>
+              </div>
+            </div>
+          </form>
+    </div>   
+
   </main>
 {% endblock %}  
