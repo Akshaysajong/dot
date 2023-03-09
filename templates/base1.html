@@ -88,13 +88,13 @@
             <li class="list-group-item border-0 p-1"><a href="/dot/view_destination/" class="nav-sublink">Destination List</a></li>
             {% endif %}
             {% if perms.dot_app.add_destinstions %}
-            <li class="list-group-item border-0 p-1"><a href="/dot/destinations/" class="nav-sublink">Addd Destinations</a></li>
+            <li class="list-group-item border-0 p-1"><a href="/dot/destinations/" class="nav-sublink">Add Destinations</a></li>
             {% endif %}
           </ul>
           </li>
           {% endif %}   
           {% if perms.dot_app.view_facility_type %}
-          <li class="nav-item"> <a class="nav-link" data-bs-toggle="collapse" href="#menu-facility" aria-expanded="false" aria-controls="menu-order"> <span data-feather="file"></span> Facility </a> 
+          <li class="nav-item"> <a class="nav-link" data-bs-toggle="collapse" href="#menu-facility" aria-expanded="false" aria-controls="menu-order"> <span data-feather="activity"></span> Facility </a> 
             <ul class="list-group collapse multi-collapse ms-4 mb-2" id="menu-facility">  
               <li class="list-group-item border-0 p-1"><a href="/dot/viewfacilitytype/" class="nav-sublink">View Facility Type</a></li>
               {% if perms.dot_app.add_facility_type %}
