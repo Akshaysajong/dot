@@ -1213,7 +1213,7 @@ def dot_updateprofile(request):
         usr.save()
     return redirect('dotprofile')
 
-#view customer list
+#view customerlist
 @login_required(login_url="/login")
 @permission_required('dot_app.view_customer', 'view_cust_profile', raise_exception=True)
 def dot_customerlist(request):
