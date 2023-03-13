@@ -32,18 +32,18 @@
                               {% endfor %}
                             </select>  
                   </div> -->
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <label for="destn" class="form-label" >Destination</label><br>
-                                <select name="destn" id="destn" class="form-control" onchange="">
+                                <select name="destn" id="destn" class="form-select" onchange="">
                                 <option value="0">--Select--</option>    
                                 {% for x in destn %}
                                 <option value="{{x.name}}">{{x.name}}</option>
                                 {% endfor %}
                                 </select>  <br>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <label for="type" class="form-label" >Type</label><br>
-                                <select name="typ" id="typ" class="form-control" onchange="">
+                                <select name="typ" id="typ" class="form-select" onchange="">
                                 <option value="0">--Select--</option>    
                                 {% for x in faclty_type %}
                                 <option value="{{x.title}}">{{x.title}}</option><br>
@@ -60,20 +60,20 @@
                               </select>  
                     </div><br> -->
                   
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                       <label for="title" class="form-label">Title</label>
                       <input type="text" class="form-control" name="title" value="" id="title" required><br>
                     </div>
                     
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                       <label for="description" class="form-label">Description</label>
                       <input type="text" class="form-control" name="description" value="" id="description" required><br>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                       <label for="price" class="form-label">Price</label>
                       <input type="text" class="form-control" name="price" value="" id="price" required><br>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                       <label for="images" class="form-label">Choose Images</label><br>
                       <input type="file" class="form-control"  placeholder="" name="image" id="image" multiple >
                     </div>
@@ -83,7 +83,7 @@
                       <input type="text" class="form-control" name="type" value="" id="type" required><br>
                     </div> -->
                     
-                    <div class="col-md-6"><br>
+                    <div class="col-md-4"><br>
                       <label for="status">Status </label>
                       <input type="checkbox" id="status" name="status" value="True">
                       

@@ -358,7 +358,7 @@ def dot_edit_destinationarea(request):
     for x in d_type:
         # print(x.destnarea_type.name)
         d_type_list.append(x.destnarea_type.id)
-    print(d_type_list)
+    # print(d_type_list)
     return render(request, "edit_destinationarea.html",{'destn':destn, 'destarea_type':destnarea_type, 'd_type_list':d_type_list})
 
 #edit destination area save to database
@@ -374,7 +374,7 @@ def dot_update_destinationarea(request):
         longitude = request.POST['longitude']
         status = request.POST.get('status', False)
         destinarea_type = request.POST.getlist('destinationarea_type', False)
-        print(destinarea_type)
+        # print(destinarea_type)
         dn_ar = destination_area.objects.all().filter(id=da_id)  
         if int(dn_ar[0].c_user) == user.id or user.is_superuser:
             destination_area.objects.all().filter(id=da_id).update(name=destn_area, place=place, longitude=longitude, lattitude=lattitude, status=status)
@@ -384,17 +384,24 @@ def dot_update_destinationarea(request):
                 old_image.image.delete(save=False)
                 old_image.image = image
                 old_image.save()
+            # des = destinationarea_type.objects.all()
+            # i = 0
+            # for d in des:
+            #     print(d.destnarea_type_id)
+            #     print(destinarea_type[i])
+            #     i = i + 1
+
             
             for d_type in  destinarea_type:
-                print('44444444444444444')
-                print(d_type)
-                print('555555555555555555555')
                 f = destinationarea_type.objects.exclude(destnarea_type=d_type).filter(destnarea=da_id)
+                print(f)
                 p = destinationarea_type.objects.filter(destnarea=da_id, destnarea_type=d_type)
                 if f:
                     # f.delete()
                     for x in f:
+                        print('1111111111111111111')
                         print(x.destnarea_type.name)
+
                     # print('######################################')
                 elif destinationarea_type.objects.filter(destnarea=da_id, destnarea_type=d_type):
                     print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
@@ -402,10 +409,8 @@ def dot_update_destinationarea(request):
                     d = destinationarea_type(destnarea_type_id=d_type, destnarea_id=da_id)
                     # d.save()
                     print('2222222222222222222222222222222')
-                # print(d)
-                # print("111111111111111111111111111111111")
-                
-
+                print(d)
+                print("111111111111111111111111111111111")
         else:
             messages.error(request, "You are not autherized to edit !!!!")
     return redirect("dot_view_destinationarea")
@@ -457,7 +462,7 @@ def dot_add_destination(request):
         longitude = request.POST['longitude']
         destinationtype = request.POST['destinationtype']
         status = request.POST.get('status', False)
-        dstn = destinstions(name=destn, d_area_id=destn_area, address=address, description=description, climate=climate, culture=culture, longitude=longitude, lattitude=lattitude, c_user=user ,destn_type=destinationtype, status=status)
+        dstn = destinstions(name=request.POST['destn'], d_area_id=request.POST['destn_area'], address=request.POST['address'], description=request.POST['description'], climate=request.POST['climate'], culture=request.POST['culture'], longitude=request.POST['longitude'], lattitude=request.POST['lattitude'], c_user=user ,destn_type=request.POST['destinationtype'], status=status)
         dstn.save()
         for x in img:
             b=destination_img(destinstions_id=dstn.id, image=x)
