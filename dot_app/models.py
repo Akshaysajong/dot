@@ -282,18 +282,28 @@ class icons(models.Model):
 
 class Subscription(models.Model):
     email = models.EmailField()
-    subscription_type = models.CharField(max_length=50)
+    # subscription_type = models.CharField(max_length=50)
     subscribed_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
          return self.email
 
-
+class organization_Review(models.Model):
+    organization_id = models.CharField(max_length=100,blank=True, null=True, default=0)
+    cust_id= models.ForeignKey(customer, default=None, on_delete=models.CASCADE)
+    rating = models.IntegerField(blank=True, null=True)
+    # rating=models.IntegerField(blank=True, null=True)
+    review=models.CharField(max_length=100,blank=True, null=True)
+    user_id = models.CharField(max_length=100,blank=True, null=True, default=0)
+    created = models.DateTimeField(blank=True, null=True)
+    updated = models.DateTimeField(blank=True, null=True)
+    status = models.CharField(max_length=100,blank=True, null=True)
 
 class facility_Review(models.Model):
     destn_facility_id = models.CharField(max_length=100,blank=True, null=True, default=0)
     cust_id= models.ForeignKey(customer, default=None, on_delete=models.CASCADE)
-    rating=models.IntegerField(blank=True, null=True)
+    rating = models.IntegerField(blank=True, null=True)
+    # rating=models.IntegerField(blank=True, null=True)
     review=models.CharField(max_length=100,blank=True, null=True)
     user_id = models.CharField(max_length=100,blank=True, null=True, default=0)
     created = models.DateTimeField(blank=True, null=True)
@@ -310,21 +320,23 @@ class destination_Review(models.Model):
     updated = models.DateTimeField(blank=True, null=True)
     status = models.CharField(max_length=100,blank=True, null=True)
 
-class memories(models.Model):
+class memories(models.Model):  
     cust_id = models.ForeignKey(customer, default=None, on_delete=models.CASCADE)
-    destinstions = models.CharField(max_length=100,blank=True, null=True, default=0)
+    destinstion = models.CharField(max_length=100,blank=True, null=True, default=0)
     destn_facility = models.CharField(max_length=100,blank=True, null=True, default=0)
+    organzn = models.CharField(max_length=100,blank=True, null=True, default=0)
     experience = models.CharField(max_length=200,blank=True, null=True)
     memories = models.CharField(max_length=200,blank=True, null=True)
     created = models.DateTimeField(blank=True, null=True)
     updated = models.DateTimeField(blank=True, null=True)
-    visited_date=models.DateTimeField(blank=True, null=True)
+    visited_date=models.CharField(max_length=100,blank=True, null=True, default=0)
     user_id = models.CharField(max_length=100,blank=True, null=True, default=0)
+    # image = models.ForeignKey('memories_img', on_delete=models.CASCADE)
+    # images = models.ManyToManyField('image', blank=True)
     status = models.CharField(max_length=200,blank=True, null=True)
-    
+
 class memories_img(models.Model):
     memories = models.ForeignKey(memories, on_delete=models.CASCADE)
     image=models.ImageField(upload_to = 'images/', blank=True)
 
     
-
