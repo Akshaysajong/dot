@@ -288,6 +288,17 @@ class Subscription(models.Model):
     def __str__(self):
          return self.email
 
+class organization_Review(models.Model):
+    organization_id = models.CharField(max_length=100,blank=True, null=True, default=0)
+    cust_id= models.ForeignKey(customer, default=None, on_delete=models.CASCADE)
+    rating = models.IntegerField(blank=True, null=True)
+    # rating=models.IntegerField(blank=True, null=True)
+    review=models.CharField(max_length=100,blank=True, null=True)
+    user_id = models.CharField(max_length=100,blank=True, null=True, default=0)
+    created = models.DateTimeField(blank=True, null=True)
+    updated = models.DateTimeField(blank=True, null=True)
+    status = models.CharField(max_length=100,blank=True, null=True)
+
 class facility_Review(models.Model):
     destn_facility_id = models.CharField(max_length=100,blank=True, null=True, default=0)
     cust_id= models.ForeignKey(customer, default=None, on_delete=models.CASCADE)
@@ -308,8 +319,6 @@ class destination_Review(models.Model):
     created = models.DateTimeField(blank=True, null=True)
     updated = models.DateTimeField(blank=True, null=True)
     status = models.CharField(max_length=100,blank=True, null=True)
-
-
 
 class memories(models.Model):  
     cust_id = models.ForeignKey(customer, default=None, on_delete=models.CASCADE)

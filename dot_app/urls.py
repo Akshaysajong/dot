@@ -11,11 +11,11 @@ from django.conf.urls.static import static
 from .views import LocationList, LocationDetail,autocompleteList,autocompleteDetail
 from rest_framework import filters
 # from django.conf import settings
-from .views import facilityReviewListCreateAPIView,destinationReviewListCreateAPIView
+from .views import facilityReviewListCreateAPIView,destinationReviewListCreateAPIView,organizationReviewListCreateAPIView,bookhotelCreateAPIView
 from .views import AccountView
 from django.urls import path, include
 # from rest_framework import routers
-from .views import facilityReviewAPIView,destinationReviewViewSet,travelmemoriesViewSet
+from .views import organizationReviewAPIView,facilityReviewAPIView,destinationReviewViewSet,travelmemoriesViewSet
 
 # router = routers.DefaultRouter()
 # router.register('api/facilityreviews_view', facilityReviewAPIView)
@@ -84,6 +84,8 @@ urlpatterns = [
     path('api/locations/<int:pk>/', LocationDetail.as_view(), name='location-detail'),
     path('api/locations/search/', LocationList.as_view(filter_backends=[filters.SearchFilter]), name='location-search'),
     path('api/filtersearch_results/',views.filtersearch_resultsView.as_view(({'get': 'list'})), name='filtersearch_results'),
+    path('api/organizationaddreviews/', organizationReviewListCreateAPIView.as_view(), name='org_review-list-create'),
+    path('api/organizationreview_view/', organizationReviewAPIView.as_view(({'get': 'list'})), name='organizationreview_view'),
     path('api/facilityaddreviews/', facilityReviewListCreateAPIView.as_view(), name='review-list-create'),
     path('api/facilityreview_view/', facilityReviewAPIView.as_view(({'get': 'list'})), name='facilityreview_view'),
     path('api/destinationaddreviews/', destinationReviewListCreateAPIView.as_view(), name='destinationaddreviews'),
@@ -91,11 +93,13 @@ urlpatterns = [
     path('api/travelmemories/', travelmemoriesViewSet.as_view(({'get': 'list'})), name='travelmemories'),
     path('api/memorydetails/<int:id>/', views.MemoryDetailAPIView.as_view(), name='memory-detail'), 
     path('api/travelhistory/',views.travelhistoryAPI.as_view(),name='travelhistory'),
-
-    path('api/organization_details/',views.organization_detailsAPI.as_view(), name='organization_details'),   
-    # path('api/editaccount/', views.EditCustomerView.as_view(), name='editaccount-list'), 
-    path('api/editaccount/<int:pk>/', views.edit_CustomerUpdateView.as_view(), name='editaccount-detail'),      
+    path('api/editaccount/<int:pk>/', views.edit_CustomerUpdateView.as_view(), name='editaccount-detail'),  
+    path('api/bookinghotel/', bookhotelCreateAPIView.as_view(), name='bookinghotel'),
     path('api/addmemories/',views.MemoryCreateView.as_view(), name='memory_create'),
+    
+    path('api/organization_details/',views.organization_detailsAPI.as_view(), name='organization_details'),   
+    # path('api/editaccount/', views.EditCustomerView.as_view(), name='editaccount-list'),      
+ 
 
     
     # path('memoryimages/', ImageList.as_view(), name='image-list'),

@@ -6,8 +6,7 @@ from rest_framework.response import Response
 # register customers
 
 
-class customerRegister(serializers.ModelSerializer):
-    # password2=serializers.CharField(style={'input_type':'password'},write_only=True)
+class customerRegister(serializers.ModelSerializer): 
     class Meta:
         model=customer
         fields=('id','name','email','phone','gender','cust_type','status','first_name','last_name')
@@ -326,8 +325,15 @@ class TripSerializer(serializers.ModelSerializer):
 
 class bookingSerializer(serializers.ModelSerializer):
     class Meta:
+        model = destinstions
+        fields = ['bk_from','bk_to','cust_id']
+
+
+# book hotel
+class hotel_bookingSerializer(serializers.ModelSerializer):
+    class Meta:
         model = booking
-        fields =  ['created','bk_from','bk_to']
+        fields =  ['cust','bk_from','bk_to','title','guests','status']
 
 
 from .models import customer
@@ -520,8 +526,12 @@ class CustomerSerializer(serializers.ModelSerializer):
 
 
 
-from .models import facility_Review,destination_Review
+from .models import facility_Review,destination_Review,organization_Review
 
+class organizationReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = organization_Review
+        fields =  '__all__'
 class facilityReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = facility_Review
@@ -533,21 +543,30 @@ class destinationReviewSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 # add memory
+# class memoryImageSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = memories_img
+#         fields = ('id', 'image')
+
+# class MemorySerializer(serializers.ModelSerializer):
+#     images = memoryImageSerializer()
+#     class Meta:
+#         model = memories      
+#         fields = ('id', 'cust_id','destinstion','created','updated','destn_facility', 'experience', 'memories','visited_date', 'images','status')
+  
+class MemorySerializer(serializers.ModelSerializer): 
+    class Meta:
+        model=memories
+        fields=('id', 'cust_id','destinstion','created','updated','destn_facility', 'experience', 'memories','visited_date','status')
 class memoryImageSerializer(serializers.ModelSerializer):
+    memories = MemorySerializer()
     class Meta:
         model = memories_img
-        fields = ('id', 'image')
-
-class MemorySerializer(serializers.ModelSerializer):
-    images = memoryImageSerializer()
-    class Meta:
-        model = memories      
-        fields = ('id', 'cust_id','destinstion','created','updated','destn_facility', 'experience', 'memories','visited_date', 'images','status')
-    def create(self, validated_data):
-        image_data = validated_data.pop('images')
-        image = memories_img.objects.create(**image_data)
-        memory = memories.objects.create(image=image, **validated_data)
-        return memory
+        fields =['id', 'image','memories']
+    # def mem(self, validated_data):
+       
+    #     return mem
+    
 # travel memory
 class travelMemoryimgSerializer(serializers.ModelSerializer):
     class Meta:

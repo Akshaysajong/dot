@@ -5,7 +5,7 @@ class Itemfilter(FilterSet):
     class Meta:
         model=destinstions
         fields = ['id','name']
-
+# category search
 class categoryfilter(FilterSet):
     class Meta:
         model=icons
